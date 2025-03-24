@@ -8,6 +8,15 @@
 ## Einleitung
 Im Rahmen unsere Projektarbeit haben wir den Auftrag erhalten eine  Hotelreservierungssystem mit der Programmiersprache Python zu entwerfen, welches die folgenden User Stories realisieren. Wie bereits in den Guidelines beschrieben, werden wir auf die Userstorys richten.
 
+## Deliverables
+Abgabetermin: 15.06.2025
+- Source Code und Artefakte
+-   Link zu Deepnote-Projekt mit allen ausführbaren Notebooks, Dateien und der endgültigen Datenbank
+-   Link zum GitHub-Repository
+-   Link zu einer Projekt Board
+- Dokumentation/Bericht (Link zu GitHub Markdown-Dateien)
+- Link zum Präsentationsvideo (Microsoft Stream, SWITCHtube oder Youtube)
+
 ## Minimale User Stories
 
 1. Als Gast möchte ich die verfügbaren Hotels durchsuchen, damit ich dasjenige auswählen kann, welches meinen Wünschen entspricht.\
@@ -58,3 +67,4 @@ Hint: Wählt ein geeignetes Diagramm, um die Auslastung nach Zimmertyp darzustel
 
 2. Als Admin möchte ich eine Aufschlüsselung der demografischen Merkmalde meiner Gäste sehen, damit ich gezieltes Marketing planen kann.
 Hint: Wählt ein geeignetes Diagramm, um die Verteilung der Gäste nach verschiedenen Merkmalden darzustellen (z.B. Altersspanne, Nationalität, wiederkehrende Gäste). Möglicherweise müssen Sie dier Tabelle "Gäste" einige Spalten hinzufügen.
+
