@@ -18,15 +18,15 @@ Abgabetermin: 15.06.2025
 - Link zum Präsentationsvideo (Microsoft Stream, SWITCHtube oder Youtube)
 
 ## Links
-Deepnote:
-Project Board:
+Deepnote:\
+Project Board:\
 Präsentationsvideo:
 
 ## Class Diagram
 
 
 ## Methodologie
-
+...
 
 ## Minimale User Stories
 
