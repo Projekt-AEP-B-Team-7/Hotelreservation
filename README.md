@@ -17,6 +17,17 @@ Abgabetermin: 15.06.2025
 - Dokumentation/Bericht (Link zu GitHub Markdown-Dateien)
 - Link zum Präsentationsvideo (Microsoft Stream, SWITCHtube oder Youtube)
 
+## Links
+Deepnote:
+Project Board:
+Präsentationsvideo:
+
+## Class Diagram
+
+
+## Methodologie
+
+
 ## Minimale User Stories
 
 1. Als Gast möchte ich die verfügbaren Hotels durchsuchen, damit ich dasjenige auswählen kann, welches meinen Wünschen entspricht.\
