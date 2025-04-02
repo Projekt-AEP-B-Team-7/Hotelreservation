@@ -31,7 +31,7 @@ class Address:
         if not isinstance city:
             raise ValueError("City must be string.")
 
-@property
+    @property
     def zip_code(self):
         return self.__zip_code
 

@@ -20,8 +20,8 @@ class Invoice:
 
     def generate_pdf(self) -> None:
         # Platzhalter für PDF-Erzeugung
-        print(f"Rechnung {self._invoice_id} als PDF generiert.")
+        print(f"Invoice {self._invoice_id} was generated as a PDF.")
 
     def send_to_guest(self) -> None:
         # Platzhalter für Sende-Logik
-        print(f"Rechnung {self._invoice_id} wurde an den Gast gesendet.")
+        print(f"Invoice {self._invoice_id} has been sent to guest.")

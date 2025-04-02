@@ -7,7 +7,7 @@ class Guest:
         self.__last_name = last_name
         self.__email = email
 
-     @property
+    @property
     def guest_id(self) -> int:
         return self.__guest_id
 
