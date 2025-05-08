@@ -11,7 +11,7 @@ class Address:
     
     @property
     def street(self):
-        return self.__street
+        return self.__street = street
     
     @street.setter
     def street(self, street:str) -> None:

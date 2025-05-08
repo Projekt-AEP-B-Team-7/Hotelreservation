@@ -19,7 +19,7 @@ class Guest:
     @first_name.setter
     def first_name(self, first_name : str):
         if not first_name:
-            raise valueerror ("First Name required")
+            raise ValueError ("First Name required")
         if not isinstance(first_name , str):
              raise TypeError("First Name must be a string")
 

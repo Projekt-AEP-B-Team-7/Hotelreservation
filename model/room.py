@@ -6,7 +6,7 @@ class Room:
         self.__available = True                
 
     @property
-    def room_id = room_id
+    def room_id(self) -> room_id:
         return self.__room_id
 
     @property
@@ -19,7 +19,7 @@ class Room:
 
     @property
     def assign_booking(self):
-        self.__available = False
+        return self.__available = False
 
     @property
     def __str__(self):
