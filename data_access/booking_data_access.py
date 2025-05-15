@@ -24,21 +24,40 @@ class BookingDataAccess(BaseDataAccess):
         sql = """
         INSERT INTO Booking (guest_id, room_id, check_in_date, check_out_date, total_amount) VALUES (?, ?, ?, ?, ?)
         """
-
         params = tuple([guest_id, room_id, check_in_date, check_out_date, total_amount])
 
         last_row_id, row_count = self.execute(sql, params)
         return model.Booking(last_row_id, guest_id, room_id, check_in_date, check_out_date, total_amount)
 
-    def read_booking_by_guestId(self, city: str, hotel: model.Hotel) -> model.Booking:
+    def read_booking_by_guestId(self, guest_id) -> model.Booking:
+        
         sql = """
-        SELECT Address_Id, Street, City, Zip_code FROM Hotel WHERE city = ?
+        SELECT * FROM Booking WHERE guest_id = ?
         """
-        if city is None:
-            raise ValueError("City can not be None")
-        if hotel is None:
-            raise ValueError("Hotel can not be None")
+        params = tuple([guest_id])
+        result = self.fetchone(sql, params)
+        if result:
+            guest_id, room_id, check_in_date, check_in_date, is_cancelled, total_amount = result
+            return model.Booking(guest_id, room_id, check_in_date, check_in_date, is_cancelled, total_amount)
+        else:
+            return None
+    
+    def update_booking(self, is_cancelled: bool) -> model.Booking:
+        if booking is None:
+            raise ValueError("Booking cannot be None")
 
-        params = tuple([city.hotel_id])
-        address = self.fetchall(sql, params)
-        return [model.Address(Address_Id, street, city, zip_code) for Address_Id, city in address]
+        sql = """
+        UPDATE Booking SET is_cancelled = ? WHERE booking_id = ?
+        """
+        params = tuple([is_cancelled, booking_id])
+        last_row_id, row_count = self.execute(sql, params)
+
+    def delete_booking(self, booking_id) -> model.Booking:
+        if booking is None:
+            raise ValueError("Booking cannot be None")
+
+        sql = """
+        DELETE FROM Booking WHERE booking_id = ?
+        """
+        params = tuple([booking_id])
+        last_row_id, row_count = self.execute(sql, params)

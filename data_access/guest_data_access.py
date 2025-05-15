@@ -26,15 +26,31 @@ class GuestDataAccess(BaseDataAccess):
         last_row_id, row_count = self.execute(sql, params)
         return model.Guest(last_row_id, first_name, last_name, email)
 
-    #def read_guest_by_(self, city: str, hotel: model.Hotel) -> model.Guest:
-     #   sql = """
-     #   SELECT Address_Id, Street, City, Zip_code FROM Hotel WHERE city = ?
-     #   """
-     #   if city is None:
-     #       raise ValueError("City can not be None")
-     #   if hotel is None:
-     #       raise ValueError("Hotel can not be None")
+    def read_all_guests(self, first_name, last_name, email, address_id) -> model.Guest:
+        
+        sql = """
+        SELECT * FROM Guest
+        """
+        params = tuple([first_name, last_name, email, address_id])
+        result = self.fetchone(sql, params)
+        return model.Guest(last_row_id, first_name, last_name, email)
+    
+   # def update_guest(self, is_cancelled: bool) -> model.Guest:
+   #     if guest is None:
+    #        raise ValueError("Guest cannot be None")
 
-#        params = tuple([city.hotel_id])
- #       address = self.fetchall(sql, params)
-  #      return [model.Address(Address_Id, street, city, zip_code) for Address_Id, city in address]
+    #    sql = """
+    #    UPDATE Guest SET first_name = ? WHERE guest_id = ?
+    #    """
+    #    params = tuple([is_cancelled, booking_id])
+    #    last_row_id, row_count = self.execute(sql, params)
+
+  #  def delete_guest(self, booking_id) -> model.Guest:
+    #    if guest is None:
+    #        raise ValueError("Booking cannot be None")
+
+ #     sql = """
+   #     DELETE FROM Guest WHERE booking_id = ?
+    #    """
+    #    params = tuple([booking_id])
+    #    last_row_id, row_count = self.execute(sql, params)
