@@ -1,3 +1,5 @@
+from business_logic.hotel_manager import HotelManager
+
 class Hotel:
     def __init__(self, hotel_id: int, name: str, stars: str):
         self.__hotel_id = hotel_id

@@ -35,22 +35,22 @@ class GuestDataAccess(BaseDataAccess):
         result = self.fetchone(sql, params)
         return model.Guest(last_row_id, first_name, last_name, email)
     
-   # def update_guest(self, is_cancelled: bool) -> model.Guest:
-   #     if guest is None:
-    #        raise ValueError("Guest cannot be None")
+   def update_guest_name(self, : bool) -> model.Guest:
+       if guest is None:
+           raise ValueError("Guest cannot be None")
 
-    #    sql = """
-    #    UPDATE Guest SET first_name = ? WHERE guest_id = ?
-    #    """
-    #    params = tuple([is_cancelled, booking_id])
-    #    last_row_id, row_count = self.execute(sql, params)
+        sql = """
+        UPDATE Guest SET first_name = ? WHERE guest_id = ?
+        """
+        params = tuple([is_cancelled, guest_id])
+        last_row_id, row_count = self.execute(sql, params)
 
-  #  def delete_guest(self, booking_id) -> model.Guest:
-    #    if guest is None:
-    #        raise ValueError("Booking cannot be None")
+    def delete_guest(self, guest_id) -> model.Guest:
+        if guest is None:
+            raise ValueError("Guest cannot be None")
 
- #     sql = """
-   #     DELETE FROM Guest WHERE booking_id = ?
-    #    """
-    #    params = tuple([booking_id])
-    #    last_row_id, row_count = self.execute(sql, params)
+        sql = """
+        DELETE FROM Guest WHERE guest_id = ?
+        """
+        params = tuple([guest_id])
+        last_row_id, row_count = self.execute(sql, params)
