@@ -6,20 +6,20 @@ class Room:
         self.__available = True                
 
     @property
-    def room_id(self) -> room_id:
+    def room_id(self) -> int:
         return self.__room_id
 
     @property
-    def room_no = room_no 
+    def room_no(self) -> int: 
         return self.__room_no
     
     @property
     def is_available(self) -> bool:
         return self.__available
 
-    @property
-    def assign_booking(self):
-        return self.__available = False
+    #@property
+    #def assign_booking(self):
+       # return self.__available = False
 
     @property
     def __str__(self):

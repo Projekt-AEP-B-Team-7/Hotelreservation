@@ -14,4 +14,4 @@ class RoomType:
 
     @property
     def max_guests(self) -> int:
-        return self._max_guests 
+        return self._max_guests

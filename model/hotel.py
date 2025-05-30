@@ -1,10 +1,12 @@
-from business_logic.hotel_manager import HotelManager
+from model.room import Room
+from model.address import Address
 
 class Hotel:
-    def __init__(self, hotel_id: int, name: str, stars: str):
+    def __init__(self, hotel_id: int, name: str, star: str, address: str):
         self.__hotel_id = hotel_id
         self.__name = name
-        self.__stars = stars
+        self.__star = star
+        self.__address = address
         self.__rooms = []
 
     @property
@@ -16,20 +18,25 @@ class Hotel:
         return self.__name
 
     @property
-    def stars(self) -> str:
-        return self.__stars
+    def star(self) -> str:
+        return self.__star
 
-    def add_room(self, room: Room):
-        self.__rooms.append(room)
+    @property
+    def address(self) -> str:
+        return self.__address
 
-    def get_available_rooms(self) -> list:
-        return [room for room in self.__rooms if room.is_available]
+    def __repr__(self):
+        return f"Hotel: {self.name}, Stars: {self.star}, Address: {self.address.city}, {self.address.street}, {self.address.zip_code}"
 
-    def view_rooms(self) -> list:
-        return self.__rooms
+   # def add_room(self, room: Room):
+#        self.__rooms.append(room)
 
-    def sort_rooms_by_price(self) -> list:
-        return sorted(self.__rooms, key=lambda r: r.price_per_night)
+#    def get_available_rooms(self) -> list:
+ #       return [room for room in self.__rooms if room.is_available]
 
-    def find_rooms_by_max_price(self, max_price: float) -> list:
-        return [room for room in self.__rooms if room.price_per_night <= max_price]
+#    def view_rooms(self) -> list:
+ #       return self.__rooms
+
+   # def sort_rooms_by_price(self) -> list:
+   #     return sorted(self.__rooms, key=lambda r: r.price_per_night)
+

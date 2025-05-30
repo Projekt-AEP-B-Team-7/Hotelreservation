@@ -11,13 +11,13 @@ class Address:
     
     @property
     def street(self):
-        return self.__street = street
+        return self.__street
     
     @street.setter
     def street(self, street:str) -> None:
         if not street:
             raise ValueError("Street is required.")
-        if not isinstance street:
+        if not isinstance (street, str):
             raise ValueError("Street must be string.")
     
     @property
@@ -28,19 +28,19 @@ class Address:
     def city(self, city:str) -> None:
         if not city:
             raise ValueError("City is required.")
-        if not isinstance city:
+        if not isinstance (city, str):
             raise ValueError("City must be string.")
 
     @property
     def zip_code(self):
         return self.__zip_code
 
-    @city.zip_code
-    def zip_code(self, city:str) -> None:
+    @zip_code.setter
+    def zip_code(self, zip_code:int) -> None:
         if not zip_code:
             raise ValueError("Zip code is required.")
-        if not isinstance zip_code:
-            raise ValueError("Zip code must be string.")
+        if not isinstance (zip_code, int):
+            raise ValueError("Zip code must be integer.")
     
-def get_address_details(self):
-    return f"Address Id: {address_id}, Street: {street}, City: {city}, Zip Code: {zip_code}"
+    def get_address_details(self):
+        return f"Address Id: {address_id}, Street: {street}, City: {city}, Zip Code: {zip_code}"
