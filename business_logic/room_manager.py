@@ -15,3 +15,11 @@ class RoomManager:
     
     def delete_room(self, room_id: int) -> model.Room:
         return self.__room_dal.delete_room(room_id)
+
+    def get_all_rooms_with_facilities(self,room_id: int) -> model.Room
+        return self.__room_dal.get_rooms_with_facilities()
+
+    #def insert_room_price(self, room_id: int) -> model.Room:
+        return self.__room_dal.insert_room_price(room_id)
+    
+   

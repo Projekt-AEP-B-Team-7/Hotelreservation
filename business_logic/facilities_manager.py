@@ -15,3 +15,6 @@ class FacilitiesManager:
     
     def delete_facilities(self, facility_id: int) -> model.Facilities:
         return self.__facilities_dal.delete_facilities(facility_id)
+
+    #def insert_facilities(self, facility_id: int) -> model.Facilities:
+       # return self.__facilities_dal.insert_facilities(facility_id)
