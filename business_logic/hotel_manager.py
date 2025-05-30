@@ -13,6 +13,9 @@ class HotelManager:
     def read_hotel_by_id(self, hotel_id: int) -> Hotel | None:
         return self.__hotel_dal.read_hotel_by_id(hotel_id)
     
+    def read_available_hotels_combined(self, city: str, max_guests: int) -> list[Hotel]:
+        return self.__hotel_dal.read_available_hotels_combined(city, max_guests)
+
     def read_hotel_by_city(self, city: str) -> list[Hotel]:
         return self.__hotel_dal.read_hotel_by_city(city)
 

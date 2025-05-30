@@ -48,7 +48,6 @@ class RoomDataAccess(BaseDataAccess):
         SELECT room_id
         FROM Booking
         WHERE NOT (b.check_out_date <= ? OR b.check_in_date >= ?)
-        )
         """
         params = (check_in, check_out)
         results = self.fetchall(sql, params)

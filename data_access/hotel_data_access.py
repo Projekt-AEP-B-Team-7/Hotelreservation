@@ -26,10 +26,10 @@ class HotelDataAccess(BaseDataAccess):
 
     def read_hotel_by_city(self, city: str) -> list[Hotel]:
         sql = """
-        SELECT h.Hotel_id, h.Name, h.Stars, a.Street, a.Zip_Code, a.City
-        FROM Hotel h
-        JOIN Address a ON h.Address_Id = a.Address_Id
-        WHERE a.City = ?;
+        SELECT Hotel.Hotel_id, Hotel.Name, Hotel.Stars, Address.Street, Address.Zip_Code, Address.City
+        FROM Hotel
+        JOIN Address ON Hotel.Address_Id = Address.Address_Id
+        WHERE Address.City = ?;
         """
         params = tuple([city])
         result = self.fetchall(sql, params)
@@ -44,10 +44,10 @@ class HotelDataAccess(BaseDataAccess):
     
     def read_hotels_by_city_and_stars(self, city: str, stars: int) -> list[Hotel]:
         sql = """
-        SELECT h.Hotel_id, h.Name, h.Stars, a.Street, a.Zip_Code, a.City
-        FROM Hotel h
-        JOIN Address a ON h.Address_Id = a.Address_Id
-        WHERE a.City = ? AND h.Stars >= ?;
+        SELECT Hotel.Hotel_id, Hotel.Name, Hotel.Stars, Address.Street, Address.Zip_Code, Address.City
+        FROM Hotel
+        JOIN Address ON Hotel.Address_Id = Address.Address_Id
+        WHERE Address.City = ? AND Hotel.Stars >= ?;
         """
         params = (city, stars)
         result = self.fetchall(sql, params)
@@ -63,23 +63,47 @@ class HotelDataAccess(BaseDataAccess):
     def read_available_hotels_combined(self, city: str, max_guests: int) -> list[Hotel]:
         sql = """
         SELECT DISTINCT
-        Hotel.name, Address.street, Address.city, Address.zip_code, Hotel.stars, Room_Type.description, Room_Type.max_guests, Room.price_per_night
+        Hotel.Hotel_id, Hotel.name, Address.street, Address.city, Address.zip_code, Hotel.stars, Room_Type.description, Room_Type.max_guests, Room.price_per_night
         FROM Hotel 
         JOIN Room On Hotel.hotel_id = Room.hotel_id
         JOIN Room_Type ON Room.type_id = Room_Type.type_id
         JOIN Address ON Hotel.address_id = Address.address_id
-        WHERE address.city = ? AND RoomType.maxGuests = ?;
+        WHERE Address.city = ? AND Room_Type.max_guests >= ?;
         """
         params = tuple([city, max_guests])
         result = self.fetchall(sql, params)
         
         hotels = []
         for row in result:
-            hotel_id, name, stars, street, zip_code, city = row
-            address = Address(None, street, zip_code, city)
+            hotel_id, name, street, city, zip_code, stars, description, max_guests, price = row
+            address = Address(None, street, city, zip_code)
             hotel = Hotel(hotel_id, name, stars, address)
             hotels.append(hotel)
         return hotels
+
+    def get_available_hotels(self, city: str, check_in: str, check_out:str, max_guests: int) -> list[Hotel]:
+        sql = """
+        SELECT DISTINCT
+        Hotel.Hotel_id, Hotel.name, Address.street, Address.city, Address.zip_code, Hotel.stars, Room_Type.description, Room_Type.max_guests, Room.price_per_night
+        FROM Hotel 
+        JOIN Room On Hotel.hotel_id = Room.hotel_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        JOIN Address ON Hotel.address_id = Address.address_id
+        WHERE Address.city = ? AND Room_Type.max_guests >= ?;
+        """
+        params = tuple([city, max_guests])
+        result = self.fetchall(sql, params)
+        
+        hotels = []
+        for row in result:
+            hotel_id, name, street, city, zip_code, stars, description, max_guests, price = row
+            address = Address(None, street, city, zip_code)
+            hotel = Hotel(hotel_id, name, stars, address)
+            hotels.append(hotel)
+        return hotels
+
+
+
 
     def update_hotel_name(self, name: str) -> model.Hotel:
         if hotel is None:

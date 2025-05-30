@@ -44,3 +44,6 @@ class Address:
     
     def get_address_details(self):
         return f"Address Id: {address_id}, Street: {street}, City: {city}, Zip Code: {zip_code}"
+
+    def delete_guest(self, guest_id) -> model.Guest:
+        return self.__guest_dal.delete_guest(guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount)

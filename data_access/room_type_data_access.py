@@ -5,7 +5,7 @@ from data_access.base_data_access import BaseDataAccess
 
 class RoomtypeDataAccess(BaseDataAccess):
     
-    def read_roomtype_by_id(self, type_id: int) -> model.Roomtype:
+    #def read_roomtype_by_id(self, type_id: int) -> model.Roomtype:
         sql = """
         SELECT type_id, description, max_guests  FROM Room WHERE type_id = ?;
         """
@@ -15,6 +15,18 @@ class RoomtypeDataAccess(BaseDataAccess):
             type_id, description, max_guests = result
             return model.Roomtype(type_id, description, max_guests)
         return None
+
+
+    def read_roomtypes_by_hotel(self, hotel_id: int) -> list[model.Roomtype]:
+        sql = """
+        SELECT DISTINCT Room_Type.type_id, Room_Type.description, Room_Type.max_guests
+        FROM Room
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        WHERE Room.hotel_id = ?;
+        """
+        rows = self.fetchall(sql, (hotel_id,))
+        return [model.Roomtype(type_id, description, max_guests) for type_id, description, max_guests in rows]
+
 
 
    # def update_roomtype(self, type_id: int) -> model.Roomtype:
