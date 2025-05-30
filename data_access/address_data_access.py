@@ -15,7 +15,6 @@ class AddressDataAccess(BaseDataAccess):
         if zip_code is None:
             raise ValueError ("Zip Code is required")
             
-        
         sql = """
         INSERT INTO Address (Street, City, Zip_code) VALUES (?, ?, ?)
         """
@@ -26,6 +25,7 @@ class AddressDataAccess(BaseDataAccess):
         return model.Address(last_row_id, street, city, zip_code)
 
     def read_address_by_city(self, city: str, hotel: model.Hotel) -> model.Address:
+        
         sql = """
         SELECT Address_Id, Street, City, Zip_code FROM Hotel WHERE city = ?
         """
