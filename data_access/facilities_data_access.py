@@ -39,4 +39,22 @@ class FacilitiesDataAccess(BaseDataAccess):
         """
         params = tuple([facility_id])
         last_row_id, row_count = self.execute(sql, params)
-    
+
+    def read_facilities_by_roomtype_id(self, type_id: int) -> model.Facility
+        sql = """
+        SELECT Facility.name FROM Facility JOIN RoomtypeFacility ON Facility.facility_id = RoomtypeFacility.facility_id
+        WHERE RoomtypeFacility.roomtype_id = ?;
+        """
+        params = (type_id,)
+        results = self.fetchall(sql, params)
+        facilities = []
+        for row in results:
+        facility_name = row[0]
+        facilities.append(facility_name)
+        return facilities
+
+    def insert_facility(self, name: str) -> model.Facility
+        sql = """
+        "INSERT INTO Facilities (name) VALUES (?)"
+        """
+        return self.execute(sql, (name,))[0]

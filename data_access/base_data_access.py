@@ -6,7 +6,7 @@ import sqlite3
 class BaseDataAccess:
     def __init__(self, db_connection_str: str = None):
         if db_connection_str is None:
-            self.__db_connection_str = os.environ.get("DB_FILE")
+            self.__db_connection_str = os.environ["DB_FILE"]
             if self.__db_connection_str is None:
                 raise Exception("DB_FILE environment variable and parameter path is not set.")
         else:

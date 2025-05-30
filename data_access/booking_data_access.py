@@ -61,3 +61,27 @@ class BookingDataAccess(BaseDataAccess):
         """
         params = tuple([booking_id])
         last_row_id, row_count = self.execute(sql, params)
+
+    def read_all_bookings(self, booking_id) -> model.Booking:
+        sql = """
+        SELECT booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount
+        FROM Booking;
+        """
+        rows = self.fetchall(sql)
+        return [model.Booking(*row) for row in rows]
+
+#########################################################
+def get_room_by_id(self, room_id: int) -> model.Room | None:
+    if room_id is None:
+        raise ValueError("Room ID is required.")
+
+    sql = """
+    SELECT room_id, hotel_id, room_number, type_id, price_per_night
+    FROM Room
+    WHERE room_id = ?;
+    """
+    result = self.fetchone(sql, (room_id,))
+    if result:
+        room_id, hotel_id, room_number, type_id, price_per_night = result
+        return model.Room(room_id, hotel_id, room_number, type_id, price_per_night)
+    return None
