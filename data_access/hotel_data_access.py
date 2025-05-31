@@ -1,34 +1,34 @@
 from __future__ import annotations
-
-from model.hotel import Hotel
-from model.address import Address
-from model.room import Room
-from model.room_type import RoomType
-from model.booking import Booking
-
+import hotel.model from Hotel
+import address.model from Address
 from data_access.base_data_access import BaseDataAccess
 
 class HotelDataAccess(BaseDataAccess):
-    
     def __init__(self, db_path: str = None):
         super().__init__(db_path)
 
-    # User Story 3.1: Hotel hinzufügen
-    def create_new_hotel(self, name: str, stars: int, address_id: int = None) -> Hotel:
-        sql = """
-        INSERT INTO Hotel (Name, Stars, Address_Id) VALUES (?, ?, ?)
-        """
-        params = (name, stars, address_id)
-        last_row_id, row_count = self.execute(sql, params)
-        return Hotel(last_row_id, name, stars)
+    def create_new_hotel(self, name: str, stars: int, address: Address = None) -> Hotel:
+        if name is None:
+            raise ValueError("Hotel name is required")
+        if stars is None:
+            raise ValueError("Hotel stars is required")
 
-    # Basis Read-Methoden
-    def read_hotel_by_id(self, hotel_id: int) -> Hotel | None:
         sql = """
-        SELECT h.Hotel_id, h.Name, h.Stars, a.Address_Id, a.Street, a.City, a.Zip_Code
-        FROM Hotel h
-        LEFT JOIN Address a ON h.Address_Id = a.Address_Id
-        WHERE h.Hotel_id = ?
+        INSERT INTO Hotel (name, stars, address_id) VALUES (?, ?, ?)
+        """
+        params = (name, stars, address.address_id if address else None)
+        last_row_id, row_count = self.execute(sql, params)
+        return Hotel(last_row_id, name, stars, address)
+
+    def read_hotel_by_id(self, hotel_id: int) -> Hotel | None:
+        if hotel_id is None:
+            raise ValueError("Hotel ID is required")
+
+        sql = """
+        SELECT Hotel.hotel_id, Hotel.name, Hotel.stars, Address.address_id, Address.street, Address.city, Address.zip_code
+        FROM Hotel
+        LEFT JOIN Address ON Hotel.address_id = Address.address_id
+        WHERE Hotel.hotel_id = ?
         """
         params = tuple([hotel_id])
         result = self.fetchone(sql, params)
@@ -38,241 +38,144 @@ class HotelDataAccess(BaseDataAccess):
             if address_id:
                 address = Address(address_id, street, city, zip_code)
             return Hotel(hotel_id, name, stars, address)
-        return None
+        else:
+            return None
 
-    def read_hotel_by_name(self, name: str) -> Hotel | None:
-        sql = """
-        SELECT h.Hotel_id, h.Name, h.Stars, a.Address_Id, a.Street, a.City, a.Zip_Code
-        FROM Hotel h
-        LEFT JOIN Address a ON h.Address_Id = a.Address_Id
-        WHERE h.Name = ?
-        """
-        params = tuple([name])
-        result = self.fetchone(sql, params)
-        if result:
-            hotel_id, name, stars, address_id, street, city, zip_code = result
-            address = None
-            if address_id:
-                address = Address(address_id, street, city, zip_code)
-            return Hotel(hotel_id, name, stars, address)
-        return None
-
-    # User Story 1.1: Hotels nach Stadt durchsuchen
     def read_hotels_by_city(self, city: str) -> list[Hotel]:
+        if city is None:
+            raise ValueError("City cannot be None")
+
         sql = """
-        SELECT h.Hotel_id, h.Name, h.Stars, a.Address_Id, a.Street, a.City, a.Zip_Code
-        FROM Hotel h
-        JOIN Address a ON h.Address_Id = a.Address_Id
-        WHERE a.City = ?
-        ORDER BY h.Stars DESC, h.Name
+        SELECT Hotel.hotel_id, Hotel.name, Hotel.stars, Address.address_id, Address.street, Address.city, Address.zip_code
+        FROM Hotel
+        JOIN Address ON Hotel.address_id = Address.address_id
+        WHERE Address.city = ?
+        ORDER BY Hotel.stars DESC, Hotel.name
         """
         params = tuple([city])
-        result = self.fetchall(sql, params)
+        hotels = self.fetchall(sql, params)
+        
+        return [Hotel(hotel_id, name, stars, Address(address_id, street, city, zip_code))
+            for hotel_id, name, stars, address_id, street, city, zip_code in hotels]
 
-        hotels = []
-        for row in result:
-            hotel_id, name, stars, address_id, street, city, zip_code = row
-            address = Address(address_id, street, city, zip_code)
-            hotel = Hotel(hotel_id, name, stars, address)
-            hotels.append(hotel)
-        return hotels
-    
-    # User Story 1.2: Hotels nach Sternen filtern
     def read_hotels_by_stars(self, min_stars: int) -> list[Hotel]:
+        if min_stars is None:
+            raise ValueError("Minimum stars is required")
+
         sql = """
-        SELECT h.Hotel_id, h.Name, h.Stars, a.Address_Id, a.Street, a.City, a.Zip_Code
-        FROM Hotel h
-        LEFT JOIN Address a ON h.Address_Id = a.Address_Id
-        WHERE h.Stars >= ?
-        ORDER BY h.Stars DESC, h.Name
+        SELECT Hotel.hotel_id, Hotel.name, Hotel.stars, Address.address_id, Address.street, Address.city, Address.zip_code
+        FROM Hotel
+        LEFT JOIN Address ON Hotel.address_id = Address.address_id
+        WHERE Hotel.stars >= ?
+        ORDER BY Hotel.stars DESC, Hotel.name
         """
         params = tuple([min_stars])
-        result = self.fetchall(sql, params)
+        hotels = self.fetchall(sql, params)
+        
+        return [Hotel(hotel_id, name, stars, 
+                Address(address_id, street, city, zip_code) if address_id else None)
+            for hotel_id, name, stars, address_id, street, city, zip_code in hotels]
 
-        hotels = []
-        for row in result:
-            hotel_id, name, stars, address_id, street, city, zip_code = row
-            address = None
-            if address_id:
-                address = Address(address_id, street, city, zip_code)
-            hotel = Hotel(hotel_id, name, stars, address)
-            hotels.append(hotel)
-        return hotels
-
-    # User Story 1.5: Kombinierte Filter (Stadt + Sterne)
     def read_hotels_by_city_and_stars(self, city: str, min_stars: int) -> list[Hotel]:
+        if city is None:
+            raise ValueError("City cannot be None")
+        if min_stars is None:
+            raise ValueError("Minimum stars is required")
+
         sql = """
-        SELECT h.Hotel_id, h.Name, h.Stars, a.Address_Id, a.Street, a.City, a.Zip_Code
-        FROM Hotel h
-        JOIN Address a ON h.Address_Id = a.Address_Id
-        WHERE a.City = ? AND h.Stars >= ?
-        ORDER BY h.Stars DESC, h.Name
+        SELECT Hotel.hotel_id, Hotel.name, Hotel.stars, Address.address_id, Address.street, Address.city, Address.zip_code
+        FROM Hotel
+        JOIN Address ON Hotel.address_id = Address.address_id
+        WHERE Address.city = ? AND Hotel.stars >= ?
+        ORDER BY Hotel.stars DESC, Hotel.name
         """
-        params = (city, min_stars)
-        result = self.fetchall(sql, params)
+        params = tuple([city, min_stars])
+        hotels = self.fetchall(sql, params)
+        
+        return [Hotel(hotel_id, name, stars, 
+                Address(address_id, street, city, zip_code))
+            for hotel_id, name, stars, address_id, street, city, zip_code in hotels]
 
-        hotels = []
-        for row in result:
-            hotel_id, name, stars, address_id, street, city, zip_code = row
-            address = Address(address_id, street, city, zip_code)
-            hotel = Hotel(hotel_id, name, stars, address)
-            hotels.append(hotel)
-        return hotels
+    def read_hotels_by_guest_capacity(self, city: str, max_guests: int) -> list[Hotel]:
+        if city is None:
+            raise ValueError("City cannot be None")
+        if max_guests is None:
+            raise ValueError("Maximum guests is required")
 
-    # User Story 1.3: Hotels mit passender Gästezahl
-    def read_hotels_by_city_and_guests(self, city: str, max_guests: int) -> list[Hotel]:
         sql = """
-        SELECT DISTINCT h.Hotel_id, h.Name, h.Stars, a.Address_Id, a.Street, a.City, a.Zip_Code
-        FROM Hotel h 
-        JOIN Room r ON h.Hotel_id = r.Hotel_id
-        JOIN Room_Type rt ON r.Type_id = rt.Type_id
-        JOIN Address a ON h.Address_id = a.Address_id
-        WHERE a.City = ? AND rt.Max_guests >= ?
-        ORDER BY h.Stars DESC, h.Name
+        SELECT DISTINCT Hotel.hotel_id, Hotel.name, Hotel.stars, Address.address_id, Address.street, Address.city, Address.zip_code
+        FROM Hotel
+        JOIN Address ON Hotel.address_id = Address.address_id
+        JOIN Room ON Hotel.hotel_id = Room.hotel_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        WHERE Address.city = ? AND Room_Type.max_guests >= ?
+        ORDER BY Hotel.stars DESC, Hotel.name
         """
         params = tuple([city, max_guests])
-        result = self.fetchall(sql, params)
+        hotels = self.fetchall(sql, params)
         
-        hotels = []
-        for row in result:
-            hotel_id, name, stars, address_id, street, city, zip_code = row
-            address = Address(address_id, street, city, zip_code)
-            hotel = Hotel(hotel_id, name, stars, address)
-            hotels.append(hotel)
-        return hotels
+        return [Hotel(hotel_id, name, stars, 
+                model.Address(address_id, street, city, zip_code))
+            for hotel_id, name, stars, address_id, street, city, zip_code in hotels]
 
-    # User Story 1.4: Hotels mit Verfügbarkeit
-    def read_available_hotels(self, city: str, check_in: str, check_out: str) -> list[Hotel]:
+    def read_available_hotels(self, city: str, check_in_date: str, check_out_date: str) -> list[Hotel]:
+        if city is None:
+            raise ValueError("City cannot be None")
+        if check_in_date is None:
+            raise ValueError("Check-in date is required")
+        if check_out_date is None:
+            raise ValueError("Check-out date is required")
+
         sql = """
-        SELECT DISTINCT h.Hotel_id, h.Name, h.Stars, a.Address_Id, a.Street, a.City, a.Zip_Code
-        FROM Hotel h 
-        JOIN Room r ON h.Hotel_id = r.Hotel_id
-        JOIN Address a ON h.Address_id = a.Address_id    
-        WHERE a.City = ? AND r.Room_id NOT IN (
-            SELECT b.Room_id FROM Booking b
-            WHERE b.Is_cancelled = 0 AND (
-                (b.Check_in_date <= ? AND b.Check_out_date > ?) OR
-                (b.Check_in_date < ? AND b.Check_out_date >= ?)
+        SELECT DISTINCT Hotel.hotel_id, Hotel.name, Hotel.stars, Address.address_id, Address.street, Address.city, Address.zip_code
+        FROM Hotel
+        JOIN Address ON Hotel.address_id = Address.address_id
+        JOIN Room ON Hotel.hotel_id = Room.hotel_id
+        WHERE Address.city = ? AND Room.room_id NOT IN (
+            SELECT Booking.room_id FROM Booking
+            WHERE Booking.is_cancelled = 0 AND (
+                (Booking.check_in_date <= ? AND Booking.check_out_date > ?) OR
+                (Booking.check_in_date < ? AND Booking.check_out_date >= ?)
             )
         )
-        ORDER BY h.Stars DESC, h.Name
+        ORDER BY Hotel.stars DESC, Hotel.name
         """
-        params = tuple([city, check_in, check_in, check_out, check_out])
-        result = self.fetchall(sql, params)
+        params = tuple([city, check_in_date, check_in_date, check_out_date, check_out_date])
+        hotels = self.fetchall(sql, params)
         
-        hotels = []
-        for row in result:
-            hotel_id, name, stars, address_id, street, city, zip_code = row
-            address = Address(address_id, street, city, zip_code)
-            hotel = Hotel(hotel_id, name, stars, address)
-            hotels.append(hotel)
-        return hotels
+        return [Hotel(hotel_id, name, stars, 
+                model.Address(address_id, street, city, zip_code))
+            for hotel_id, name, stars, address_id, street, city, zip_code in hotels]
 
-    # User Story 1.5: Kombinierte Suche (alle Filter)
-    def search_hotels_combined(self, city: str = None, min_stars: int = None, 
-                              max_guests: int = None, check_in: str = None, 
-                              check_out: str = None) -> list[Hotel]:
-        # Basis SQL
-        sql = """
-        SELECT DISTINCT h.Hotel_id, h.Name, h.Stars, a.Address_Id, a.Street, a.City, a.Zip_Code
-        FROM Hotel h 
-        LEFT JOIN Address a ON h.Address_id = a.Address_id
-        """
-        
-        # Conditions und Joins hinzufügen
-        conditions = []
-        joins = []
-        params = []
-        
-        if city:
-            conditions.append("a.City = ?")
-            params.append(city)
-        
-        if min_stars:
-            conditions.append("h.Stars >= ?")
-            params.append(min_stars)
-        
-        if max_guests:
-            joins.append("JOIN Room r ON h.Hotel_id = r.Hotel_id")
-            joins.append("JOIN Room_Type rt ON r.Type_id = rt.Type_id")
-            conditions.append("rt.Max_guests >= ?")
-            params.append(max_guests)
-        
-        if check_in and check_out:
-            if "JOIN Room r" not in " ".join(joins):
-                joins.append("JOIN Room r ON h.Hotel_id = r.Hotel_id")
-            conditions.append("""r.Room_id NOT IN (
-                SELECT b.Room_id FROM Booking b
-                WHERE b.Is_cancelled = 0 AND (
-                    (b.Check_in_date <= ? AND b.Check_out_date > ?) OR
-                    (b.Check_in_date < ? AND b.Check_out_date >= ?)
-                )
-            )""")
-            params.extend([check_in, check_in, check_out, check_out])
-        
-        # SQL zusammenbauen
-        if joins:
-            sql += " " + " ".join(joins)
-        if conditions:
-            sql += " WHERE " + " AND ".join(conditions)
-        sql += " ORDER BY h.Stars DESC, h.Name"
-        
-        result = self.fetchall(sql, tuple(params))
-        
-        hotels = []
-        for row in result:
-            hotel_id, name, stars, address_id, street, city, zip_code = row
-            address = None
-            if address_id:
-                address = Address(address_id, street, city, zip_code)
-            hotel = Hotel(hotel_id, name, stars, address)
-            hotels.append(hotel)
-        return hotels
-
-    # User Story 3.3: Hotel aktualisieren
-    def update_hotel(self, hotel_id: int, name: str = None, stars: int = None) -> bool:
-        updates = []
-        params = []
-        
-        if name:
-            updates.append("Name = ?")
-            params.append(name)
-        if stars:
-            updates.append("Stars = ?")
-            params.append(stars)
-        
-        if not updates:
-            return False
-            
-        params.append(hotel_id)
-        sql = f"UPDATE Hotel SET {', '.join(updates)} WHERE Hotel_id = ?"
-        
-        last_row_id, row_count = self.execute(sql, tuple(params))
-        return row_count > 0
-
-    # User Story 3.2: Hotel löschen
-    def delete_hotel(self, hotel_id: int) -> bool:
-        sql = "DELETE FROM Hotel WHERE Hotel_id = ?"
-        params = tuple([hotel_id])
-        last_row_id, row_count = self.execute(sql, params)
-        return row_count > 0
-
-    # User Story 8: Alle Hotels für Admin
     def read_all_hotels(self) -> list[Hotel]:
         sql = """
-        SELECT h.Hotel_id, h.Name, h.Stars, a.Address_Id, a.Street, a.City, a.Zip_Code
-        FROM Hotel h
-        LEFT JOIN Address a ON h.Address_Id = a.Address_Id
-        ORDER BY h.Name
+        SELECT Hotel.hotel_id, Hotel.name, Hotel.stars, Address.address_id, Address.street, Address.city, Address.zip_code
+        FROM Hotel
+        LEFT JOIN Address a ON Hotel.address_id = Address.address_id
+        ORDER BY Hotel.name
         """
-        result = self.fetchall(sql, tuple())
+        hotels = self.fetchall(sql)
         
-        hotels = []
-        for row in result:
-            hotel_id, name, stars, address_id, street, city, zip_code = row
-            address = None
-            if address_id:
-                address = Address(address_id, street, city, zip_code)
-            hotel = Hotel(hotel_id, name, stars, address)
-            hotels.append(hotel)
-        return hotels
+        return [Hotel(hotel_id, name,stars, 
+                model.Address(address_id, street, city, zip_code) if address_id else None)
+            for hotel_id, name, stars, address_id, street, city, zip_code in hotels]
+
+    def update_hotel(self, hotel: Hotel) -> None:
+        if hotel is None:
+            raise ValueError("Hotel cannot be None")
+
+        sql = """
+        UPDATE Hotel SET name = ?, stars = ?, address_id = ? WHERE hotel_id = ?
+        """
+        params = tuple([hotel.name, hotel.stars, hotel.address.address_id if hotel.address else None, hotel.hotel_id])
+        last_row_id, row_count = self.execute(sql, params)
+
+    def delete_hotel(self, hotel: Hotel) -> None:
+        if hotel is None:
+            raise ValueError("Hotel cannot be None")
+
+        sql = """
+        DELETE FROM Hotel WHERE hotel_id = ?
+        """
+        params = tuple([hotel.hotel_id])
+        last_row_id, row_count = self.execute(sql, params)

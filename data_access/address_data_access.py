@@ -1,85 +1,81 @@
 from __future__ import annotations
-
-import model
+import address.model import Address
 from data_access.base_data_access import BaseDataAccess
 
 class AddressDataAccess(BaseDataAccess):
     def __init__(self, db_path: str = None):
         super().__init__(db_path)
-    
+
     def create_new_address(self, street: str, city: str, zip_code: str) -> Address:
-        if not street:
+        if street is None:
             raise ValueError("Street is required")
-        if not city:
+        if city is None:
             raise ValueError("City is required")
-        if not zip_code:
-            raise ValueError("Zip Code is required")
-            
+        if zip_code is None:
+            raise ValueError("Zip code is required")
+
         sql = """
-        INSERT INTO Address (Street, City, Zip_Code) VALUES (?, ?, ?)
+        INSERT INTO Address (street, city, zip_code) VALUES (?, ?, ?)
         """
         params = (street, city, zip_code)
         last_row_id, row_count = self.execute(sql, params)
         return Address(last_row_id, street, city, zip_code)
 
     def read_address_by_id(self, address_id: int) -> Address | None:
+        if address_id is None:
+            raise ValueError("Address ID is required")
+
         sql = """
-        SELECT Address_Id, Street, City, Zip_Code FROM Address WHERE Address_Id = ?
+        SELECT address_id, street, city, zip_code FROM Address WHERE address_id = ?
         """
         params = tuple([address_id])
         result = self.fetchone(sql, params)
         if result:
             address_id, street, city, zip_code = result
             return Address(address_id, street, city, zip_code)
-        return None
+        else:
+            return None
 
     def read_addresses_by_city(self, city: str) -> list[Address]:
+        if city is None:
+            raise ValueError("City is required")
+
         sql = """
-        SELECT Address_Id, Street, City, Zip_Code FROM Address WHERE City = ?
+        SELECT address_id, street, city, zip_code FROM Address WHERE city = ?
         """
         params = tuple([city])
-        result = self.fetchall(sql, params)
+        addresses = self.fetchall(sql, params)
         return [
-            Address(address_id, street, city, zip_code) 
-            for address_id, street, city, zip_code in result
+            Address(address_id, street, city, zip_code)
+            for address_id, street, city, zip_code in addresses
         ]
-
-    def update_address(self, address_id: int, street: str = None, 
-                      city: str = None, zip_code: str = None) -> bool:
-        updates = []
-        params = []
-        
-        if street:
-            updates.append("Street = ?")
-            params.append(street)
-        if city:
-            updates.append("City = ?")
-            params.append(city)
-        if zip_code:
-            updates.append("Zip_Code = ?")
-            params.append(zip_code)
-        
-        if not updates:
-            return False
-            
-        params.append(address_id)
-        sql = f"UPDATE Address SET {', '.join(updates)} WHERE Address_Id = ?"
-        
-        last_row_id, row_count = self.execute(sql, tuple(params))
-        return row_count > 0
-
-    def delete_address(self, address_id: int) -> bool:
-        sql = "DELETE FROM Address WHERE Address_Id = ?"
-        params = tuple([address_id])
-        last_row_id, row_count = self.execute(sql, params)
-        return row_count > 0
 
     def read_all_addresses(self) -> list[Address]:
         sql = """
-        SELECT Address_Id, Street, City, Zip_Code FROM Address ORDER BY City, Street
+        SELECT address_id, street, city, zip_code FROM Address ORDER BY city, street
         """
-        result = self.fetchall(sql, tuple())
+        addresses = self.fetchall(sql)
         return [
-            Address(address_id, street, city, zip_code) 
-            for address_id, street, city, zip_code in result
+            Address(address_id, street, city, zip_code)
+            for address_id, street, city, zip_code in addresses
         ]
+
+    def update_address(self, address: Address) -> None:
+        if address is None:
+            raise ValueError("Address cannot be None")
+
+        sql = """
+        UPDATE Address SET street = ?, city = ?, zip_code = ? WHERE address_id = ?
+        """
+        params = tuple([address.street, address.city, address.zip_code, address.address_id])
+        last_row_id, row_count = self.execute(sql, params)
+
+    def delete_address(self, address: Address) -> None:
+        if address is None:
+            raise ValueError("Address cannot be None")
+
+        sql = """
+        DELETE FROM Address WHERE address_id = ?
+        """
+        params = tuple([address.address_id])
+        last_row_id, row_count = self.execute(sql, params)

@@ -1,174 +1,249 @@
 from __future__ import annotations
-from datetime import datetime
+from datetime import date
 import model
 from model.booking import Booking
 from model.room import Room
 from model.guest import Guest
+from model.room_type import RoomType
 from data_access.base_data_access import BaseDataAccess
 
 class BookingDataAccess(BaseDataAccess):
     def __init__(self, db_path: str = None):
         super().__init__(db_path)
-    
-    # User Story 4.1: Buchung erstellen
-    def create_new_booking(self, guest_id: int, room_id: int, check_in_date: datetime, 
-                          check_out_date: datetime, total_amount: float) -> Booking:
-        if not guest_id:
-            raise ValueError("Guest ID is required")
-        if not room_id:
-            raise ValueError("Room ID is required")
-        if not check_in_date:
-            raise ValueError("Check in date is required")
-        if not check_out_date:
-            raise ValueError("Check out date is required")
-        if total_amount < 0:
-            raise ValueError("Total amount cannot be negative")
-    
-        sql = """
-        INSERT INTO Booking (Guest_id, Room_id, Check_in_date, Check_out_date, 
-                           Total_amount, Is_cancelled, Booking_date) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        """
-        params = (guest_id, room_id, check_in_date, check_out_date, 
-                 total_amount, False, datetime.now())
 
+    def create_new_booking(self, guest: model.Guest, room: model.Room, check_in_date: date, 
+                          check_out_date: date, total_amount: float) -> model.Booking:
+        if guest is None:
+            raise ValueError("Guest is required")
+        if room is None:
+            raise ValueError("Room is required")
+        if check_in_date is None:
+            raise ValueError("Check-in date is required")
+        if check_out_date is None:
+            raise ValueError("Check-out date is required")
+        if total_amount is None:
+            raise ValueError("Total amount is required")
+
+        sql = """
+        INSERT INTO Booking (guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount) 
+        VALUES (?, ?, ?, ?, ?, ?)
+        """
+        params = (guest.guest_id, room.room_id, check_in_date, check_out_date, False, total_amount)
         last_row_id, row_count = self.execute(sql, params)
-        
-        # Room-Objekt laden für vollständiges Booking
-        room = self._load_room_by_id(room_id)
-        return Booking(last_row_id, guest_id, room, check_in_date, 
-                      check_out_date, False, total_amount)
+        return model.Booking(last_row_id, guest, room, check_in_date, check_out_date, False, total_amount)
 
     def read_booking_by_id(self, booking_id: int) -> Booking | None:
+        if booking_id is None:
+            raise ValueError("Booking ID is required")
+
         sql = """
-        SELECT b.Booking_id, b.Guest_id, b.Room_id, b.Check_in_date, 
-               b.Check_out_date, b.Total_amount, b.Is_cancelled, b.Booking_date
-        FROM Booking b 
-        WHERE b.Booking_id = ?
+        SELECT Booking.booking_id, Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
+               Booking.is_cancelled, Booking.total_amount,
+               Guest.first_name AS "First Name", Guest.last_name AS "Last Name", Guest.email,
+               Room.room_number, Room.price_per_night,
+               Hotel.hotel_id, Hotel.name AS "Hotel Name", Hotel.stars,
+               Room_Type.type_id, Room_Type.description, Room_Type.max_guests,
+               Address.address_id, Address.street, Address.city, Address.zip_code
+        FROM Booking
+        JOIN Guest ON Booking.guest_id = Guest.guest_id
+        JOIN Room ON Booking.room_id = Room.room_id
+        JOIN Hotel ON Room.hotel_id = Hotel.hotel_id
+        JOIN Room_Type ON Room_Type.type_id = Room_Type.type_id
+        LEFT JOIN Address ON Guest.address_id = Address.address_id
+        WHERE Booking.booking_id = ?
         """
         params = tuple([booking_id])
         result = self.fetchone(sql, params)
         if result:
-            booking_id, guest_id, room_id, check_in, check_out, total_amount, is_cancelled, booking_date = result
-            room = self._load_room_by_id(room_id)
-            return Booking(booking_id, guest_id, room, check_in, check_out, is_cancelled, total_amount)
-        return None
+            (booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
+             first_name, last_name, email, room_number, price_per_night,
+             hotel_id, hotel_name, hotel_stars, type_id, type_description, max_guests,
+             address_id, street, city, zip_code) = result
+            
+            guest_address = None
+            if address_id:
+                guest_address = Address(address_id, street, city, zip_code)
+            
+            guest = model.Guest(guest_id, first_name, last_name, email, guest_address)
+            hotel = model.Hotel(hotel_id, hotel_name, hotel_stars)
+            room_type = model.RoomType(type_id, type_description, max_guests)
+            room = model.Room(room_id, hotel, room_number, room_type, price_per_night)
+            
+            return model.Booking(booking_id, guest, room, check_in_date, check_out_date, is_cancelled, total_amount)
+        else:
+            return None
 
-    # User Story 12: Buchungen nach Gast
-    def read_bookings_by_guest_id(self, guest_id: int) -> list[Booking]:
+    def read_bookings_by_guest(self, guest: Guest) -> list[Booking]:
+        if guest is None:
+            raise ValueError("Guest cannot be None")
+
         sql = """
-        SELECT b.Booking_id, b.Guest_id, b.Room_id, b.Check_in_date, 
-               b.Check_out_date, b.Total_amount, b.Is_cancelled, b.Booking_date
-        FROM Booking b 
-        WHERE b.Guest_id = ?
-        ORDER BY b.Check_in_date DESC
+        SELECT Booking.booking_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
+               Booking.is_cancelled, Booking.total_amount,
+               Room.room_number, Room.price_per_night,
+               Hotel.hotel_id, Hotel.name as "Hotel Name", Hotel.stars,
+               Room_Type.type_id, Room_Type.description, Room_Type.max_guests
+        FROM Booking
+        JOIN Room ON Booking.room_id = Room.room_id
+        JOIN Hotel ON Room.hotel_id = Hotel.hotel_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        WHERE Booking.guest_id = ?
+        ORDER BY Booking.check_in_date DESC
         """
-        params = tuple([guest_id])
-        result = self.fetchall(sql, params)
+        params = tuple([guest.guest_id])
+        bookings = self.fetchall(sql, params)
         
-        bookings = []
-        for row in result:
-            booking_id, guest_id, room_id, check_in, check_out, total_amount, is_cancelled, booking_date = row
-            room = self._load_room_by_id(room_id)
-            booking = Booking(booking_id, guest_id, room, check_in, check_out, is_cancelled, total_amount)
-            bookings.append(booking)
-        return bookings
+        return [Booking(booking_id, guest,model.Room(room_id,model.Hotel(hotel_id, hotel_name, hotel_stars),
+                room_number,model.RoomType(type_id, description, max_guests),price_per_night),
+                check_in_date, check_out_date, is_cancelled, total_amount)
+            for booking_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
+                room_number, price_per_night, hotel_id, hotel_name, hotel_stars,
+                type_id, description, max_guests in bookings]
 
-    # User Story 8: Alle Buchungen für Admin
+    def read_bookings_by_room(self, room: Room) -> list[Booking]:
+        if room is None:
+            raise ValueError("Room cannot be None")
+
+        sql = """
+        SELECT Booking.booking_id, Booking.guest_id, Booking.check_in_date, Booking.check_out_date, 
+               Booking.is_cancelled, Booking.total_amount,
+               Guest.first_name, Guest.last_name, Guest.email
+        FROM Booking
+        JOIN Guest ON Booking.guest_id = Guest.guest_id
+        WHERE Booking.room_id = ?
+        ORDER BY Booking.check_in_date DESC
+        """
+        params = tuple([room.room_id])
+        bookings = self.fetchall(sql, params)
+        
+        return [model.Booking(booking_id,model.Guest(guest_id, first_name, last_name, email),
+                room, check_in_date, check_out_date, is_cancelled,total_amount)
+            for booking_id, guest_id, check_in_date, check_out_date, is_cancelled, total_amount,
+                first_name, last_name, email in bookings]
+
+    def read_bookings_by_hotel(self, hotel: Hotel) -> list[Booking]:
+        if hotel is None:
+            raise ValueError("Hotel cannot be None")
+
+        sql = """
+        SELECT Booking.booking_id, Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
+               Booking.is_cancelled, Booking.total_amount,
+               Guest.first_name, Guest.last_name, Guest.email,
+               Room.room_number, Room.price_per_night,
+               Room_Type.type_id, Room_Type.description, Room_Type.max_guests
+        FROM Booking
+        JOIN Guest ON Booking.guest_id = Guest.guest_id
+        JOIN Room ON Booking.room_id = Room.room_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        WHERE Room.hotel_id = ?
+        ORDER BY Booking.check_in_date DESC
+        """
+        params = tuple([hotel.hotel_id])
+        bookings = self.fetchall(sql, params)
+        
+        return [model.Booking(booking_id, model.Guest(guest_id, first_name, last_name, email),
+                model.Room(room_id, hotel, room_number, model.RoomType(type_id, description, max_guests), price_per_night),
+                check_in_date, check_out_date, is_cancelled, total_amount)
+            for booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
+                first_name, last_name, email, room_number, price_per_night,
+                type_id, description, max_guests in bookings]
+
     def read_all_bookings(self) -> list[Booking]:
         sql = """
-        SELECT b.Booking_id, b.Guest_id, b.Room_id, b.Check_in_date, 
-               b.Check_out_date, b.Total_amount, b.Is_cancelled, b.Booking_date,
-               h.Name as hotel_name, g.First_name, g.Last_name
-        FROM Booking b
-        JOIN Room r ON b.Room_id = r.Room_id
-        JOIN Hotel h ON r.Hotel_id = h.Hotel_id
-        JOIN Guest g ON b.Guest_id = g.Guest_id
-        ORDER BY b.Booking_date DESC
+        SELECT Booking.booking_id, Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
+               Booking.is_cancelled, Booking.total_amount,
+               Guest.first_name, Guest.last_name, Guest.email,
+               Room.room_number, Room.price_per_night,
+               Hotel.hotel_id, Hotel.name AS "Hotel Name", Hotel.stars,
+               Room_Type.type_id, Room_Type.description, Room_Type.max_guests
+        FROM Booking
+        JOIN Guest ON Booking.guest_id = Guest.guest_id
+        JOIN Room ON Booking.room_id = Room.room_id
+        JOIN Hotel ON Room.hotel_id = Hotel.hotel_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        ORDER BY Booking.booking_id DESC
         """
-        result = self.fetchall(sql, tuple())
+        bookings = self.fetchall(sql)
         
-        bookings = []
-        for row in result:
-            booking_id, guest_id, room_id, check_in, check_out, total_amount, is_cancelled, booking_date, hotel_name, first_name, last_name = row
-            room = self._load_room_by_id(room_id)
-            booking = Booking(booking_id, guest_id, room, check_in, check_out, is_cancelled, total_amount)
-            bookings.append(booking)
-        return bookings
+        return [model.Booking(booking_id, model.Guest(guest_id, first_name, last_name, email),
+                model.Room(room_id,model.Hotel(hotel_id, hotel_name, hotel_stars),
+                    room_number, model.RoomType(type_id, description, max_guests), price_per_night),
+                check_in_date, check_out_date, is_cancelled,total_amount)
+            for booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
+                first_name, last_name, email, room_number, price_per_night,
+                hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in bookings]
 
-    # User Story 1.4: Verfügbarkeit prüfen
-    def read_conflicting_bookings(self, room_id: int, check_in: datetime, check_out: datetime) -> list[Booking]:
+    def read_active_bookings(self) -> list[Booking]:
         sql = """
-        SELECT b.Booking_id, b.Guest_id, b.Room_id, b.Check_in_date, 
-               b.Check_out_date, b.Total_amount, b.Is_cancelled, b.Booking_date
-        FROM Booking b 
-        WHERE b.Room_id = ? AND b.Is_cancelled = 0 AND (
-            (b.Check_in_date <= ? AND b.Check_out_date > ?) OR
-            (b.Check_in_date < ? AND b.Check_out_date >= ?)
-        )
+        SELECT Booking.booking_id, Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
+               Booking.is_cancelled, Booking.total_amount,
+               Guest.first_name, Guest.last_name, Guest.email,
+               Room.room_number, Room.price_per_night,
+               Hotel.hotel_id, Hotel.name AS "Hotel Name", Hotel.stars,
+               Room_Type.type_id, Room_Type.description, Room_Type.max_guests
+        FROM Booking
+        JOIN Guest ON Booking.guest_id = Guest.guest_id
+        JOIN Room ON Booking.room_id = Room.room_id
+        JOIN Hotel ON Room.hotel_id = Hotel.hotel_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        WHERE Booking.is_cancelled = 0
+        ORDER BY Booking.check_in_date DESC
         """
-        params = (room_id, check_in, check_in, check_out, check_out)
-        result = self.fetchall(sql, params)
+        bookings = self.fetchall(sql)
         
-        bookings = []
-        for row in result:
-            booking_id, guest_id, room_id, check_in_db, check_out_db, total_amount, is_cancelled, booking_date = row
-            room = self._load_room_by_id(room_id)
-            booking = Booking(booking_id, guest_id, room, check_in_db, check_out_db, is_cancelled, total_amount)
-            bookings.append(booking)
-        return bookings
+        return [model.Booking(booking_id, model.Guest(guest_id, first_name, last_name, email),
+                model.Room(room_id, model.Hotel(hotel_id, hotel_name, hotel_stars),
+                    room_number, model.RoomType(type_id, description, max_guests), price_per_night),
+                check_in_date, check_out_date, is_cancelled, total_amount)
+            for booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
+                first_name, last_name, email, room_number, price_per_night,
+                hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in bookings]
 
-    # User Story 6: Buchung stornieren
-    def update_booking_status(self, booking_id: int, is_cancelled: bool) -> bool:
+    def read_cancelled_bookings(self) -> list[Booking]:
         sql = """
-        UPDATE Booking SET Is_cancelled = ? WHERE Booking_id = ?
+        SELECT Booking.booking_id, Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
+               Booking.is_cancelled, Booking.total_amount,
+               Guest.first_name, Guest.last_name, Guest.email,
+               Room.room_number, Room.price_per_night,
+               Hotel.hotel_id, Hotel.name AS "Hotel Name", Hotel.stars,
+               Room_Type.type_id, Room_Type.description, Room_Type.max_guests
+        FROM Booking
+        JOIN Guest ON Booking.guest_id = Guest.guest_id
+        JOIN Room ON Booking.room_id = Room.room_id
+        JOIN Hotel ON Room.hotel_id = Hotel.hotel_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        WHERE Booking.is_cancelled = 1
+        ORDER BY Booking.check_in_date DESC
         """
-        params = (is_cancelled, booking_id)
+        bookings = self.fetchall(sql)
+        
+        return [model.Booking (booking_id, model.Guest(guest_id, first_name, last_name, email),
+                model.Room(room_id, model.Hotel(hotel_id, hotel_name, hotel_stars), room_number,
+                    model.RoomType(type_id, description, max_guests), price_per_night),
+                check_in_date, check_out_date, is_cancelled, total_amount)
+            for booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
+                first_name, last_name, email, room_number, price_per_night,
+                hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in bookings]
+
+    def update_booking(self, booking: Booking) -> None:
+        if booking is None:
+            raise ValueError("Booking cannot be None")
+
+        sql = """
+        UPDATE Booking SET guest_id = ?, room_id = ?, check_in_date = ?, check_out_date = ?, 
+                          is_cancelled = ?, total_amount = ? 
+        WHERE booking_id = ?
+        """
+        params = tuple([booking.guest.guest_id, booking.room.room_id, booking.check_in_date, booking.check_out_date,
+            booking.is_cancelled, booking.total_amount, booking.booking_id])
         last_row_id, row_count = self.execute(sql, params)
-        return row_count > 0
 
-    # User Story 11: Buchung aktualisieren
-    def update_booking(self, booking_id: int, check_in_date: datetime = None, 
-                      check_out_date: datetime = None, total_amount: float = None) -> bool:
-        updates = []
-        params = []
-        
-        if check_in_date:
-            updates.append("Check_in_date = ?")
-            params.append(check_in_date)
-        if check_out_date:
-            updates.append("Check_out_date = ?")
-            params.append(check_out_date)
-        if total_amount is not None:
-            updates.append("Total_amount = ?")
-            params.append(total_amount)
-        
-        if not updates:
-            return False
-            
-        params.append(booking_id)
-        sql = f"UPDATE Booking SET {', '.join(updates)} WHERE Booking_id = ?"
-        
-        last_row_id, row_count = self.execute(sql, tuple(params))
-        return row_count > 0
+    def delete_booking(self, booking: Booking) -> None:
+        if booking is None:
+            raise ValueError("Booking cannot be None")
 
-    def delete_booking(self, booking_id: int) -> bool:
-        sql = "DELETE FROM Booking WHERE Booking_id = ?"
-        params = tuple([booking_id])
-        last_row_id, row_count = self.execute(sql, params)
-        return row_count > 0
-
-    # Hilfsmethoden
-    def _load_room_by_id(self, room_id: int) -> Room | None:
-        """Lädt Room-Objekt für Booking"""
         sql = """
-        SELECT r.Room_id, r.Hotel_id, r.Room_number, r.Type_id, r.Price_per_night
-        FROM Room r
-        WHERE r.Room_id = ?
+        DELETE FROM Booking WHERE booking_id = ?
         """
-        result = self.fetchone(sql, (room_id,))
-        if result:
-            room_id, hotel_id, room_number, type_id, price_per_night = result
-            # TODO: Vollständiges Room-Objekt mit RoomType laden
-            return Room(room_id, hotel_id, room_number, None, price_per_night)
-        return None
+        params = tuple([booking.booking_id])
+        last_row_id, row_count = self.execute(sql, params)
