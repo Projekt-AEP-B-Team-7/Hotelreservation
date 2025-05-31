@@ -138,6 +138,41 @@ class InvoiceDataAccess(BaseDataAccess):
                 first_name, last_name, email, room_number, price_per_night,
                 hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in invoices]
 
+    def read_invoices_by_date_range(self, start_date: date, end_date: date) -> list[model.Invoice]:
+        if start_date is None:
+            raise ValueError("Start date is required")
+        if end_date is None:
+            raise ValueError("End date is required")
+
+        sql = """
+        SELECT Invoice.invoice_id, Invoice.booking_id, Invoice.issue_date, Invoice.total_amount,
+               Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
+               Booking.is_cancelled, Booking.total_amount AS "Booking Amount",
+               Guest.first_name, Guest.last_name, Guest.email,
+               Room.room_number, Room.price_per_night,
+               Hotel.hotel_id, Hotel.name AS "Hotel Name", Hotel.stars,
+               Room_Type.type_id, Room_Type.description, Room_Type.max_guests
+        FROM Invoice
+        JOIN Booking ON Invoice.booking_id = Booking.booking_id
+        JOIN Guest ON Booking.guest_id = Guest.guest_id
+        JOIN Room ON Booking.room_id = Room.room_id
+        JOIN Hotel ON Room.hotel_id = Hotel.hotel_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        WHERE Invoice.issue_date >= ? AND Invoice.issue_date <= ?
+        ORDER BY Invoice.issue_date DESC
+        """
+        params = tuple([start_date, end_date])
+        invoices = self.fetchall(sql, params)
+        
+        return [model.Invoice(invoice_id, model.Booking(booking_id, model.Guest(guest_id, first_name, last_name, email),
+                    model.Room(room_id, model.Hotel(hotel_id, hotel_name, hotel_stars), room_number,
+                        model.RoomType(type_id, description, max_guests), price_per_night),
+                    check_in_date, check_out_date, is_cancelled, booking_amount), issue_date, total_amount)
+            for invoice_id, booking_id, issue_date, total_amount,
+                guest_id, room_id, check_in_date, check_out_date, is_cancelled, booking_amount,
+                first_name, last_name, email, room_number, price_per_night,
+                hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in invoices]
+
     def update_invoice(self, invoice: model.Invoice) -> None:
         if invoice is None:
             raise ValueError("Invoice cannot be None")
