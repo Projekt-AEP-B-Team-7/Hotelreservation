@@ -59,3 +59,20 @@ class InvoiceDataAccess(BaseDataAccess):
             return model.Invoice(invoice_id, booking, issue_date, total_amount)
         else:
             return None
+            
+    def read_invoice_by_booking(self, booking: model.Booking) -> model.Invoice | None:
+        if booking is None:
+            raise ValueError("Booking cannot be None")
+
+        sql = """
+        SELECT invoice_id, booking_id, issue_date, total_amount
+        FROM Invoice 
+        WHERE booking_id = ?
+        """
+        params = tuple([booking.booking_id])
+        result = self.fetchone(sql, params)
+        if result:
+            invoice_id, booking_id, issue_date, total_amount = result
+            return model.Invoice(invoice_id, booking, issue_date, total_amount)
+        else:
+            return None
