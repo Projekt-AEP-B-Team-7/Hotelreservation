@@ -59,7 +59,7 @@ class InvoiceDataAccess(BaseDataAccess):
             return model.Invoice(invoice_id, booking, issue_date, total_amount)
         else:
             return None
-            
+
     def read_invoice_by_booking(self, booking: model.Booking) -> model.Invoice | None:
         if booking is None:
             raise ValueError("Booking cannot be None")
@@ -76,3 +76,64 @@ class InvoiceDataAccess(BaseDataAccess):
             return model.Invoice(invoice_id, booking, issue_date, total_amount)
         else:
             return None
+
+    def read_invoices_by_guest(self, guest: model.Guest) -> list[model.Invoice]:
+        if guest is None:
+            raise ValueError("Guest cannot be None")
+
+        sql = """
+        SELECT Invoice.invoice_id, Invoice.booking_id, Invoice.issue_date, Invoice.total_amount,
+               Booking.room_id, Booking.check_in_date, Booking.check_out_date, Booking.is_cancelled, Booking.total_amount AS "Booking Amount",
+               Room.room_number, Room.price_per_night,
+               Hotel.hotel_id, Hotel.name AS "Hotel Name", Hotel.stars,
+               Room_Type.type_id, Room_Type.description, Room_Type.max_guests
+        FROM Invoice
+        JOIN Booking ON Invoice.booking_id = Booking.booking_id
+        JOIN Room ON Booking.room_id = Room.room_id
+        JOIN Hotel ON Room.hotel_id = Hotel.hotel_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        WHERE Booking.guest_id = ?
+        ORDER BY Invoice.issue_date DESC
+        """
+        params = tuple([guest.guest_id])
+        invoices = self.fetchall(sql, params)
+        
+        return [model.Invoice(invoice_id, model.Booking(booking_id, guest,
+                    model.Room(room_id, model.Hotel(hotel_id, hotel_name, hotel_stars),
+                        room_number, model.RoomType(type_id, description, max_guests),
+                        price_per_night),
+                    check_in_date, check_out_date, is_cancelled, booking_amount),
+                issue_date,total_amount)
+            for invoice_id, booking_id, issue_date, total_amount,
+                room_id, check_in_date, check_out_date, is_cancelled, booking_amount,
+                room_number, price_per_night, hotel_id, hotel_name, hotel_stars,
+                type_id, description, max_guests in invoices]
+
+    def read_all_invoices(self) -> list[model.Invoice]:
+        sql = """
+        SELECT Invoice.invoice_id, Invoice.booking_id, Invoice.issue_date, Invoice.total_amount,
+               Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
+               Booking.is_cancelled, Booking.total_amount AS "Booking Amount",
+               Guest.first_name, Guest.last_name, Guest.email,
+               Room.room_number, Room.price_per_night,
+               Hotel.hotel_id, Hotel.name AS "Hotel Name", Hotel.stars,
+               Room_Type.type_id, Room_Type.description, Room_Type.max_guests
+        FROM Invoice
+        JOIN Booking ON Invoice.booking_id = Booking.booking_id
+        JOIN Guest ON Booking.guest_id = Guest.guest_id
+        JOIN Room ON Booking.room_id = Room.room_id
+        JOIN Hotel ON Room.hotel_id = Hotel.hotel_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        ORDER BY Invoice.issue_date DESC
+        """
+        invoices = self.fetchall(sql)
+        
+        return [model.Invoice(invoice_id, model.Booking( booking_id,
+                    model.Guest(guest_id, first_name, last_name, email),
+                    model.Room(room_id, model.Hotel(hotel_id, hotel_name, hotel_stars), room_number, model.RoomType(type_id, description, max_guests), price_per_night),
+                    check_in_date, check_out_date, is_cancelled, booking_amount),
+                issue_date, total_amount)
+            for invoice_id, booking_id, issue_date, total_amount,
+                guest_id, room_id, check_in_date, check_out_date, is_cancelled, booking_amount,
+                first_name, last_name, email, room_number, price_per_night,
+                hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in invoices]
