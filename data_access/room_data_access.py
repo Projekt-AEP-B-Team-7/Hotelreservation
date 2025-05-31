@@ -23,3 +23,34 @@ class RoomDataAccess(BaseDataAccess):
         last_row_id, row_count = self.execute(sql, params)
         return model.Room(last_row_id, hotel, room_number, room_type, price_per_night)
 
+    def read_room_by_id(self, room_id: int) -> model.Room | None:
+        if room_id is None:
+            raise ValueError("Room ID is required")
+
+        sql = """
+        SELECT Room.room_id, Room.hotel_id, Room.room_number, Room.type_id, Room.price_per_night,
+               Hotel.name AS "Hotel Name", Hotel.stars, Room_Type.description, Room_Type.max_guests,
+               Address.address_id, Address.street, Address.city, Address.zip_code
+        FROM Room
+        JOIN Hotel ON Room.hotel_id = Hotel.hotel_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        LEFT JOIN Address ON Hotel.address_id = Address.address_id
+        WHERE Room.room_id = ?
+        """
+        params = tuple([room_id])
+        result = self.fetchone(sql, params)
+        if result:
+            (room_id, hotel_id, room_number, type_id, price_per_night,
+             hotel_name, hotel_stars, type_description, max_guests,
+             address_id, street, city, zip_code) = result
+            
+            address = None
+            if address_id:
+                address = model.Address(address_id, street, city, zip_code)
+            
+            hotel = model.Hotel(hotel_id, hotel_name, hotel_stars, address)
+            room_type = model.RoomType(type_id, type_description, max_guests)
+            
+            return model.Room(room_id, hotel, room_number, room_type, price_per_night)
+        else:
+            return None
