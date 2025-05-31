@@ -137,3 +137,24 @@ class InvoiceDataAccess(BaseDataAccess):
                 guest_id, room_id, check_in_date, check_out_date, is_cancelled, booking_amount,
                 first_name, last_name, email, room_number, price_per_night,
                 hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in invoices]
+
+    def update_invoice(self, invoice: model.Invoice) -> None:
+        if invoice is None:
+            raise ValueError("Invoice cannot be None")
+
+        sql = """
+        UPDATE Invoice SET booking_id = ?, issue_date = ?, total_amount = ? 
+        WHERE invoice_id = ?
+        """
+        params = tuple([invoice.booking.booking_id, invoice.issue_date, invoice.total_amount, invoice.invoice_id])
+        last_row_id, row_count = self.execute(sql, params)
+
+    def delete_invoice(self, invoice: model.Invoice) -> None:
+        if invoice is None:
+            raise ValueError("Invoice cannot be None")
+
+        sql = """
+        DELETE FROM Invoice WHERE invoice_id = ?
+        """
+        params = tuple([invoice.invoice_id])
+        last_row_id, row_count = self.execute(sql, params)
