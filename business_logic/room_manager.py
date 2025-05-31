@@ -1,6 +1,6 @@
 import os
 
-import model
+from model.room import Room
 import data_access
 
 class RoomManager:
@@ -15,6 +15,9 @@ class RoomManager:
     
     def delete_room(self, room_id: int) -> model.Room:
         return self.__room_dal.delete_room(room_id)
+
+    def get_available_rooms(self, city: str, max_guests: int, check_in: str, check_out: str) -> list[Hotel]:
+        return self.__room_dal.get_available_rooms(city, max_guests, check_in, check_out)
 
     def get_all_rooms_with_facilities(self,room_id: int) -> model.Room
         return self.__room_dal.get_rooms_with_facilities()

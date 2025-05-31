@@ -1,49 +1,37 @@
-class Address:
-    def __init__(self, address_id:int, street:str, city:str, zip_code:str):
-        self.__address_id = address_id
-        self.__street = street
-        self.__city = city
-        self.__zip_code = zip_code
+from model.address import Address
+from data_access.address_data_access import AddressDataAccess
 
-    @property
-    def address_id(self) -> int:
-        return self.__address_id
-    
-    @property
-    def street(self):
-        return self.__street
-    
-    @street.setter
-    def street(self, street:str) -> None:
-        if not street:
-            raise ValueError("Street is required.")
-        if not isinstance (street, str):
-            raise ValueError("Street must be string.")
-    
-    @property
-    def city(self):
-        return self.__city
-    
-    @city.setter
-    def city(self, city:str) -> None:
-        if not city:
-            raise ValueError("City is required.")
-        if not isinstance (city, str):
-            raise ValueError("City must be string.")
+class AddressManager:
+    def __init__(self) -> None:
+        self.__address_dal = AddressDataAccess()
 
-    @property
-    def zip_code(self):
-        return self.__zip_code
+    def create_address(self, street: str, city: str, zip_code: str) -> Address:
+        """Erstellt eine neue Adresse"""
+        return self.__address_dal.create_new_address(street, city, zip_code)
 
-    @zip_code.setter
-    def zip_code(self, zip_code:int) -> None:
-        if not zip_code:
-            raise ValueError("Zip code is required.")
-        if not isinstance (zip_code, int):
-            raise ValueError("Zip code must be integer.")
-    
-    def get_address_details(self):
-        return f"Address Id: {address_id}, Street: {street}, City: {city}, Zip Code: {zip_code}"
+    def read_address_by_id(self, address_id: int) -> Address | None:
+        """Liest eine Adresse anhand der ID"""
+        return self.__address_dal.read_address_by_id(address_id)
 
-    def delete_guest(self, guest_id) -> model.Guest:
-        return self.__guest_dal.delete_guest(guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount)
+    def read_addresses_by_city(self, city: str) -> list[Address]:
+        """User Story 1.1: Alle Adressen in einer Stadt"""
+        return self.__address_dal.read_addresses_by_city(city)
+
+    def update_address(self, address_id: int, street: str = None, 
+                      city: str = None, zip_code: str = None) -> bool:
+        """Aktualisiert eine Adresse"""
+        return self.__address_dal.update_address(address_id, street, city, zip_code)
+
+    def delete_address(self, address_id: int) -> bool:
+        """Löscht eine Adresse"""
+        return self.__address_dal.delete_address(address_id)
+
+    def get_all_addresses(self) -> list[Address]:
+        """Alle Adressen für Admin"""
+        return self.__address_dal.read_all_addresses()
+
+    def find_cities(self) -> list[str]:
+        """User Story 1.1: Alle verfügbaren Städte finden"""
+        addresses = self.__address_dal.read_all_addresses()
+        cities = list(set(addr.city for addr in addresses))
+        return sorted(cities)

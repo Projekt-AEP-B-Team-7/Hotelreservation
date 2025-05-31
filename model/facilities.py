@@ -1,30 +1,42 @@
-class Facilities:
-    facilities_list = []  # Static list to manage all facilities
+from __future__ import annotations
 
+class Facilities:
     def __init__(self, facility_id: int, facility_name: str):
-        self._facility_id = facility_id
-        self._facility_name = facility_name
+        if facility_id is not None and not isinstance(facility_id, int):
+            raise ValueError("facility_id must be an integer")
+        if not facility_name:
+            raise ValueError("facility_name is required")
+        if not isinstance(facility_name, str):
+            raise ValueError("facility_name must be a string")
+
+        self.__facility_id: int = facility_id
+        self.__facility_name: str = facility_name
+
+    def __repr__(self):
+        return f"Facilities(id={self.__facility_id!r}, name={self.__facility_name!r})"
+
+    def __str__(self) -> str:
+        return self.__facility_name
 
     @property
     def facility_id(self) -> int:
-        return self._facility_id
+        return self.__facility_id
 
     @property
     def facility_name(self) -> str:
-        return self._facility_name
+        return self.__facility_name
 
-    @classmethod
-    def add_facility(cls, facility):
-        """Adds a new facility to the list."""
-        cls.facilities_list.append(facility)
-        print(f"Facility '{facility.facility_name}' added.")
+    @facility_name.setter
+    def facility_name(self, facility_name: str) -> None:
+        if not facility_name:
+            raise ValueError("facility_name is required")
+        if not isinstance(facility_name, str):
+            raise ValueError("facility_name must be a string")
+        self.__facility_name = facility_name
 
-    @classmethod
-    def remove_facility(cls, facility_id: int):
-        """Removes a facility based on its ID."""
-        for facility in cls.facilities_list:
-            if facility.facility_id == facility_id:
-                cls.facilities_list.remove(facility)
-                print(f"Facility '{facility.facility_name}' removed.")
-                return
-        print(f"Facility with ID {facility_id} not found.") 
+    # User Story Support Methods
+    def matches_name(self, search_term: str) -> bool:
+        """User Story 2.1: Facility-Suche"""
+        if not search_term:
+            return False
+        return search_term.lower() in self.__facility_name.lower()
