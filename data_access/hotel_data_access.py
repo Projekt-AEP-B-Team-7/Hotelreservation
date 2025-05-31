@@ -1,6 +1,6 @@
 from __future__ import annotations
-import hotel.model from Hotel
-import address.model from Address
+from hotel.model import Hotel
+from address.model import Address
 from data_access.base_data_access import BaseDataAccess
 
 class HotelDataAccess(BaseDataAccess):

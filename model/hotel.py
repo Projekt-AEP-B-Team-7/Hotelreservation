@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from model.hotel import Hotel
     from model.address import Address
     from model.room import Room
 
