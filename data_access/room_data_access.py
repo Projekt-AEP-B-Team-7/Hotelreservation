@@ -54,3 +54,21 @@ class RoomDataAccess(BaseDataAccess):
             return model.Room(room_id, hotel, room_number, room_type, price_per_night)
         else:
             return None
+
+    def read_rooms_by_hotel(self, hotel: model.Hotel) -> list[model.Room]:
+        if hotel is None:
+            raise ValueError("Hotel cannot be None")
+
+        sql = """
+        SELECT Room.room_id, Room.room_number, Room.price_per_night,
+               Room_Type.type_id, Room_Type.description, Room_Type.max_guests
+        FROM Room
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        WHERE Room.hotel_id = ?
+        ORDER BY Room.room_number
+        """
+        params = tuple([hotel.hotel_id])
+        rooms = self.fetchall(sql, params)
+        
+        return [model.Room(room_id, hotel, room_number, model.RoomType(type_id, description, max_guests), price_per_night)
+            for room_id, room_number, price_per_night, type_id, description, max_guests in rooms]

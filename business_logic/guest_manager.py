@@ -4,17 +4,23 @@ import model
 import data_access
 
 class GuestManager:
-    def __init__(self) -> None:
-        self.__guest_dal = data_access.guestDataAccess()
+    def __init__(self):
+        self.__guest_da = data_access.GuestDataAccess()
 
-    def create_guest(self, guest_id:int, room_id:int, check_in_date:str, check_out_date:str, is_cancelled:bool, total_amount: float) -> model.Guest:
-        return self.__guest_dal.create_new_guest(guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount)
+    def create_guest(self, first_name: str, last_name: str, email: str, address: model.Address = None) -> model.Guest:
+        return self.__guest_da.create_new_guest(first_name, last_name, email, address)
 
-    def read_all_guests(self, first_name, last_name, email, address_id) -> model.Guest:
-        return self.__guest_dal.read_all_guests(guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount)
+    def read_guest(self, guest_id: int) -> model.Guest:
+        return self.__guest_da.read_guest_by_id(guest_id)
 
-    def update_guest_name(self, : bool) -> model.Guest:
-        return self.__guest_dal.update_guest_name(guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount)
+    def read_guest_by_email(self, email: str) -> model.Guest:
+        return self.__guest_da.read_guest_by_email(email)
 
-    def delete_guest(self, guest_id) -> model.Guest:
-        return self.__guest_dal.delete_guest(guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount)
+    def read_all_guests(self) -> list[model.Guest]:
+        return self.__guest_da.read_all_guests()
+
+    def update_guest(self, guest: model.Guest) -> None:
+        self.__guest_da.update_guest(guest)
+
+    def delete_guest(self, guest: model.Guest) -> None:
+        self.__guest_da.delete_guest(guest)
