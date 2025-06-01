@@ -1,10 +1,7 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from model.hotel import Hotel
-    from model.address import Address
-    from model.room import Room
+from model.address import Address
+from model.room import Room
 
 class Hotel:
     def __init__(self, hotel_id: int, name: str, stars: int, address: Address = None):
@@ -74,11 +71,9 @@ class Hotel:
 
     @property
     def rooms(self) -> list[Room]:
-        # Return a copy so that the caller cannot modify the private list directly.
         return self.__rooms.copy()
 
     def add_room(self, room: Room) -> None:
-        from model.room import Room
         if not room:
             raise ValueError("Room is required")
         if not isinstance(room, Room):
@@ -87,7 +82,6 @@ class Hotel:
             self.__rooms.append(room)
 
     def remove_room(self, room: Room) -> None:
-        from model.room import Room
         if not room:
             raise ValueError("Room is required")
         if not isinstance(room, Room):

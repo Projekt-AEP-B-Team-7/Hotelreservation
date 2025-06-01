@@ -1,9 +1,14 @@
 from __future__ import annotations
-from hotel.model import Hotel
-from address.model import Address
+
+from model.hotel import Hotel
+from model.address import Address
+from model.room import Room
+from model.room_type import RoomType
+
 from data_access.base_data_access import BaseDataAccess
 
 class HotelDataAccess(BaseDataAccess):
+    
     def __init__(self, db_path: str = None):
         super().__init__(db_path)
 
@@ -115,7 +120,7 @@ class HotelDataAccess(BaseDataAccess):
         hotels = self.fetchall(sql, params)
         
         return [Hotel(hotel_id, name, stars, 
-                model.Address(address_id, street, city, zip_code))
+                Address(address_id, street, city, zip_code))
             for hotel_id, name, stars, address_id, street, city, zip_code in hotels]
 
     def read_available_hotels(self, city: str, check_in_date: str, check_out_date: str) -> list[Hotel]:
@@ -144,20 +149,20 @@ class HotelDataAccess(BaseDataAccess):
         hotels = self.fetchall(sql, params)
         
         return [Hotel(hotel_id, name, stars, 
-                model.Address(address_id, street, city, zip_code))
+                Address(address_id, street, city, zip_code))
             for hotel_id, name, stars, address_id, street, city, zip_code in hotels]
 
     def read_all_hotels(self) -> list[Hotel]:
         sql = """
         SELECT Hotel.hotel_id, Hotel.name, Hotel.stars, Address.address_id, Address.street, Address.city, Address.zip_code
         FROM Hotel
-        LEFT JOIN Address a ON Hotel.address_id = Address.address_id
+        LEFT JOIN Address ON Hotel.address_id = Address.address_id
         ORDER BY Hotel.name
         """
         hotels = self.fetchall(sql)
         
         return [Hotel(hotel_id, name,stars, 
-                model.Address(address_id, street, city, zip_code) if address_id else None)
+                Address(address_id, street, city, zip_code) if address_id else None)
             for hotel_id, name, stars, address_id, street, city, zip_code in hotels]
 
     def update_hotel(self, hotel: Hotel) -> None:

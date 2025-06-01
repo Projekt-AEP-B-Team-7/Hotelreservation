@@ -39,7 +39,7 @@ class BookingManager:
 
     def cancel_booking(self, booking: model.Booking) -> None:
         booking.is_cancelled = True
-        self.__booking_da.update_booking(booking)
+        self.__booking_da.cancel_booking(booking)
 
     def delete_booking(self, booking: model.Booking) -> None:
         self.__booking_da.delete_booking(booking)

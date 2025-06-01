@@ -1,13 +1,14 @@
 import os
 
 from model.hotel import Hotel
-from data_access.hotel_data_access import HotelDataAccess 
+from model.address import Address
+from data_access.hotel_data_access import HotelDataAccess
 
 class HotelManager:
-    def __init__(self):
-        self.__hotel_da = data_access.HotelDataAccess()
+    def __init__(self) -> None:
+        self.__hotel_da = HotelDataAccess()
 
-    def create_hotel(self, name: str, stars: int, address: model.Address = None) -> Hotel:
+    def create_hotel(self, name: str, stars: int, address: Address = None) -> Hotel:
         return self.__hotel_da.create_new_hotel(name, stars, address)
 
     def read_hotel(self, hotel_id: int) -> Hotel:
