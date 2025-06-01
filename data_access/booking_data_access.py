@@ -238,6 +238,12 @@ class BookingDataAccess(BaseDataAccess):
             booking.is_cancelled, booking.total_amount, booking.booking_id])
         last_row_id, row_count = self.execute(sql, params)
 
+    def cancel_booking(self, booking_id: int) -> None:
+        sql = """
+        UPDATE Booking SET is_cancelled = 1 WHERE booking_id = ?"""
+        params = tuple([booking.booking_id])
+        last_row_id, row_count = self.execute(sql, params)
+       
     def delete_booking(self, booking: Booking) -> None:
         if booking is None:
             raise ValueError("Booking cannot be None")
