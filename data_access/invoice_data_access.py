@@ -1,6 +1,7 @@
 from __future__ import annotations
 from datetime import date
 import model
+from model.invoice import Invoice
 from data_access.base_data_access import BaseDataAccess
 
 class InvoiceDataAccess(BaseDataAccess):

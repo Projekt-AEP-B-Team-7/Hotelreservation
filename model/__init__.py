@@ -1,1 +1,4 @@
 from business_logic.hotel_manager import HotelManager
+from business_logic.room_manager import RoomManager
+from business_logic.guest_manager import GuestManager
+from business_logic.booking_manager import BookingManager

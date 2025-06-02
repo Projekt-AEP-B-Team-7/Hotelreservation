@@ -1,11 +1,30 @@
 from __future__ import annotations
 
-import model
+from model.room_type import RoomType
+from model.hotel import Hotel
+from model.booking import Booking
+from model.facilities import Facilities
+
 from data_access.base_data_access import BaseDataAccess
 
-class RoomtypeDataAccess(BaseDataAccess):
-    
-    #def read_roomtype_by_id(self, type_id: int) -> model.Roomtype:
+class RoomTypeDataAccess(BaseDataAccess):
+    def __init__(self, db_path: str = None):
+        super().__init__(db_path)
+
+    def create_new_room_type(self, description: str, max_guests: int) -> RoomType:
+        if description is None:
+            raise ValueError("Room type description is required")
+        if max_guests is None:
+            raise ValueError("Max guests is required")
+
+        sql = """
+        INSERT INTO Room_Type (description, max_guests) VALUES (?, ?)
+        """
+        params = (description, max_guests)
+        last_row_id, row_count = self.execute(sql, params)
+        return model.RoomType(last_row_id, description, max_guests)
+
+    def read_roomtype_by_id(self, type_id: int) -> Roomtype:
         sql = """
         SELECT type_id, description, max_guests  FROM Room WHERE type_id = ?;
         """
@@ -13,44 +32,60 @@ class RoomtypeDataAccess(BaseDataAccess):
         result = self.fetchone(sql, params)
         if result:
             type_id, description, max_guests = result
-            return model.Roomtype(type_id, description, max_guests)
+            return Roomtype(type_id, description, max_guests)
         return None
 
-
-    def read_roomtypes_by_hotel(self, hotel_id: int) -> list[model.Roomtype]:
-        sql = """
-        SELECT DISTINCT Room_Type.type_id, Room_Type.description, Room_Type.max_guests
-        FROM Room
-        JOIN Room_Type ON Room.type_id = Room_Type.type_id
-        WHERE Room.hotel_id = ?;
-        """
-        rows = self.fetchall(sql, (hotel_id,))
-        return [model.Roomtype(type_id, description, max_guests) for type_id, description, max_guests in rows]
-
-
-
-   # def update_roomtype(self, type_id: int) -> model.Roomtype:
-        if roomtype is None:
-            raise ValueError("Roomtype cannot be None")
+    def read_room_type_by_description(self, description: str) -> RoomType | None:
+        if description is None:
+            raise ValueError("Description is required")
 
         sql = """
-        UPDATE Roomtype SET price_per_night = ? WHERE room_id = ?
+        SELECT type_id, description, max_guests FROM Room_Type WHERE description = ?
         """
-        params = tuple([type_id])
+        params = tuple([description])
+        result = self.fetchone(sql, params)
+        if result:
+            type_id, description, max_guests = result
+            return RoomType(type_id, description, max_guests)
+        else:
+            return None
+
+    def read_all_room_types(self) -> list[RoomType]:
+        sql = """
+        SELECT type_id, description, max_guests FROM Room_Type ORDER BY max_guests, description
+        """
+        room_types = self.fetchall(sql)
+        return [RoomType(type_id, description, max_guests)
+                for type_id, description, max_guests in room_types]        
+
+    def read_room_types_by_guest_capacity(self, min_guests: int) -> list[RoomType]:
+        if min_guests is None:
+            raise ValueError("Minimum guests is required")
+
+        sql = """
+        SELECT type_id, description, max_guests FROM Room_Type WHERE max_guests >= ? ORDER BY max_guests
+        """
+        params = tuple([min_guests])
+        room_types = self.fetchall(sql, params)
+        return [RoomType(type_id, description, max_guests)
+                for type_id, description, max_guests in room_types]
+
+    def update_room_type(self, room_type: RoomType) -> None:
+        if room_type is None:
+            raise ValueError("Room type cannot be None")
+
+        sql = """
+        UPDATE Room_Type SET description = ?, max_guests = ? WHERE type_id = ?
+        """
+        params = tuple([room_type.description, room_type.max_guests, room_type.type_id])
         last_row_id, row_count = self.execute(sql, params)
 
-    #def delete_roomtype(self, type_id: int) -> model.Roomtype
-        if roomtype is None:
-            raise ValueError("Hotel cannot be None")
+    def delete_room_type(self, room_type: RoomType) -> None:
+        if room_type is None:
+            raise ValueError("Room type cannot be None")
 
         sql = """
-        DELETE FROM Roomtype WHERE type_id = ?
+        DELETE FROM Room_Type WHERE type_id = ?
         """
-        params = tuple([type_id])
+        params = tuple([room_type.type_id])
         last_row_id, row_count = self.execute(sql, params)
-
-   # def insert_room_type(self, description: str, max_guests: int) -> model.Roomtype
-        sql = """
-        "INSERT INTO Room_Type (description, max_guests) VALUES (?, ?)"
-        """
-        return self.execute(sql, (description, max_guests))[0]

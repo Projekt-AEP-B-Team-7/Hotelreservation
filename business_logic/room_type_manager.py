@@ -1,6 +1,12 @@
 import os
 
 import model
+
+from model.room import Room
+from model.hotel import Hotel
+from model.facilities import Facilities
+from model.room_type import RoomType
+
 import data_access
 
 class RoomtypeManager:

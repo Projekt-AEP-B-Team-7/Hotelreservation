@@ -1,6 +1,6 @@
 from __future__ import annotations
-import model.facilities from Facilities
-import model.room from Room
+from model.facilities import Facilities
+from model.room import Room
 from data_access.base_data_access import BaseDataAccess
 
 class FacilitiesDataAccess(BaseDataAccess):

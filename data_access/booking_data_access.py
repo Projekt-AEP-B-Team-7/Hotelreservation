@@ -1,10 +1,11 @@
 from __future__ import annotations
 from datetime import date
-import model
 from model.booking import Booking
 from model.room import Room
 from model.guest import Guest
+from model.address import Address
 from model.room_type import RoomType
+from model.hotel import Hotel
 from data_access.base_data_access import BaseDataAccess
 
 class BookingDataAccess(BaseDataAccess):
@@ -30,7 +31,7 @@ class BookingDataAccess(BaseDataAccess):
         """
         params = (guest.guest_id, room.room_id, check_in_date, check_out_date, False, total_amount)
         last_row_id, row_count = self.execute(sql, params)
-        return model.Booking(last_row_id, guest, room, check_in_date, check_out_date, False, total_amount)
+        return [model.Booking(last_row_id, guest, room, check_in_date, check_out_date, False, total_amount)]
 
     def read_booking_by_id(self, booking_id: int) -> Booking | None:
         if booking_id is None:
@@ -64,12 +65,12 @@ class BookingDataAccess(BaseDataAccess):
             if address_id:
                 guest_address = Address(address_id, street, city, zip_code)
             
-            guest = model.Guest(guest_id, first_name, last_name, email, guest_address)
-            hotel = model.Hotel(hotel_id, hotel_name, hotel_stars)
+            guest = Guest(guest_id, first_name, last_name, email, guest_address)
+            hotel = Hotel(hotel_id, hotel_name, hotel_stars)
             room_type = model.RoomType(type_id, type_description, max_guests)
-            room = model.Room(room_id, hotel, room_number, room_type, price_per_night)
+            room = Room(room_id, hotel, room_number, room_type, price_per_night)
             
-            return model.Booking(booking_id, guest, room, check_in_date, check_out_date, is_cancelled, total_amount)
+            return [model.Booking(booking_id, guest, room, check_in_date, check_out_date, is_cancelled, total_amount)]
         else:
             return None
 
@@ -238,7 +239,7 @@ class BookingDataAccess(BaseDataAccess):
             booking.is_cancelled, booking.total_amount, booking.booking_id])
         last_row_id, row_count = self.execute(sql, params)
 
-    def cancel_booking(self, booking_id: int) -> None:
+    def cancel_booking_by_id(self, booking_id: int) -> None:
         sql = """
         UPDATE Booking SET is_cancelled = 1 WHERE booking_id = ?"""
         params = tuple([booking.booking_id])

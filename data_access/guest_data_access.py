@@ -1,7 +1,7 @@
 from __future__ import annotations
 from model.guest import Guest
 from model.address import Address
-from model.booking import booking
+from model.booking import Booking
 from data_access.base_data_access import BaseDataAccess
 
 class GuestDataAccess(BaseDataAccess):

@@ -1,8 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from model.address import Address
+from model.address import Address
 
 class Guest:
     def __init__(self, guest_id: int, first_name: str, last_name: str, email: str, address: Address = None):

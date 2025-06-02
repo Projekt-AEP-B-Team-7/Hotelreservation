@@ -1,10 +1,7 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
-from datetime import date
-
-if TYPE_CHECKING:
-    from model.guest import Guest
-    from model.room import Room
+from datetime import date, datetime
+from model.guest import Guest
+from model.room import Room
 
 class Booking:
     def __init__(self, booking_id: int, guest: Guest, room: Room, check_in_date: date, check_out_date: date, is_cancelled: bool = False, total_amount: float = 0.0):
@@ -17,7 +14,7 @@ class Booking:
         if not isinstance(guest, Guest):
             raise ValueError("Guest must be an instance of Guest")
         if not room:
-            raise ValueError(Rroom is required")
+            raise ValueError("Room is required")
         if not isinstance(room, Room):
             raise ValueError("Room must be an instance of Room")
         if not check_in_date:

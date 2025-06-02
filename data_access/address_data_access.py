@@ -1,5 +1,5 @@
 from __future__ import annotations
-import model.address import Address
+from model.address import Address
 from data_access.base_data_access import BaseDataAccess
 
 class AddressDataAccess(BaseDataAccess):
