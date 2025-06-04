@@ -58,7 +58,7 @@ class HotelDataAccess(BaseDataAccess):
         SELECT Hotel.hotel_id, Hotel.name, Hotel.stars, Address.address_id, Address.street, Address.city, Address.zip_code
         FROM Hotel
         JOIN Address ON Hotel.address_id = Address.address_id
-        WHERE Address.city = ?
+        WHERE LOWER(Address.city) = LOWER(?)
         ORDER BY Hotel.stars DESC, Hotel.name
         """
         params = tuple([city])
