@@ -29,19 +29,19 @@ Unser Team hat grundsätzlich gemeinsam gearbeitet und sich gegenseitig unterst�
 
 Zu Beginn haben wir mit einem Projektboard gearbeitet, im weiteren Verlauf jedoch primär über WhatsApp und Microsoft Teams kommuniziert. Gegen Projektende haben wir das Board nochmals aktiv genutzt, um offene Aufgaben vor der Abgabe zu erledigen. Da alle Teammitglieder regelmässig vor Ort waren, konnten wir die Coaching-Zeit optimal nutzen, um gemeinsam weiterzuarbeiten und bei Bedarf direkt Fragen an unsere Coaches zu stellen.
 
-## Projektziele: 
+# Projektziele: 
  
 
 
 
-### Vorgehen:
+# Vorgehen:
 
 Zu Beginn dieser Phase haben wir das Projekt mit GitHub und Deepnote verknüpft. Durch das bereitgestellte Einführungsvideo funktionierte dies problemlos. Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten und damit vertraut waren, entschieden wir uns bewusst dafür, alle Bestandteile unseres Projekts, also Model, Data Access, Business Logic und User Interface, vollständig in Deepnote umzusetzen.
 
 Zuerst haben wir den Klassendiagramms basierend auf dem vorgegebenen ER-Modell erstellt. Da die Klassen und Attribute bereits definiert waren, konnten wir diese direkt übernehmen. Ursprünglich wollten wir auch Methoden ergänzen, entschieden uns jedoch, diese erst später zu definieren. sobald klar war, welche Methoden für die Umsetzung der User Stories tatsächlich benötigt werden.
 
 
-## Class Diagram
+# Class Diagram
 
 ![image](https://github.com/user-attachments/assets/1b4d7a91-2510-4f92-bc11-e5e5cce9ef09)
  
