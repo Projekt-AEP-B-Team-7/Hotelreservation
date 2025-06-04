@@ -22,14 +22,29 @@ Deepnote:\
 Project Board:\
 Präsentationsvideo:
 
+## Methodologie
+
+## Teamarbeit:
+Unser Team hat grundsätzlich gemeinsam gearbeitet und sich gegenseitig unterstützt, da niemand von uns einen IT-Background hatte. Anstatt feste Rollen oder Zuständigkeiten zu vergeben, haben wir uns jede Woche neue Ziele gesetzt, die wir bis zum nächsten Coaching erreichen wollten. Diese Ziele umfassten sowohl Repetition als auch das Bearbeiten konkreter Aufgaben.
+
+Zu Beginn haben wir mit einem Projektboard gearbeitet, im weiteren Verlauf jedoch primär über WhatsApp und Microsoft Teams kommuniziert. Gegen Projektende haben wir das Board nochmals aktiv genutzt, um offene Aufgaben vor der Abgabe zu erledigen. Da alle Teammitglieder regelmässig vor Ort waren, konnten wir die Coaching-Zeit optimal nutzen, um gemeinsam weiterzuarbeiten und bei Bedarf direkt Fragen an unsere Coaches zu stellen.
+
+## Projektziele: 
+ 
+
+
+
+### Vorgehen:
+
+Zu Beginn dieser Phase haben wir das Projekt mit GitHub und Deepnote verknüpft. Durch das bereitgestellte Einführungsvideo funktionierte dies problemlos. Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten und damit vertraut waren, entschieden wir uns bewusst dafür, alle Bestandteile unseres Projekts, also Model, Data Access, Business Logic und User Interface, vollständig in Deepnote umzusetzen.
+
+Zuerst haben wir den Klassendiagramms basierend auf dem vorgegebenen ER-Modell erstellt. Da die Klassen und Attribute bereits definiert waren, konnten wir diese direkt übernehmen. Ursprünglich wollten wir auch Methoden ergänzen, entschieden uns jedoch, diese erst später zu definieren. sobald klar war, welche Methoden für die Umsetzung der User Stories tatsächlich benötigt werden.
+
+
 ## Class Diagram
 
 ![image](https://github.com/user-attachments/assets/1b4d7a91-2510-4f92-bc11-e5e5cce9ef09)
-
-Anhand des vorgegeben ER-Modells haben wir den Class Diagramm erstellt. 
-
-Wir haben folgende Klassen definiert: 
-
+ 
 Class Address: (Cardinality 1:1)
 Attributes: address_id, street, city, zip_code
 Relationship: One-to-one with both Hotel and Guest (One to One) 
@@ -62,15 +77,37 @@ Class Facilities: (Cardinality 0:1)
 Attributes: facility_id, facility_name 
 Relationship: One Facility can be linked to multiple room types
 
-## Methodologie
 
-Team Roles: 
--> haben alle grundsätzlich zusammen gearbeitet und uns gegenseitig geholfen. Da wir alle keine IT Background haben mussten wir usn gegenseitig unterstützen. Wir haben die spezifisch untereinander die Aufgaben unterteilt sondern jede Woche unsere Ziele festgelegt, was wir bis zum nächsten Coaching erledigen sollte, sei es Repetition oder spezifische Aufgaben lösen. Zu Beginn haben wir mit dem Projektboard gearbeitet und nachher jedoch uns via Whatsapp, Teams kommuniziert und am Schluss haben wir auch den Projektboard benutzt um noch ausstehene Aufträge vor der Abgabe zu erledigen. Da wir alle aus der Gruppe immer vor Ort waren, könnten wir die genutze Zeit für das Coaching verwenden um weiter an unserem Projekt zu arbeiten und gegebenfalls unsere Coaches zu fragen.
+# Implentierung der Modelklassen: 
 
-Der erste Schritt war die Verknüpfung mit Github und Deepnote, anhand der aufgeladenen Einleitungsvideo konnten wir dies schnell erledigen. Dann erstellten wir anhand des vorgegeben ER-Diagramms den Class Diagramm. Da die Klassen und Attribute bereits gegeben waren mussten wir diese nur noch kopieren. Wir haben auch die Methoden versucht zu definieren, jedoch haben wir sie nachträglich entfernt, da wir nicht schon vorab wussten, welche Methoden wir schlussendlich für unsere User Stories wichtig sein würden und haben beschlossen dies am Schluss unseres Projektes im Class Diagramm zu ergänzen. 
+Im nächsten Schritt wurden die Modellklassen des Projekts im Github implentiert. 
 
-Als Weiteren Schritt haben wir im Model die Getter/Setter Methode angewendet und dann haben wir die Properties festgelegt. 
-Die festgelegt 
+Dabei gingen wie folgt vor:
+
+Für jede Modellklasse wurde eine eigene .py-Datei erstellt (z. B. hotel.py, room.py) und im Ordner models gespeichert.
+  
+Jede Klasse wurde mit einem __init__-Konstruktor versehen. Dadurch können beim Erstellen eines Objekts direkt Werte mitgegeben werden.
+Beispiel:            class Hotel:
+                        def __init__(self, hotel_name, stars):
+                          self.hotel_name = Royal
+                          self.stars = 4
+                        hotel = Hotel
+                        print(hotel.hotel_name) #Ausgabe Royal
+
+Dann wurden die Getter- und Setter-Methoden angewendet,um eine saubere Datenkapselung sicherzustellen. Damit können wir verhindern,    dass Daten von aussen unkontrolliert verändert werden. Zum Beispiel durch falsche oder ungültige Werte. Ausserdem lässt sich steuern, ob und wie jemand einen Wert lesen oder ändern darf. Das ist besonders relevant für Funktionen in unseren User Stories für Admin oder Guest. 
+
+# Implentierung Data Access: 
+
+Nach dem wir den "model" fertiggestellt haben, fingen wir mit der "data access" an. Die Base Data wurde uns vorgegeben, dies haben wir für unser Projekt übernommen. Mit der Base Data müssen wir den Code nicht neu schreiben und es ermmöglich uns einfach diese für weitere Klassen zu übernehemen (Vererbung). Die Data Access stellt eine Verbindung zu SQL und in diesem Layer können vor allem Daten gelesen, gelöscht oder bearbeitet werden. In diesem Layer werden vor allem Funktioniern wie Select, Insert into, Delete. Update verwendet. 
+
+# Implentierung Business Logic: 
+
+Im Layer Business Logic (Manager Schicht) verbindet den Data Access mit der UI. Hier wird definiert, was der USER (Admin oder Guest) machen darf. z.B. Guest darf eine Buchung stornieren,suchen,buchen usw. -> Die Methode wird dem Benutzter entsprechend zugewiesen. Die Data Access speichert oder holt Daten ohne zu wissen, ob das Sinn ergibt, dafür gibt es denn Business Logic. Dort werden die Regeln definiert. 
+
+
+
+
+
 
 
 
