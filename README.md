@@ -24,24 +24,24 @@ Präsentationsvideo:
 
 ## Methodologie
 
-## Teamarbeit:
+### Teamarbeit:
 Unser Team hat grundsätzlich gemeinsam gearbeitet und sich gegenseitig unterstützt, da niemand von uns einen IT-Background hatte. Anstatt feste Rollen oder Zuständigkeiten zu vergeben, haben wir uns jede Woche neue Ziele gesetzt, die wir bis zum nächsten Coaching erreichen wollten. Diese Ziele umfassten sowohl Repetition als auch das Bearbeiten konkreter Aufgaben.
 
 Zu Beginn haben wir mit einem Projektboard gearbeitet, im weiteren Verlauf jedoch primär über WhatsApp und Microsoft Teams kommuniziert. Gegen Projektende haben wir das Board nochmals aktiv genutzt, um offene Aufgaben vor der Abgabe zu erledigen. Da alle Teammitglieder regelmässig vor Ort waren, konnten wir die Coaching-Zeit optimal nutzen, um gemeinsam weiterzuarbeiten und bei Bedarf direkt Fragen an unsere Coaches zu stellen.
 
-# Projektziele: 
+### Projektziele: 
  
 
 
 
-# Vorgehen:
+### Vorgehen:
 
 Zu Beginn dieser Phase haben wir das Projekt mit GitHub und Deepnote verknüpft. Durch das bereitgestellte Einführungsvideo funktionierte dies problemlos. Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten und damit vertraut waren, entschieden wir uns bewusst dafür, alle Bestandteile unseres Projekts, also Model, Data Access, Business Logic und User Interface, vollständig in Deepnote umzusetzen.
 
 Zuerst haben wir den Klassendiagramms basierend auf dem vorgegebenen ER-Modell erstellt. Da die Klassen und Attribute bereits definiert waren, konnten wir diese direkt übernehmen. Ursprünglich wollten wir auch Methoden ergänzen, entschieden uns jedoch, diese erst später zu definieren. sobald klar war, welche Methoden für die Umsetzung der User Stories tatsächlich benötigt werden.
 
 
-# Class Diagram
+### Class Diagram
 
 ![image](https://github.com/user-attachments/assets/1b4d7a91-2510-4f92-bc11-e5e5cce9ef09)
  
@@ -78,7 +78,7 @@ Attributes: facility_id, facility_name
 Relationship: One Facility can be linked to multiple room types
 
 
-# Implentierung der Modelklassen: 
+### Implentierung der Modelklassen: 
 
 Im nächsten Schritt wurden die Modellklassen des Projekts im Github implentiert. 
 
@@ -96,11 +96,11 @@ Beispiel:            class Hotel:
 
 Dann wurden die Getter- und Setter-Methoden angewendet,um eine saubere Datenkapselung sicherzustellen. Damit können wir verhindern,    dass Daten von aussen unkontrolliert verändert werden. Zum Beispiel durch falsche oder ungültige Werte. Ausserdem lässt sich steuern, ob und wie jemand einen Wert lesen oder ändern darf. Das ist besonders relevant für Funktionen in unseren User Stories für Admin oder Guest. 
 
-# Implentierung Data Access: 
+### Implentierung Data Access: 
 
 Nach dem wir den "model" fertiggestellt haben, fingen wir mit der "data access" an. Die Base Data wurde uns vorgegeben, dies haben wir für unser Projekt übernommen. Mit der Base Data müssen wir den Code nicht neu schreiben und es ermmöglich uns einfach diese für weitere Klassen zu übernehemen (Vererbung). Die Data Access stellt eine Verbindung zu SQL und in diesem Layer können vor allem Daten gelesen, gelöscht oder bearbeitet werden. In diesem Layer werden vor allem Funktioniern wie Select, Insert into, Delete. Update verwendet. 
 
-# Implentierung Business Logic: 
+### Implentierung Business Logic: 
 
 Im Layer Business Logic (Manager Schicht) verbindet den Data Access mit der UI. Hier wird definiert, was der USER (Admin oder Guest) machen darf. z.B. Guest darf eine Buchung stornieren,suchen,buchen usw. -> Die Methode wird dem Benutzter entsprechend zugewiesen. Die Data Access speichert oder holt Daten ohne zu wissen, ob das Sinn ergibt, dafür gibt es denn Business Logic. Dort werden die Regeln definiert. 
 
