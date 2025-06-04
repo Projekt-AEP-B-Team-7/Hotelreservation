@@ -9,11 +9,14 @@ from model.guest import Guest
 from model.room import Room
 from model.invoice import Invoice
 
+from ui.city import CityValidationService
+
 from data_access.hotel_data_access import HotelDataAccess
 
 class HotelManager:
     def __init__(self) -> None:
         self.__hotel_da = HotelDataAccess()
+        self.city_validator = CityValidationService()
 
     def create_hotel(self, name: str, stars: int, address: Address = None) -> Hotel:
         return self.__hotel_da.create_new_hotel(name, stars, address)
