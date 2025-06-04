@@ -24,6 +24,8 @@ Präsentationsvideo:
 
 ## Class Diagram
 
+![image](https://github.com/user-attachments/assets/1b4d7a91-2510-4f92-bc11-e5e5cce9ef09)
+
 
 ## Methodologie
 ...
