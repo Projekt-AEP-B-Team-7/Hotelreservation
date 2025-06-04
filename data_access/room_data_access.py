@@ -1,6 +1,14 @@
 from __future__ import annotations
 import model
+from model.room_type import RoomType
+from model.hotel import Hotel
+from model.booking import Booking
+from model.facilities import Facilities
+from model.address import Address
+from model.guest import Guest
 from model.room import Room
+from model.invoice import Invoice
+
 from data_access.base_data_access import BaseDataAccess
 
 class RoomDataAccess(BaseDataAccess):
@@ -96,10 +104,10 @@ class RoomDataAccess(BaseDataAccess):
         for (room_id, room_number, price_per_night, type_id, type_description, max_guests,hotel_id, hotel_name, hotel_stars, address_id, street, city, zip_code, facilities_str) in rooms:
             address = model.Address(address_id, street, city, zip_code) if address_id else None
             hotel = model.Hotel(hotel_id, hotel_name, hotel_stars, address)
-        room_type = model.RoomType(type_id, type_description, max_guests)
-        facilities = facilities_str.split(',') if facilities_str else []
-        room = model.Room(room_id, hotel, room_number, room_type, price_per_night)
-        room.facilities = facilities
+            room_type = model.RoomType(type_id, type_description, max_guests)
+            facilities = facilities_str.split(',') if facilities_str else []
+            room = model.Room(room_id, hotel, room_number, room_type, price_per_night)
+            room.facilities = facilities
         result.append(room)
         return result
 

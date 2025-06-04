@@ -1,26 +1,37 @@
 import os
 
-import model
-
-from model.room import Room
-from model.hotel import Hotel
-from model.facilities import Facilities
 from model.room_type import RoomType
+from model.hotel import Hotel
+from model.booking import Booking
+from model.facilities import Facilities
+from model.address import Address
+from model.guest import Guest
+from model.room import Room
+from model.invoice import Invoice
 
-import data_access
+from data_access.room_type_data_access import RoomTypeDataAccess
 
-class RoomtypeManager:
-    def __init__(self) -> None:
-        self.__roomtype_dal = data_access.RoomtypeDataAccess()
+class RoomTypeManager:
+    def __init__(self):
+        self.__room_type_da = RoomTypeDataAccess()
 
-    def read_roomtypes_by_hotel(self, hotel_id: int) -> list[model.Roomtype]:
-        return self.__roomtype_dal.read_roomtypes_by_hotel(hotel_id)
+    def create_new_room_type(self, description: str, max_guests: int) -> RoomType:
+        return self.__room_type_da.create_new_room_type(description, max_guests)
 
-    def update_roomtype(self, type_id: int) -> model.Roomtype:
-        return self.__roomtype_dal.update_roomtype(type_id)
+    def read_roomtype_by_id(self, type_id: int) -> RoomType:
+        return self.__room_type_da.read_roomtype_by_id(type_id)
 
-    def delete_roomtype(self, type_id: int) -> model.Roomtype:
-        return self.__roomtype_dal.delete_roomtype(type_id)
+    def read_room_type_by_description(self, description: str) -> RoomType:
+        return self.__room_type_da.read_room_type_by_description(description)
 
-    #def insert_roomtype(self, type_id: int) -> model.Roomtype:
-        return self.__roomtype_dal.insert_roomtype(type_id)
+    def read_all_room_types(self) -> list[RoomType]:
+        return self.__room_type_da.read_all_room_types()
+
+    def read_room_types_by_guest_capacity(self, min_guests: int) -> list[RoomType]:
+        return self.__room_type_da.read_room_types_by_guest_capacity(min_guests)
+
+    def update_room_type(self, room_type: RoomType) -> None:
+        self.__room_type_da.update_room_type(room_type)
+
+    def delete_room_type(self, room_type: RoomType) -> None:
+        self.__room_type_da.delete_room_type(room_type)

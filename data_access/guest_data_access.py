@@ -1,14 +1,20 @@
-from __future__ import annotations
-from model.guest import Guest
-from model.address import Address
+import model
+
+from model.room_type import RoomType
+from model.hotel import Hotel
 from model.booking import Booking
+from model.facilities import Facilities
+from model.address import Address
+from model.guest import Guest
+from model.room import Room
+from model.invoice import Invoice
 from data_access.base_data_access import BaseDataAccess
 
 class GuestDataAccess(BaseDataAccess):
     def __init__(self, db_path: str = None):
         super().__init__(db_path)
 
-    def create_new_guest(self, first_name: str, last_name: str, email: str, address: model.Address = None) -> Guest:
+    def create_new_guest(self, first_name: str, last_name: str, email: str, address: Address = None) -> Guest:
         if first_name is None:
             raise ValueError("First name is required")
         if last_name is None:
@@ -22,7 +28,7 @@ class GuestDataAccess(BaseDataAccess):
         params = (first_name, last_name, email,
             address.address_id if address else None,)
         last_row_id, row_count = self.execute(sql, params)
-        return model.Guest(last_row_id, first_name, last_name, email, address)
+        return Guest(last_row_id, first_name, last_name, email, address)
 
     def read_guest_by_id(self, guest_id: int) -> Guest | None:
         if guest_id is None:
@@ -41,8 +47,8 @@ class GuestDataAccess(BaseDataAccess):
             guest_id, first_name, last_name, email, address_id, street, city, zip_code = result
             address = None
             if address_id:
-                address = model.Address(address_id, street, city, zip_code)
-            return model.Guest(guest_id, first_name, last_name, email, address)
+                address = Address(address_id, street, city, zip_code)
+            return Guest(guest_id, first_name, last_name, email, address)
         else:
             return None
 
@@ -114,7 +120,7 @@ class GuestDataAccess(BaseDataAccess):
         guests = self.fetchall(sql)
         
         return [Guest(guest_id, first_name, last_name, email,
-                model.Address(address_id, street, city, zip_code) if address_id else None)
+                Address(address_id, street, city, zip_code) if address_id else None)
             for guest_id, first_name, last_name, email, address_id, street, city, zip_code in guests]
 
     def update_guest(self, guest: Guest) -> None:

@@ -36,7 +36,6 @@ class Room:
         self.__price_per_night: float = float(price_per_night)
         self.__facilities: list[Facilities] = []
 
-        # Add room to hotel
         if hotel is not None:
             hotel.add_room(self)
 
@@ -59,7 +58,6 @@ class Room:
         if not isinstance(hotel, Hotel):
             raise ValueError("Hotel must be an instance of Hotel")
         
-        # Only do something if the hotel is not already the same, prevents recursion!
         if self.__hotel is not hotel:
             if self.__hotel is not None:
                 self.__hotel.remove_room(self)

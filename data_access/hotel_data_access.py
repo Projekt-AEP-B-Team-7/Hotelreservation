@@ -1,9 +1,13 @@
 from __future__ import annotations
 
-from model.hotel import Hotel
-from model.address import Address
-from model.room import Room
 from model.room_type import RoomType
+from model.hotel import Hotel
+from model.booking import Booking
+from model.facilities import Facilities
+from model.address import Address
+from model.guest import Guest
+from model.room import Room
+from model.invoice import Invoice
 
 from data_access.base_data_access import BaseDataAccess
 

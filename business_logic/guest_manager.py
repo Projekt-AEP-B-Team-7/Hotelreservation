@@ -1,8 +1,14 @@
 import os
 
 import model
-from model.guest import Guest
+from model.room_type import RoomType
+from model.hotel import Hotel
+from model.booking import Booking
+from model.facilities import Facilities
 from model.address import Address
+from model.guest import Guest
+from model.room import Room
+from model.invoice import Invoice
 import data_access
 from data_access.guest_data_access import GuestDataAccess
 
