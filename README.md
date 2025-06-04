@@ -26,9 +26,57 @@ Präsentationsvideo:
 
 ![image](https://github.com/user-attachments/assets/1b4d7a91-2510-4f92-bc11-e5e5cce9ef09)
 
+Anhand des vorgegeben ER-Modells haben wir den Class Diagramm erstellt. 
+
+Wir haben folgende Klassen definiert: 
+
+Class Address: (Cardinality 1:1)
+Attributes: address_id, street, city, zip_code
+Relationship: One-to-one with both Hotel and Guest (One to One) 
+
+Class Guest: (Cardinality 1:0)
+Attributes: address_id, street, city, zip_code
+Relationship: One Guest has one address and One Guest can have multiple bookings (One to many)
+
+Class Booking (Cardinality 0:1), (Cardinality 1:1)
+Attributes: booking_id, check_in_date, check_out_date, is_cancelled, total_amount
+Relationships: One or more Booking belongs to one guest, One Booking is linked to one invoice
+
+Class Invoice: (Cardinality 1:1)
+Attributes: invoice_id, issue_date, total_amount
+Relationship: One Invoice belongs to one booking
+
+Class Hotel: (Cardinality 1:0)
+Attributes: hotel_id, name, stars, rooms, address
+Relationships: One hotel has one address, One hotel includes multiple rooms
+
+Class Room: (Cardinality 1:1)
+Attributes: room_id, room_no, price_per_night
+Relationships: One Room belongs to one hotel, One Room has exactly one room type
+
+Class Room_Type: (Cardinality 0:1)
+Attributes: room_type_id, description, max_guests
+Relationships: One Room_type can be associated with multiple rooms and one Room_type can have multiple facilities
+
+Class Facilities: (Cardinality 0:1)
+Attributes: facility_id, facility_name 
+Relationship: One Facility can be linked to multiple room types
 
 ## Methodologie
-...
+
+Team Roles: 
+-> haben alle grundsätzlich zusammen gearbeitet und uns gegenseitig geholfen. Da wir alle keine IT Background haben mussten wir usn gegenseitig unterstützen. Wir haben die spezifisch untereinander die Aufgaben unterteilt sondern jede Woche unsere Ziele festgelegt, was wir bis zum nächsten Coaching erledigen sollte, sei es Repetition oder spezifische Aufgaben lösen. Zu Beginn haben wir mit dem Projektboard gearbeitet und nachher jedoch uns via Whatsapp, Teams kommuniziert und am Schluss haben wir auch den Projektboard benutzt um noch ausstehene Aufträge vor der Abgabe zu erledigen. Da wir alle aus der Gruppe immer vor Ort waren, könnten wir die genutze Zeit für das Coaching verwenden um weiter an unserem Projekt zu arbeiten und gegebenfalls unsere Coaches zu fragen.
+
+Der erste Schritt war die Verknüpfung mit Github und Deepnote, anhand der aufgeladenen Einleitungsvideo konnten wir dies schnell erledigen. Dann erstellten wir anhand des vorgegeben ER-Diagramms den Class Diagramm. Da die Klassen und Attribute bereits gegeben waren mussten wir diese nur noch kopieren. Wir haben auch die Methoden versucht zu definieren, jedoch haben wir sie nachträglich entfernt, da wir nicht schon vorab wussten, welche Methoden wir schlussendlich für unsere User Stories wichtig sein würden und haben beschlossen dies am Schluss unseres Projektes im Class Diagramm zu ergänzen. 
+
+Als Weiteren Schritt haben wir im Model die Getter/Setter Methode angewendet und dann haben wir die Properties festgelegt. 
+Die festgelegt 
+
+
+
+
+
+
 
 ## Minimale User Stories
 
