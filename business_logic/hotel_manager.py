@@ -35,9 +35,9 @@ class HotelManager:
 
     def read_hotels_by_guest_capacity(self, city: str, max_guests: int) -> list[Hotel]:
         return self.__hotel_da.read_hotels_by_guest_capacity(city, max_guests)
-    
-    def get_available_hotels(self, city: str, checkin: str, checkout: str, guests: int) -> list[Hotel]:
-        return self.__hotel_da.read_available_hotels_by_guest_capacity(city, checkin, checkout, guests)
+
+    def read_available_hotels_by_guest_capacity(self, city: str, min_stars: int, check_in_date: str, check_out_date: str, guest_count: int) -> list[Hotel]:
+        return self.__hotel_da.read_available_hotels_by_guest_capacity(city, min_stars, check_in_date, check_out_date, guest_count)
 
     def read_available_hotels(self, city: str, check_in_date: str, check_out_date: str) -> list[Hotel]:
         return self.__hotel_da.read_available_hotels(city, check_in_date, check_out_date)
