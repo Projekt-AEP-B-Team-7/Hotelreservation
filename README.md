@@ -75,6 +75,8 @@ Nach der Modellierung der Datenobjekte folgte die Umsetzung der Data-Access-Schi
 
 Die fachliche Logik wurde stattdessen in der Business-Logic-Schicht (Manager-Schicht) implementiert. Diese bildet die Schnittstelle zwischen der Benutzeroberfläche und der Data-Access-Schicht. Hier werden die Regeln definiert, die festlegen, welche Aktionen ein Benutzer,je nach Rolle ausführen darf. So darf ein Gast beispielsweise eine Buchung erstellen, stornieren oder nach verfügbaren Zimmern suchen, während ein Admini Hotels, Zimmer oder Zimmertypen verwalten kann. Die Business-Logik stellt sicher, dass nur gültige, sinnvolle Operationen ausgeführt werden, und nutzt dafür gezielt Methoden der Data-Access-Schicht.
 
+UI Layer:
+
 ##Englisch: 
 
 Project Approach
