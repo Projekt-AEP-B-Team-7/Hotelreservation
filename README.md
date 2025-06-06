@@ -90,7 +90,13 @@ Following the completion of the model classes, we developed the data access laye
 
 Business logic was implemented in a separate business logic layer (also called the manager layer), which connects the data access layer with the user interface. This is where rules are defined to specify what actions a user—depending on their role—is allowed to perform. For example, a guest can make a booking, cancel a reservation, or search for available rooms, whereas an administrator can manage hotels, rooms, or room types. The business logic layer ensures that only valid and meaningful operations are executed, relying on the data access layer for database interaction.
 
+## Herausforderungen im Projekt
 
+Eine der größten Herausforderungen in unserem Projekt war es, herauszufinden, welche Inhalte aus dem Unterricht konkret im Projekt umgesetzt werden müssen. Da Python für uns als Gruppe Neuland war, sind wir alle immer wieder an unsere Grenzen gestossen. Bis zur Erstellung des Klassendiagramms konnten wir das Gelernte noch gut anwenden. Doch danach kamen wir in eine Phase, in der wir als Gruppe nicht mehr wussten, wie wir weiter vorgehen sollten.
+
+Uns war unklar, in welcher Schicht welche Funktionalitäten implementiert werden müssen, wie die einzelnen Bestandteile des Projekts miteinander zusammenhängen und wie der Gesamtaufbau der Anwendung konkret aussehen soll. An diesem Punkt kamen wir nicht mehr weiter und entschieden uns, Hilfe in Anspruch zu nehmen. Wir wandten uns an Charuta, die uns anhand eines anschaulichen Beispiels erklärte, wie eine mehrschichtige Architektur aufgebaut ist und welche Rolle jede Schicht spielt. Sie zeigte uns auf, wie Modellklassen, Data Access und Business Logic miteinander interagieren und welche Bestandteile in welcher Schicht umgesetzt werden sollen.
+
+Durch diese Unterstützung konnten wir den Aufbau des Projekts besser nachvollziehen und unsere Umsetzung gezielter und strukturierter fortführen. Wir begannen zu verstehen, wie die verschiedenen Teile zusammenwirken und wie die Anforderungen aus den User Stories technisch umgesetzt werden können.
 
 
 
