@@ -102,8 +102,17 @@ Eine weitere Herausforderung bestand darin, die Benutzerabfragen (User Queries) 
 
 Dieser Prozess war oft frustrierend, insbesondere wenn Fehler nicht sofort nachvollziehbar waren oder ein scheinbar funktionierender Teil plötzlich nicht mehr korrekt ausgeführt wurde. Wir mussten lernen, dass nicht jeder erste Versuch gelingt und dass systematisches Debugging, Ausdauer und gegenseitige Unterstützung entscheidend sind, um solche Problem zu lösen. 
 
+##English:
+Challenges in the Project
+One of the biggest challenges in our project was figuring out which content from the course needed to be implemented in our application. Since Python was new to all of us, we often reached our limits. Up until the creation of the class diagram, we were able to apply what we had learned fairly well. However, we then entered a phase where we, as a group, no longer knew how to proceed.
 
+It was unclear to us which functionalities needed to be implemented in which layer, how the different parts of the project were connected, and what the overall structure of the application should look like. At that point, we were stuck and decided to seek help. We turned to Charuta, who explained the concept of layered architecture to us using a clear example and showed us the role of each layer. She demonstrated how model classes, data access, and business logic interact and how to correctly assign responsibilities to each layer.
 
+With her support, we were able to better understand the structure of the project and continue our implementation in a more focused and organized way. We began to grasp how the various components work together and how to translate the requirements from the user stories into technical solutions.
+
+Another challenge was writing and executing the user queries correctly. This required a great deal of patience, as error messages were often unclear and could have multiple causes. Even small mistakes would cause the entire code to fail. The error messages were sometimes misleading, which made it necessary to switch between layers—such as from the user interface to the business logic and then to the data access layer—to locate the source of the issue.
+
+This process was often frustrating, especially when errors weren’t immediately understandable or when a seemingly working part of the code suddenly stopped functioning. We had to learn that not every first attempt will succeed—and that systematic debugging, persistence, and mutual support are essential to overcoming such problems.
 
 ## Minimale User Stories
 
