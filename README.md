@@ -100,7 +100,7 @@ Durch diese Unterstützung konnten wir den Aufbau des Projekts besser nachvollzi
 
 Eine weitere Herausforderung bestand darin, die Benutzerabfragen (User Queries) korrekt zu formulieren und erfolgreich auszuführen. Dieser Teil erforderte viel Geduld, da Fehler oft nicht eindeutig waren und mehrere Ursachen haben konnten. Schon kleine Ungenauigkeiten führten dazu, dass der gesamte Code nicht mehr funktionierte. Die Fehlermeldungen waren teils irreführend, was es notwendig machte, mehrfach zwischen den Schichten zu wechseln – etwa von der Benutzeroberfläche zur Business-Logic-Schicht und weiter zur Data-Access-Ebene –, um den Ursprung des Problems zu finden.
 
-Dieser Prozess war oft frustrierend, insbesondere wenn Fehler nicht sofort nachvollziehbar waren oder ein scheinbar funktionierender Teil plötzlich nicht mehr korrekt ausgeführt wurde. Wir mussten lernen, dass nicht jeder erste Versuch gelingt und dass systematisches Debugging, Ausdauer und gegenseitige Unterstützung entscheidend sind, um solche Problem zu lösen. 
+Dieser Prozess war oft frustrierend, insbesondere wenn Fehler nicht sofort nachvollziehbar waren oder ein scheinbar funktionierender Teil plötzlich nicht mehr korrekt ausgeführt wurde. Wir mussten lernen, dass nicht jeder erste Versuch gelingt und Ausdauer und gegenseitige Unterstützung entscheidend sind, um solche Problem zu lösen. 
 
 ##English:
 Challenges in the Project
