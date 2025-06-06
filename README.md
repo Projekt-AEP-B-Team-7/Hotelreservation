@@ -22,19 +22,14 @@ Deepnote:\
 Project Board:\
 Präsentationsvideo:
 
-## Methodologie
-
 ### Teamarbeit:
 Unser Team hat grundsätzlich gemeinsam gearbeitet und sich gegenseitig unterstützt, da niemand von uns einen IT-Background hatte. Anstatt feste Rollen oder Zuständigkeiten zu vergeben, haben wir uns jede Woche neue Ziele gesetzt, die wir bis zum nächsten Coaching erreichen wollten. Diese Ziele umfassten sowohl Repetition als auch das Bearbeiten konkreter Aufgaben.
 
 Zu Beginn haben wir mit einem Projektboard gearbeitet, im weiteren Verlauf jedoch primär über WhatsApp und Microsoft Teams kommuniziert. Gegen Projektende haben wir das Board nochmals aktiv genutzt, um offene Aufgaben vor der Abgabe zu erledigen. Da alle Teammitglieder regelmässig vor Ort waren, konnten wir die Coaching-Zeit optimal nutzen, um gemeinsam weiterzuarbeiten und bei Bedarf direkt Fragen an unsere Coaches zu stellen. Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten und damit vertraut waren, entschieden wir uns bewusst dafür, alle Bestandteile unseres Projekts, also Model, Data Access, Business Logic und User Interface, vollständig in Deepnote umzusetzen.
 
-### Projektziele: ?
+### Vorgehensweise im Projekt:
 
-### Projektstruktur:
-
-Zuerst haben wir den Klassendiagramms basierend auf dem vorgegebenen ER-Modell erstellt. Da die Klassen und Attribute bereits definiert waren, konnten wir diese direkt übernehmen. Ursprünglich wollten wir auch Methoden ergänzen, entschieden uns jedoch, diese erst später zu definieren. sobald klar war, welche Methoden für die Umsetzung der User Stories tatsächlich benötigt werden.
-
+Unser Projekt begann mit der Erstellung eines Klassendiagramms auf Basis des vorgegebenen ER-Modells. Da die Klassen und ihre Attribute bereits definiert waren, konnten wir diese direkt übernehmen. Ursprünglich hatten wir geplant, auch Methoden zu ergänzen, entschieden uns jedoch bewusst dafür, diese erst in einem späteren Schritt zu implementieren – und zwar dann, wenn klar war, welche Methoden für die Umsetzung der User Stories tatsächlich benötigt werden.
 
 ### Class Diagram
 
@@ -72,38 +67,26 @@ Class Facilities: (Cardinality 0:1)
 Attributes: facility_id, facility_name 
 Relationship: One Facility can be linked to multiple room types
 
+Das erstellte Klassendiagramm umfasste zentrale Klassen wie Hotel, Room, Guest, Booking, Invoice, RoomType, Facility und Address. Die Beziehungen zwischen den Klassen wurden anhand der Kardinalitäten modelliert: Ein Hotel hat beispielsweise genau eine Adresse und mehrere Zimmer, ein Zimmer gehört zu genau einem Hotel und ist einem bestimmten Zimmertyp zugeordnet. Gäste wiederum verfügen über genau eine Adresse und können mehrere Buchungen vornehmen. Eine Buchung wiederum ist genau einer Rechnung zugeordnet. Die Beziehung zwischen Zimmertypen und Ausstattungen wurde als Many to Many-Beziehung modelliert, realisiert durch eine Zwischentabelle.
 
-### Implentierung der Modelklassen: 
+Im Anschluss daran begannen wir mit der Implementierung der Modellklassen. Jede Klasse wurde in einer separaten .py-Datei im Ordner models gespeichert. Der Aufbau erfolgte jeweils mit einem Konstruktor (__init__), um bereits beim Erstellen eines Objekts die relevanten Werte übergeben zu können. Zusätzlich setzten wir Getter- und Setter-Methoden ein, um eine saubere Datenkapselung sicherzustellen. Dies ermöglicht uns eine kontrollierte Datenmanipulation, was insbesondere bei Benutzeraktionen, etwa durch Gäste oder Admin wichtig ist, um ungültige Werte und ungewollte Änderungen zu vermeiden.
 
-Im nächsten Schritt wurden die Modellklassen des Projekts im Github implentiert. 
+Nach der Modellierung der Datenobjekte folgte die Umsetzung der Data-Access-Schicht. Als Grundlage diente uns eine vorgegebene Basisklasse (DB File) zur Anbindung an die SQLite-Datenbank, die wir für unsere konkreten Klassen übernehmen und erweitern konnten. In dieser Schicht wurden grundlegende Datenbankoperationen wie SELECT, INSERT, UPDATE und DELETE umgesetzt. Die Data-Access-Schicht ist rein für den Zugriff auf die Daten zuständig und enthält keine Logik.
 
-Dabei gingen wie folgt vor:
+Die fachliche Logik wurde stattdessen in der Business-Logic-Schicht (Manager-Schicht) implementiert. Diese bildet die Schnittstelle zwischen der Benutzeroberfläche und der Data-Access-Schicht. Hier werden die Regeln definiert, die festlegen, welche Aktionen ein Benutzer,je nach Rolle ausführen darf. So darf ein Gast beispielsweise eine Buchung erstellen, stornieren oder nach verfügbaren Zimmern suchen, während ein Admini Hotels, Zimmer oder Zimmertypen verwalten kann. Die Business-Logik stellt sicher, dass nur gültige, sinnvolle Operationen ausgeführt werden, und nutzt dafür gezielt Methoden der Data-Access-Schicht.
 
-Für jede Modellklasse wurde eine eigene .py-Datei erstellt (z. B. hotel.py, room.py) und im Ordner models gespeichert.
-  
-Jede Klasse wurde mit einem __init__-Konstruktor versehen. Dadurch können beim Erstellen eines Objekts direkt Werte mitgegeben werden.
-Beispiel:            class Hotel:
-                        def __init__(self, hotel_name, stars):
-                          self.hotel_name = Royal
-                          self.stars = 4
-                        hotel = Hotel
-                        print(hotel.hotel_name) #Ausgabe Royal
+##Englisch: 
 
-Dann wurden die Getter- und Setter-Methoden angewendet,um eine saubere Datenkapselung sicherzustellen. Damit können wir verhindern,    dass Daten von aussen unkontrolliert verändert werden. Zum Beispiel durch falsche oder ungültige Werte. Ausserdem lässt sich steuern, ob und wie jemand einen Wert lesen oder ändern darf. Das ist besonders relevant für Funktionen in unseren User Stories für Admin oder Guest. 
+Project Approach
+Our project began with the creation of a class diagram based on the provided ER model. Since the classes and their attributes were already defined, we were able to adopt them directly. Initially, we had planned to add methods as well, but we deliberately decided to define them at a later stage—specifically once it became clear which methods would actually be needed to implement the user stories.
 
-### Implentierung Data Access: 
+The resulting class diagram included core classes such as Hotel, Room, Guest, Booking, Invoice, RoomType, Facility, and Address. The relationships between the classes were modeled using appropriate cardinalities: for example, a hotel has exactly one address and multiple rooms; a room belongs to exactly one hotel and is assigned to one specific room type. Guests have exactly one address and can make multiple bookings. Each booking, in turn, is associated with exactly one invoice. The many-to-many relationship between room types and facilities was modeled using a junction table.
 
-Nach dem wir den "model" fertiggestellt haben, fingen wir mit der "data access" an. Die Base Data wurde uns vorgegeben, dies haben wir für unser Projekt übernommen. Mit der Base Data müssen wir den Code nicht neu schreiben und es ermmöglich uns einfach diese für weitere Klassen zu übernehemen (Vererbung). Die Data Access stellt eine Verbindung zu SQL und in diesem Layer können vor allem Daten gelesen, gelöscht oder bearbeitet werden. In diesem Layer werden vor allem Funktioniern wie Select, Insert into, Delete. Update verwendet. 
+We then proceeded with the implementation of the model classes. Each class was created in a separate .py file and stored in the models directory. Each class was constructed with an __init__ method, allowing us to pass relevant values when creating an object. Additionally, we implemented getter and setter methods to ensure clean data encapsulation. This approach helps prevent uncontrolled manipulation of object data from outside the class and ensures that values are only modified in a controlled and validated way. This is particularly important for user interactions—such as those by guests or administrators—where invalid values must be avoided.
 
-### Implentierung Business Logic: 
+Following the completion of the model classes, we developed the data access layer. This layer was built on top of a provided base class that handles the database connection to SQLite. We reused and extended this base class for our specific entities, enabling efficient code reuse through inheritance. The data access layer implements fundamental database operations such as SELECT, INSERT, UPDATE, and DELETE. It is responsible solely for interacting with the database and does not include any business logic.
 
-Im Layer Business Logic (Manager Schicht) verbindet den Data Access mit der UI. Hier wird definiert, was der USER (Admin oder Guest) machen darf. z.B. Guest darf eine Buchung stornieren,suchen,buchen usw. -> Die Methode wird dem Benutzter entsprechend zugewiesen. Die Data Access speichert oder holt Daten ohne zu wissen, ob das Sinn ergibt, dafür gibt es denn Business Logic. Dort werden die Regeln definiert. 
-
-
-
-
-
-
+Business logic was implemented in a separate business logic layer (also called the manager layer), which connects the data access layer with the user interface. This is where rules are defined to specify what actions a user—depending on their role—is allowed to perform. For example, a guest can make a booking, cancel a reservation, or search for available rooms, whereas an administrator can manage hotels, rooms, or room types. The business logic layer ensures that only valid and meaningful operations are executed, relying on the data access layer for database interaction.
 
 
 
