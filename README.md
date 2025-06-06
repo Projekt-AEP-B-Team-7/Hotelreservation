@@ -29,7 +29,7 @@ Zu Beginn haben wir mit einem Projektboard gearbeitet, im weiteren Verlauf jedoc
 
 ### Vorgehensweise im Projekt:
 
-Unser Projekt begann mit der Erstellung eines Klassendiagramms auf Basis des vorgegebenen ER-Modells. Da die Klassen und ihre Attribute bereits definiert waren, konnten wir diese direkt übernehmen. Ursprünglich hatten wir geplant, auch Methoden zu ergänzen, entschieden uns jedoch bewusst dafür, diese erst in einem späteren Schritt zu implementieren – und zwar dann, wenn klar war, welche Methoden für die Umsetzung der User Stories tatsächlich benötigt werden.
+Unser Projekt begann mit der Erstellung eines Klassendiagramms auf Basis des vorgegebenen ER-Modells. Da die Klassen und ihre Attribute bereits definiert waren, konnten wir diese direkt übernehmen.
 
 ### Class Diagram
 
