@@ -1,5 +1,6 @@
 from __future__ import annotations
 from datetime import date
+import model
 from model.room_type import RoomType
 from model.hotel import Hotel
 from model.booking import Booking
@@ -14,8 +15,8 @@ class BookingDataAccess(BaseDataAccess):
     def __init__(self, db_path: str = None):
         super().__init__(db_path)
 
-    def create_new_booking(self, guest: model.Guest, room: model.Room, check_in_date: date, 
-                          check_out_date: date, total_amount: float) -> model.Booking:
+    def create_new_booking(self, guest: Guest, room: Room, check_in_date: date, 
+                          check_out_date: date, total_amount: float) -> Booking:
         if guest is None:
             raise ValueError("Guest is required")
         if room is None:
@@ -33,7 +34,7 @@ class BookingDataAccess(BaseDataAccess):
         """
         params = (guest.guest_id, room.room_id, check_in_date, check_out_date, False, total_amount)
         last_row_id, row_count = self.execute(sql, params)
-        return [model.Booking(last_row_id, guest, room, check_in_date, check_out_date, False, total_amount)]
+        return Booking(last_row_id, guest, room, check_in_date, check_out_date, False, total_amount)
 
     def read_booking_by_id(self, booking_id: int) -> Booking | None:
         if booking_id is None:
@@ -51,7 +52,7 @@ class BookingDataAccess(BaseDataAccess):
         JOIN Guest ON Booking.guest_id = Guest.guest_id
         JOIN Room ON Booking.room_id = Room.room_id
         JOIN Hotel ON Room.hotel_id = Hotel.hotel_id
-        JOIN Room_Type ON Room_Type.type_id = Room_Type.type_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
         LEFT JOIN Address ON Guest.address_id = Address.address_id
         WHERE Booking.booking_id = ?
         """
@@ -69,10 +70,10 @@ class BookingDataAccess(BaseDataAccess):
             
             guest = Guest(guest_id, first_name, last_name, email, guest_address)
             hotel = Hotel(hotel_id, hotel_name, hotel_stars)
-            room_type = model.RoomType(type_id, type_description, max_guests)
+            room_type = RoomType(type_id, type_description, max_guests)
             room = Room(room_id, hotel, room_number, room_type, price_per_night)
             
-            return [model.Booking(booking_id, guest, room, check_in_date, check_out_date, is_cancelled, total_amount)]
+            return Booking(booking_id, guest, room, check_in_date, check_out_date, bool(is_cancelled), total_amount)
         else:
             return None
 
@@ -96,9 +97,9 @@ class BookingDataAccess(BaseDataAccess):
         params = tuple([guest.guest_id])
         bookings = self.fetchall(sql, params)
         
-        return [Booking(booking_id, guest,model.Room(room_id,model.Hotel(hotel_id, hotel_name, hotel_stars),
-                room_number,model.RoomType(type_id, description, max_guests),price_per_night),
-                check_in_date, check_out_date, is_cancelled, total_amount)
+        return [Booking(booking_id, guest, Room(room_id, Hotel(hotel_id, hotel_name, hotel_stars),
+                room_number, RoomType(type_id, description, max_guests), price_per_night),
+                check_in_date, check_out_date, bool(is_cancelled), total_amount)
             for booking_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
                 room_number, price_per_night, hotel_id, hotel_name, hotel_stars,
                 type_id, description, max_guests in bookings]
@@ -119,8 +120,8 @@ class BookingDataAccess(BaseDataAccess):
         params = tuple([room.room_id])
         bookings = self.fetchall(sql, params)
         
-        return [model.Booking(booking_id,model.Guest(guest_id, first_name, last_name, email),
-                room, check_in_date, check_out_date, is_cancelled,total_amount)
+        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email),
+                room, check_in_date, check_out_date, bool(is_cancelled), total_amount)
             for booking_id, guest_id, check_in_date, check_out_date, is_cancelled, total_amount,
                 first_name, last_name, email in bookings]
 
@@ -144,9 +145,9 @@ class BookingDataAccess(BaseDataAccess):
         params = tuple([hotel.hotel_id])
         bookings = self.fetchall(sql, params)
         
-        return [model.Booking(booking_id, model.Guest(guest_id, first_name, last_name, email),
-                model.Room(room_id, hotel, room_number, model.RoomType(type_id, description, max_guests), price_per_night),
-                check_in_date, check_out_date, is_cancelled, total_amount)
+        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email),
+                Room(room_id, hotel, room_number, RoomType(type_id, description, max_guests), price_per_night),
+                check_in_date, check_out_date, bool(is_cancelled), total_amount)
             for booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
                 first_name, last_name, email, room_number, price_per_night,
                 type_id, description, max_guests in bookings]
@@ -168,10 +169,10 @@ class BookingDataAccess(BaseDataAccess):
         """
         bookings = self.fetchall(sql)
         
-        return [model.Booking(booking_id, model.Guest(guest_id, first_name, last_name, email),
-                model.Room(room_id,model.Hotel(hotel_id, hotel_name, hotel_stars),
-                    room_number, model.RoomType(type_id, description, max_guests), price_per_night),
-                check_in_date, check_out_date, is_cancelled,total_amount)
+        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email),
+                Room(room_id, Hotel(hotel_id, hotel_name, hotel_stars),
+                    room_number, RoomType(type_id, description, max_guests), price_per_night),
+                check_in_date, check_out_date, bool(is_cancelled), total_amount)
             for booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
                 first_name, last_name, email, room_number, price_per_night,
                 hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in bookings]
@@ -194,10 +195,10 @@ class BookingDataAccess(BaseDataAccess):
         """
         bookings = self.fetchall(sql)
         
-        return [model.Booking(booking_id, model.Guest(guest_id, first_name, last_name, email),
-                model.Room(room_id, model.Hotel(hotel_id, hotel_name, hotel_stars),
-                    room_number, model.RoomType(type_id, description, max_guests), price_per_night),
-                check_in_date, check_out_date, is_cancelled, total_amount)
+        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email),
+                Room(room_id, Hotel(hotel_id, hotel_name, hotel_stars),
+                    room_number, RoomType(type_id, description, max_guests), price_per_night),
+                check_in_date, check_out_date, bool(is_cancelled), total_amount)
             for booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
                 first_name, last_name, email, room_number, price_per_night,
                 hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in bookings]
@@ -220,10 +221,10 @@ class BookingDataAccess(BaseDataAccess):
         """
         bookings = self.fetchall(sql)
         
-        return [model.Booking (booking_id, model.Guest(guest_id, first_name, last_name, email),
-                model.Room(room_id, model.Hotel(hotel_id, hotel_name, hotel_stars), room_number,
-                    model.RoomType(type_id, description, max_guests), price_per_night),
-                check_in_date, check_out_date, is_cancelled, total_amount)
+        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email),
+                Room(room_id, Hotel(hotel_id, hotel_name, hotel_stars), room_number,
+                    RoomType(type_id, description, max_guests), price_per_night),
+                check_in_date, check_out_date, bool(is_cancelled), total_amount)
             for booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
                 first_name, last_name, email, room_number, price_per_night,
                 hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in bookings]
@@ -244,7 +245,7 @@ class BookingDataAccess(BaseDataAccess):
     def cancel_booking_by_id(self, booking_id: int) -> None:
         sql = """
         UPDATE Booking SET is_cancelled = 1 WHERE booking_id = ?"""
-        params = tuple([booking.booking_id])
+        params = tuple([booking_id])
         last_row_id, row_count = self.execute(sql, params)
        
     def delete_booking(self, booking: Booking) -> None:
