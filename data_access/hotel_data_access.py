@@ -75,7 +75,7 @@ class HotelDataAccess(BaseDataAccess):
         SELECT Hotel.hotel_id, Hotel.name, Hotel.stars, Address.address_id, Address.street, Address.city, Address.zip_code
         FROM Hotel
         LEFT JOIN Address ON Hotel.address_id = Address.address_id
-        WHERE Hotel.stars >= ?
+        WHERE Hotel.stars = ?
         ORDER BY Hotel.stars DESC, Hotel.name
         """
         params = tuple([min_stars])
@@ -95,7 +95,7 @@ class HotelDataAccess(BaseDataAccess):
         SELECT Hotel.hotel_id, Hotel.name, Hotel.stars, Address.address_id, Address.street, Address.city, Address.zip_code
         FROM Hotel
         JOIN Address ON Hotel.address_id = Address.address_id
-        WHERE Address.city = ? AND Hotel.stars >= ?
+        WHERE LOWER(Address.city) = LOWER(?) AND Hotel.stars = ?
         ORDER BY Hotel.stars DESC, Hotel.name
         """
         params = tuple([city, min_stars])
@@ -127,7 +127,7 @@ class HotelDataAccess(BaseDataAccess):
                 Address(address_id, street, city, zip_code))
             for hotel_id, name, stars, address_id, street, city, zip_code in hotels]
 
-    def read_available_hotels(self, city: str, check_in_date: str, check_out_date: str) -> list[Hotel]:
+    def read_available_hotels(self, city: str, guest_count: int, check_in_date: str, check_out_date: str) -> list[Hotel]:
         if city is None:
             raise ValueError("City cannot be None")
         if check_in_date is None:
@@ -155,7 +155,38 @@ class HotelDataAccess(BaseDataAccess):
         return [Hotel(hotel_id, name, stars, 
                 Address(address_id, street, city, zip_code))
             for hotel_id, name, stars, address_id, street, city, zip_code in hotels]
-    
+
+    def read_available_hotels_by_guest_date(self, city: str, check_in_date: str, check_out_date: str, guest_count: int) -> list[Hotel]:
+        if city is None:
+            raise ValueError("City cannot be None")
+        if check_in_date is None or check_out_date is None:
+            raise ValueError("Check-in and check-out dates are required")
+        if guest_count is None or guest_count < 1:
+            raise ValueError("Guest count must be at least 1")
+
+        sql = """
+        SELECT DISTINCT Hotel.hotel_id, Hotel.name, Address.address_id, Address.street, Address.city, Address.zip_code
+        FROM Hotel
+        JOIN Address ON Hotel.address_id = Address.address_id
+        JOIN Room ON Hotel.hotel_id = Room.hotel_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        WHERE LOWER(Address.city) = LOWER(?)
+        AND Room_Type.max_guests = ?
+        AND Room.room_id NOT IN (
+            SELECT Booking.room_id FROM Booking
+            WHERE Booking.is_cancelled = 0 AND (
+                (Booking.check_in_date <= ? AND Booking.check_out_date > ?) OR
+                (Booking.check_in_date < ? AND Booking.check_out_date >= ?)
+            )
+        )
+        ORDER BY Hotel.stars DESC, Hotel.name
+        """
+        params = (city, guest_count, check_in_date, check_in_date, check_out_date, check_out_date)
+        hotels = self.fetchall(sql, params)
+
+        return [ Hotel(hotel_id, name, stars, Address(address_id, street, city, zip_code))
+                for hotel_id, name, stars, address_id, street, city, zip_code in hotels]
+
     def read_available_hotels_by_guest_capacity(self, city: str, min_stars: int, check_in_date: str, check_out_date: str, guest_count: int) -> list[Hotel]:
         if city is None:
             raise ValueError("City cannot be None")
@@ -173,7 +204,7 @@ class HotelDataAccess(BaseDataAccess):
         JOIN Room ON Hotel.hotel_id = Room.hotel_id
         JOIN Room_Type ON Room.type_id = Room_Type.type_id
         WHERE LOWER(Address.city) = LOWER(?)
-        AND Hotel.stars = ? AND Room_Type.max_guests >= ?
+        AND Hotel.stars = ? AND Room_Type.max_guests = ?
         AND Room.room_id NOT IN (
             SELECT Booking.room_id FROM Booking
             WHERE Booking.is_cancelled = 0 AND (
