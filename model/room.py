@@ -1,43 +1,33 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from model.hotel import Hotel
-    from model.room_type import RoomType
-    from model.facilities import Facilities
+from model.room_type import RoomType
+from model.facilities import Facilities
 
 class Room:
-    def __init__(self, room_id: int, hotel: Hotel, room_number: str, room_type: RoomType, price_per_night: float):
+    def __init__(self, room_id: int, hotel: "Hotel", room_number: str, room_type: RoomType, price_per_night: float):
         if not room_id:
             raise ValueError("Room ID is required")
         if not isinstance(room_id, int):
             raise ValueError("Room ID must be an integer")
         if not hotel:
             raise ValueError("Hotel is required")
-        if not isinstance(hotel, Hotel):
-            raise ValueError("Hotel must be an instance of Hotel")
         if not room_number:
             raise ValueError("Room number is required")
         if not isinstance(room_number, str):
             raise ValueError("Room number must be a string")
-        if not room_type:
-            raise ValueError("Room type is required")
-        if not isinstance(room_type, RoomType):
+        if not room_type or not isinstance(room_type, RoomType):
             raise ValueError("Room type must be an instance of RoomType")
-        if not isinstance(price_per_night, (int, float)):
-            raise ValueError("Price per night must be a number")
-        if price_per_night < 0:
-            raise ValueError("Price per night cannot be negative")
+        if not isinstance(price_per_night, (int, float)) or price_per_night < 0:
+            raise ValueError("Price per night must be a positive number")
 
-        self.__room_id: int = room_id
-        self.__hotel: Hotel = hotel
-        self.__room_number: str = room_number
-        self.__room_type: RoomType = room_type
-        self.__price_per_night: float = float(price_per_night)
+        self.__room_id = room_id
+        self.__hotel = hotel
+        self.__room_number = room_number
+        self.__room_type = room_type
+        self.__price_per_night = float(price_per_night)
         self.__facilities: list[Facilities] = []
 
-        if hotel is not None:
-            hotel.add_room(self)
+        hotel.add_room(self)
 
     def __repr__(self):
         return f"Room(id={self.__room_id!r}, number={self.__room_number!r}, type={self.__room_type!r})"
@@ -47,17 +37,13 @@ class Room:
         return self.__room_id
 
     @property
-    def hotel(self) -> Hotel:
+    def hotel(self) -> "Hotel":
         return self.__hotel
 
     @hotel.setter
-    def hotel(self, hotel: Hotel) -> None:
-        from model.hotel import Hotel
+    def hotel(self, hotel: "Hotel") -> None:
         if not hotel:
             raise ValueError("Hotel is required")
-        if not isinstance(hotel, Hotel):
-            raise ValueError("Hotel must be an instance of Hotel")
-        
         if self.__hotel is not hotel:
             if self.__hotel is not None:
                 self.__hotel.remove_room(self)
@@ -71,9 +57,7 @@ class Room:
 
     @room_number.setter
     def room_number(self, room_number: str) -> None:
-        if not room_number:
-            raise ValueError("Room number is required")
-        if not isinstance(room_number, str):
+        if not room_number or not isinstance(room_number, str):
             raise ValueError("Room number must be a string")
         self.__room_number = room_number
 
@@ -83,10 +67,7 @@ class Room:
 
     @room_type.setter
     def room_type(self, room_type: RoomType) -> None:
-        from model.room_type import RoomType
-        if not room_type:
-            raise ValueError("Room type is required")
-        if not isinstance(room_type, RoomType):
+        if not room_type or not isinstance(room_type, RoomType):
             raise ValueError("Room type must be an instance of RoomType")
         self.__room_type = room_type
 
@@ -96,10 +77,8 @@ class Room:
 
     @price_per_night.setter
     def price_per_night(self, price_per_night: float) -> None:
-        if not isinstance(price_per_night, (int, float)):
-            raise ValueError("Price per night must be a number")
-        if price_per_night < 0:
-            raise ValueError("Price per night cannot be negative")
+        if not isinstance(price_per_night, (int, float)) or price_per_night < 0:
+            raise ValueError("Price per night must be a positive number")
         self.__price_per_night = float(price_per_night)
 
     @property
@@ -107,19 +86,13 @@ class Room:
         return self.__facilities.copy()
 
     def add_facility(self, facility: Facilities) -> None:
-        from model.facilities import Facilities
-        if not facility:
-            raise ValueError("Facility is required")
-        if not isinstance(facility, Facilities):
+        if not facility or not isinstance(facility, Facilities):
             raise ValueError("Facility must be an instance of Facilities")
         if facility not in self.__facilities:
             self.__facilities.append(facility)
 
     def remove_facility(self, facility: Facilities) -> None:
-        from model.facilities import Facilities
-        if not facility:
-            raise ValueError("Facility is required")
-        if not isinstance(facility, Facilities):
+        if not facility or not isinstance(facility, Facilities):
             raise ValueError("Facility must be an instance of Facilities")
         if facility in self.__facilities:
             self.__facilities.remove(facility)
