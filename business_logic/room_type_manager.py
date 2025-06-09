@@ -15,8 +15,8 @@ class RoomTypeManager:
     def __init__(self):
         self.__room_type_da = RoomTypeDataAccess()
 
-    def create_new_room_type(self, description: str, max_guests: int) -> RoomType:
-        return self.__room_type_da.create_new_room_type(description, max_guests)
+    def create_room_type(self, description: str, max_guests: int) -> RoomType:
+        return self.__room_type_da.create_room_type(description, max_guests)
 
     def read_roomtype_by_id(self, type_id: int) -> RoomType:
         return self.__room_type_da.read_roomtype_by_id(type_id)

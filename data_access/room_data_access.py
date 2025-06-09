@@ -1,5 +1,5 @@
 from __future__ import annotations
-import model
+
 from model.room_type import RoomType
 from model.hotel import Hotel
 from model.booking import Booking
@@ -85,30 +85,27 @@ class RoomDataAccess(BaseDataAccess):
     def read_all_rooms_with_facilities(self) -> list[Room]:
         sql = """
         SELECT Room.room_id, Room.room_number, Room.price_per_night,
-           Room_Type.type_id, Room_Type.description, Room_Type.max_guests,
-           Hotel.hotel_id, Hotel.name, Hotel.stars,
-           Address.address_id, Address.street, Address.city, Address.zip_code,
-           GROUP_CONCAT(Facility.name) as facilities
+        Room_Type.type_id, Room_Type.description, Room_Type.max_guests,
+        Hotel.hotel_id, Hotel.name, Hotel.stars,
+        Address.address_id, Address.street, Address.city, Address.zip_code
         FROM Room
         JOIN Room_Type ON Room.type_id = Room_Type.type_id
         JOIN Hotel ON Room.hotel_id = Hotel.hotel_id
         LEFT JOIN Address ON Hotel.address_id = Address.address_id
-        LEFT JOIN Room_Facility ON Room.room_id = Room_Facility.room_id
-        LEFT JOIN Facility ON Room_Facility.facility_id = Facility.facility_id
-        GROUP BY Room.room_id
         ORDER BY Room.room_number
         """
         rooms = self.fetchall(sql)
 
         result = []
-        for (room_id, room_number, price_per_night, type_id, type_description, max_guests,hotel_id, hotel_name, hotel_stars, address_id, street, city, zip_code, facilities_str) in rooms:
+        
+        for (room_id, room_number, price_per_night, type_id, type_description, max_guests,
+            hotel_id, hotel_name, hotel_stars, address_id, street, city, zip_code) in rooms:
+            
             address = Address(address_id, street, city, zip_code) if address_id else None
             hotel = Hotel(hotel_id, hotel_name, hotel_stars, address)
             room_type = RoomType(type_id, type_description, max_guests)
-            facilities = facilities_str.split(',') if facilities_str else []
             room = Room(room_id, hotel, room_number, room_type, price_per_night)
-            room.facilities = facilities
-        result.append(room)
+            result.append(room)
         return result
 
     def read_available_rooms_by_hotel(self, hotel: Hotel, check_in_date: str, check_out_date: str) -> list[Room]:

@@ -15,7 +15,7 @@ class RoomTypeDataAccess(BaseDataAccess):
     def __init__(self, db_path: str = None):
         super().__init__(db_path)
 
-    def create_new_room_type(self, description: str, max_guests: int) -> RoomType:
+    def create_room_type(self, description: str, max_guests: int) -> RoomType:
         if description is None:
             raise ValueError("Room type description is required")
         if max_guests is None:

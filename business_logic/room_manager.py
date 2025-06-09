@@ -30,7 +30,7 @@ class RoomManager:
     def read_available_rooms_by_hotel(self, hotel: Hotel, check_in_date: str, check_out_date: str) -> list[Room]:
         return self.__room_da.read_available_rooms_by_hotel(hotel, check_in_date, check_out_date)
 
-    def read_rooms_with_facilities(self, room: Room) -> list[Facilities]:
+    def read_all_rooms_with_facilities(self) -> list[Room]:
         return self.__room_da.read_rooms_with_facilities(room)
 
     def update_room(self, room: Room) -> None:
