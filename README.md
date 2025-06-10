@@ -25,11 +25,10 @@ Präsentationsvideo:
 ### Teamarbeit:
 Unser Team hat grundsätzlich gemeinsam gearbeitet und sich gegenseitig unterstützt, da niemand von uns einen IT-Background hatte. Anstatt feste Rollen oder Zuständigkeiten zu vergeben, haben wir uns jede Woche neue Ziele gesetzt, die wir bis zum nächsten Coaching erreichen wollten. Diese Ziele umfassten sowohl Repetition als auch das Bearbeiten konkreter Aufgaben.
 
-Zu Beginn haben wir mit einem Projektboard gearbeitet, im weiteren Verlauf jedoch primär über WhatsApp und Microsoft Teams kommuniziert. Gegen Projektende haben wir das Board nochmals aktiv genutzt, um offene Aufgaben vor der Abgabe zu erledigen. Da alle Teammitglieder regelmässig vor Ort waren, konnten wir die Coaching-Zeit optimal nutzen, um gemeinsam weiterzuarbeiten und bei Bedarf direkt Fragen an unsere Coaches zu stellen. Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten und damit vertraut waren, entschieden wir uns bewusst dafür, alle Bestandteile unseres Projekts, also Model, Data Access, Business Logic und User Interface, vollständig in Deepnote umzusetzen.
+Zu Beginn nutzten wir ein Projektboard, später kommunizierten wir hauptsächlich über WhatsApp und Microsoft Teams. Gegen Projektende wurde das Board nochmals aktiv verwendet, um alle offenen Aufgaben vor der Abgabe gezielt abzuarbeiten. Da alle Teammitglieder regelmässig vor Ort waren, konnten wir die Coaching-Zeit optimal nutzen, um gemeinsam weiterzuarbeiten und bei Bedarf direkt Fragen zu stellen.
 
-### Vorgehensweise im Projekt:
+Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten, entschieden wir uns bewusst dafür, das gesamte Projekt in Deepnote umzusetzen, inklusive Datenmodellierung, Datenzugriff, Logik und Benutzeroberfläche.
 
-Unser Projekt begann mit der Erstellung eines Klassendiagramms auf Basis des vorgegebenen ER-Modells. Da die Klassen und ihre Attribute bereits definiert waren, konnten wir diese direkt übernehmen.
 
 ### Class Diagram
 
@@ -67,54 +66,59 @@ Class Facilities: (Cardinality 0:1)
 Attributes: facility_id, facility_name 
 Relationship: One Facility can be linked to multiple room types
 
-Das erstellte Klassendiagramm umfasste zentrale Klassen wie Hotel, Room, Guest, Booking, Invoice, RoomType, Facility und Address. Die Beziehungen zwischen den Klassen wurden anhand der Kardinalitäten modelliert: Ein Hotel hat beispielsweise genau eine Adresse und mehrere Zimmer, ein Zimmer gehört zu genau einem Hotel und ist einem bestimmten Zimmertyp zugeordnet. Gäste wiederum verfügen über genau eine Adresse und können mehrere Buchungen vornehmen. Eine Buchung wiederum ist genau einer Rechnung zugeordnet. Die Beziehung zwischen Zimmertypen und Ausstattungen wurde als Many to Many-Beziehung modelliert, realisiert durch eine Zwischentabelle.
+## Technische Architektur:
 
-Im Anschluss daran begannen wir mit der Implementierung der Modellklassen. Jede Klasse wurde in einer separaten .py-Datei im Ordner models gespeichert. Der Aufbau erfolgte jeweils mit einem Konstruktor (__init__), um bereits beim Erstellen eines Objekts die relevanten Werte übergeben zu können. Zusätzlich setzten wir Getter- und Setter-Methoden ein, um eine saubere Datenkapselung sicherzustellen. Dies ermöglicht uns eine kontrollierte Datenmanipulation, was insbesondere bei Benutzeraktionen, etwa durch Gäste oder Admin wichtig ist, um ungültige Werte und ungewollte Änderungen zu vermeiden.
+Unsere Anwendung basiert auf einer klar getrennten Vier-Schichten-Architektur, bestehend aus:
 
-Nach der Modellierung der Datenobjekte folgte die Umsetzung der Data-Access-Schicht. Als Grundlage diente uns eine vorgegebene Basisklasse (DB File) zur Anbindung an die SQLite-Datenbank, die wir für unsere konkreten Klassen übernehmen und erweitern konnten. In dieser Schicht wurden grundlegende Datenbankoperationen wie SELECT, INSERT, UPDATE und DELETE umgesetzt. Die Data-Access-Schicht ist rein für den Zugriff auf die Daten zuständig und enthält keine Logik.
+1. Model
+Diese Schicht umfasst die Klassenstruktur, die direkt auf dem Klassendiagramm basiert (Hotel, Room, Guest, Booking, Invoice, RoomType, Facility, Address).
+Jede Klasse wurde in einer eigenen .py-Datei gespeichert, besitzt einen Konstruktor zur Initialisierung, enthält Getter- und Setter-Methoden für kontrollierten Zugriff auf Attribute.
+Die Klassen dienen zur Abbildung der Geschäftsobjekte im Code und stellen sicher, dass Daten konsistent verarbeitet werden können.
 
-Die fachliche Logik wurde stattdessen in der Business-Logic-Schicht (Manager-Schicht) implementiert. Diese bildet die Schnittstelle zwischen der Benutzeroberfläche und der Data-Access-Schicht. Hier werden die Regeln definiert, die festlegen, welche Aktionen ein Benutzer,je nach Rolle ausführen darf. So darf ein Gast beispielsweise eine Buchung erstellen, stornieren oder nach verfügbaren Zimmern suchen, während ein Admini Hotels, Zimmer oder Zimmertypen verwalten kann. Die Business-Logik stellt sicher, dass nur gültige, sinnvolle Operationen ausgeführt werden, und nutzt dafür gezielt Methoden der Data-Access-Schicht.
+3. Data Access 
+In dieser Schicht erfolgt der Zugriff auf die SQLite-Datenbank. Jede Entität hat eine eigene Klasse, die auf eine gemeinsame Basisklasse für DB-Verbindungen aufbaut.
+Diese Klassen enthalten Methoden für: SELECT, INSERT, UPDATE, DELETE, sowie für komplexere Abfragen mit JOINs.
+Die Data-Access-Schicht ist rein technisch – sie enthält keine Geschäftslogik.
 
-UI Layer:
+4. Business Logic (Manager-Schicht)
+Diese Ebene übernimmt die fachliche Steuerung. Sie stellt die Verbindung zwischen Benutzerinteraktion (UI) und Datenzugriff (Data Accsess) her und validiert alle Aktionen.
+Hier wird definiert, wer was darf (z. B. Gast bucht, Admin verwaltet Daten),welche Regeln gelten (z. B. keine Buchung in der Vergangenheit),wie Suchanfragen verarbeitet werden.
+Die Business-Logic-Schicht ist zentral für die Sicherheit und Korrektheit der Anwendung.
 
-##Englisch: 
-Project Approach
-Our project began with the creation of a class diagram based on the provided ER model. Since the classes and their attributes were already defined, we were able to adopt them directly. Initially, we had planned to add methods as well, but we deliberately decided to define them at a later stage—specifically once it became clear which methods would actually be needed to implement the user stories.
+5. User Interface (UI)
+Die Benutzeroberfläche wurde in Python direkt in Deepnote als Konsolenanwendung umgesetzt. Sie enthält Menüführung und Eingabeaufforderungen, z. B.: Zimmertypen anzeigen, Buchungen erfassen, Hoteldaten aktualisieren.
+Sie ruft Methoden aus der Business-Logik auf und zeigt Ergebnisse oder Fehlermeldungen direkt im Menü an.
 
-The resulting class diagram included core classes such as Hotel, Room, Guest, Booking, Invoice, RoomType, Facility, and Address. The relationships between the classes were modeled using appropriate cardinalities: for example, a hotel has exactly one address and multiple rooms; a room belongs to exactly one hotel and is assigned to one specific room type. Guests have exactly one address and can make multiple bookings. Each booking, in turn, is associated with exactly one invoice. The many-to-many relationship between room types and facilities was modeled using a junction table.
+## Gelerntes Wissen:
 
-We then proceeded with the implementation of the model classes. Each class was created in a separate .py file and stored in the models directory. Each class was constructed with an __init__ method, allowing us to pass relevant values when creating an object. Additionally, we implemented getter and setter methods to ensure clean data encapsulation. This approach helps prevent uncontrolled manipulation of object data from outside the class and ensures that values are only modified in a controlled and validated way. This is particularly important for user interactions—such as those by guests or administrators—where invalid values must be avoided.
+Im Verlauf des Projekts haben wir vielfältiges Wissen aufgebaut, sowohl auf technischer als auch auf methodischer Ebene. 
+Wir lernten unter anderem:
 
-Following the completion of the model classes, we developed the data access layer. This layer was built on top of a provided base class that handles the database connection to SQLite. We reused and extended this base class for our specific entities, enabling efficient code reuse through inheritance. The data access layer implements fundamental database operations such as SELECT, INSERT, UPDATE, and DELETE. It is responsible solely for interacting with the database and does not include any business logic.
+-wie man aus einem ER-Modell ein Klassendiagramm erstellt
+-wie man Klassen mit Attributen und Methoden in Python aufbaut und mit Getter-/Setter-Methoden für saubere Datenkapselung sorgt
+-wie eine mehrschichtige Architektur funktioniert, bestehend aus Model, Data Access, Business Logic und UI
+-wie man mit SQLite arbeitet, Tabellen verknüpft und Datenbankabfragen sicher gestaltet, (Datenschema erstellt??)
+-wie man Datenbankzugriffe vom Code trennt, um Wiederverwendbarkeit und Wartbarkeit sicherzustellen (UI layer Methoden werden aufgerufen!)
+-wie man Business-Logik sauber strukturiert, um Benutzeraktionen zu steuern und Daten zu validieren
 
-Business logic was implemented in a separate business logic layer (also called the manager layer), which connects the data access layer with the user interface. This is where rules are defined to specify what actions a user—depending on their role—is allowed to perform. For example, a guest can make a booking, cancel a reservation, or search for available rooms, whereas an administrator can manage hotels, rooms, or room types. The business logic layer ensures that only valid and meaningful operations are executed, relying on the data access layer for database interaction.
+Darüber hinaus lernten wir viel über Testen, Fehlersuche, Umgang mit Fehlermeldungen und wie man im Team gemeinsam Probleme löst. 
 
-## Herausforderungen im Projekt
+## Herausforderung: 
 
-Eine der größten Herausforderungen in unserem Projekt war es, herauszufinden, welche Inhalte aus dem Unterricht konkret im Projekt umgesetzt werden müssen. Da Python für uns als Gruppe Neuland war, sind wir alle immer wieder an unsere Grenzen gestossen. Bis zur Erstellung des Klassendiagramms konnten wir das Gelernte noch gut anwenden. Doch danach kamen wir in eine Phase, in der wir als Gruppe nicht mehr wussten, wie wir weiter vorgehen sollten.
+Eine erste Herausforderung war der Einstieg in die praktische Umsetzung nach der theoretischen Phase. Obwohl wir das Klassendiagramm gut erarbeiten konnten, war zunächst nicht klar, wie daraus ein funktionierendes System entstehen soll. Insbesondere die Trennung in verschiedene Schichten war für uns schwer verständlich. Erst durch Unterstützung unserer Coaches, mit einem praxisnahen Beispiel zur Schichtenarchitektur, konnten wir die Zusammenhänge zwischen Model, Data Access und Business Logic nachvollziehen und korrekt umsetzen.
 
-Uns war unklar, in welcher Schicht welche Funktionalitäten implementiert werden müssen, wie die einzelnen Bestandteile des Projekts miteinander zusammenhängen und wie der Gesamtaufbau der Anwendung konkret aussehen soll. An diesem Punkt kamen wir nicht mehr weiter und entschieden uns, Hilfe in Anspruch zu nehmen. Wir wandten uns an Charuta, die uns anhand eines anschaulichen Beispiels erklärte, wie eine mehrschichtige Architektur aufgebaut ist und welche Rolle jede Schicht spielt. Sie zeigte uns auf, wie Modellklassen, Data Access und Business Logic miteinander interagieren und welche Bestandteile in welcher Schicht umgesetzt werden sollen.
+Ein weiterer schwieriger Punkt war das Fehlersuchen. Sie konnten in jeder Schicht entstehen und waren nicht immer sofort nachvollziehbar. Oft verursachte ein kleider Fehler dazu, dass der gesamte Ablauf nicht mehr funktionierte. Fehlermeldungen waren manchmal unklar und führten zu viel Sucharbeit über mehrere Ebenen hinweg. Das erforderte Geduld, Konzentration und Teamarbeit.
+Auch das Umsetzen von Benutzerabfragen und Menüs in der UI-Schicht war komplexer als erwartet, insbesondere, wenn Eingaben validiert oder dynamisch auf Datenbankinhalte reagiert werden musste.Oftmals mussten wir zwischen den layers switchen und dort Änderungen vornehmen und eine von mehreren Fehler zu bereinigen. 
 
-Durch diese Unterstützung konnten wir den Aufbau des Projekts besser nachvollziehen und unsere Umsetzung gezielter und strukturierter fortführen. Wir begannen zu verstehen, wie die verschiedenen Teile zusammenwirken und wie die Anforderungen aus den User Stories technisch umgesetzt werden können.
+## Reflexion:
 
-Eine weitere Herausforderung bestand darin, die Benutzerabfragen (User Queries) korrekt zu formulieren und erfolgreich auszuführen. Dieser Teil erforderte viel Geduld, da Fehler oft nicht eindeutig waren und mehrere Ursachen haben konnten. Schon kleine Ungenauigkeiten führten dazu, dass der gesamte Code nicht mehr funktionierte. Die Fehlermeldungen waren teils irreführend, was es notwendig machte, mehrfach zwischen den Schichten zu wechseln – etwa von der Benutzeroberfläche zur Business-Logic-Schicht und weiter zur Data-Access-Ebene –, um den Ursprung des Problems zu finden.
+Rückblickend war dieses Projekt für uns alle ein intensiver, aber auch sehr wertvoller Lernprozess. Wir haben viel Neues über Programmierung, Datenbanken und den Aufbau eines Systems gelernt. Besonders die technische Struktur, also wie man ein Projekt in mehrere Schichten (Model, Data Access, Business Logic und Benutzeroberfläche) aufteilt, wurde für uns nach und nach verständlich.
 
-Dieser Prozess war oft frustrierend, insbesondere wenn Fehler nicht sofort nachvollziehbar waren oder ein scheinbar funktionierender Teil plötzlich nicht mehr korrekt ausgeführt wurde. Wir mussten lernen, dass nicht jeder erste Versuch gelingt und Ausdauer und gegenseitige Unterstützung entscheidend sind, um solche Problem zu lösen. 
+Wichtig war auch unsere Teamarbeit. Wir haben viel gemeinsam ausprobiert, uns gegenseitig unterstützt, Fehler erklärt und gemeinsam Lösungen gesucht. Dabei haben wir gemerkt, wie wichtig Kommunikation und Geduld sind, vor allem, wenn etwas nicht gleich funktioniert.
 
-fehlt noch!
-Reflexion, Technisches Architektur
+Natürlich gab es auch viele Herausforderungen und Momente, in denen wir nicht weiterwussten. Doch gerade in diesen Phasen haben wir am meisten gelernt. Durch die Hilfe unserer Coaches und durch unser eigenes Dranbleiben konnten wir Schritt für Schritt ein funktionierendes System aufbauen.
 
-##English:
-Challenges in the Project
-One of the biggest challenges in our project was figuring out which content from the course needed to be implemented in our application. Since Python was new to all of us, we often reached our limits. Up until the creation of the class diagram, we were able to apply what we had learned fairly well. However, we then entered a phase where we, as a group, no longer knew how to proceed.
-
-It was unclear to us which functionalities needed to be implemented in which layer, how the different parts of the project were connected, and what the overall structure of the application should look like. At that point, we were stuck and decided to seek help. We turned to Charuta, who explained the concept of layered architecture to us using a clear example and showed us the role of each layer. She demonstrated how model classes, data access, and business logic interact and how to correctly assign responsibilities to each layer.
-
-With her support, we were able to better understand the structure of the project and continue our implementation in a more focused and organized way. We began to grasp how the various components work together and how to translate the requirements from the user stories into technical solutions.
-
-Another challenge was writing and executing the user queries correctly. This required a great deal of patience, as error messages were often unclear and could have multiple causes. Even small mistakes would cause the entire code to fail. The error messages were sometimes misleading, which made it necessary to switch between layers—such as from the user interface to the business logic and then to the data access layer—to locate the source of the issue.
-
-This process was often frustrating, especially when errors weren’t immediately understandable or when a seemingly working part of the code suddenly stopped functioning. We had to learn that not every first attempt will succeed—and that systematic debugging, persistence, and mutual support are essential to overcoming such problems.
+Am Ende hat uns dieses Projekt gezeigt, dass man etwas Komplexes umsetzen kann, wenn man als Team zusammenarbeitet, sich Zeit nimmt und offen bleibt für Neues.
 
 ## Minimale User Stories
 
