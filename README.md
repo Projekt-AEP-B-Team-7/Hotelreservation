@@ -78,7 +78,6 @@ Die fachliche Logik wurde stattdessen in der Business-Logic-Schicht (Manager-Sch
 UI Layer:
 
 ##Englisch: 
-
 Project Approach
 Our project began with the creation of a class diagram based on the provided ER model. Since the classes and their attributes were already defined, we were able to adopt them directly. Initially, we had planned to add methods as well, but we deliberately decided to define them at a later stage—specifically once it became clear which methods would actually be needed to implement the user stories.
 
@@ -101,6 +100,9 @@ Durch diese Unterstützung konnten wir den Aufbau des Projekts besser nachvollzi
 Eine weitere Herausforderung bestand darin, die Benutzerabfragen (User Queries) korrekt zu formulieren und erfolgreich auszuführen. Dieser Teil erforderte viel Geduld, da Fehler oft nicht eindeutig waren und mehrere Ursachen haben konnten. Schon kleine Ungenauigkeiten führten dazu, dass der gesamte Code nicht mehr funktionierte. Die Fehlermeldungen waren teils irreführend, was es notwendig machte, mehrfach zwischen den Schichten zu wechseln – etwa von der Benutzeroberfläche zur Business-Logic-Schicht und weiter zur Data-Access-Ebene –, um den Ursprung des Problems zu finden.
 
 Dieser Prozess war oft frustrierend, insbesondere wenn Fehler nicht sofort nachvollziehbar waren oder ein scheinbar funktionierender Teil plötzlich nicht mehr korrekt ausgeführt wurde. Wir mussten lernen, dass nicht jeder erste Versuch gelingt und Ausdauer und gegenseitige Unterstützung entscheidend sind, um solche Problem zu lösen. 
+
+fehlt noch!
+Reflexion, Technisches Architektur
 
 ##English:
 Challenges in the Project
