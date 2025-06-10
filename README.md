@@ -70,22 +70,22 @@ Relationship: One Facility can be linked to multiple room types
 
 Unsere Anwendung basiert auf einer klar getrennten Vier-Schichten-Architektur, bestehend aus:
 
-##### Model: 
+#### Model: 
 Diese Schicht umfasst die Klassenstruktur, die direkt auf dem Klassendiagramm basiert (Hotel, Room, Guest, Booking, Invoice, RoomType, Facility, Address).
 Jede Klasse wurde in einer eigenen .py-Datei gespeichert, besitzt einen Konstruktor zur Initialisierung, enthält Getter- und Setter-Methoden für kontrollierten Zugriff auf Attribute.
 Die Klassen dienen zur Abbildung der Geschäftsobjekte im Code und stellen sicher, dass Daten konsistent verarbeitet werden können.
 
-##### Data Access: 
+#### Data Access: 
 In dieser Schicht erfolgt der Zugriff auf die SQLite-Datenbank. Jede Entität hat eine eigene Klasse, die auf eine gemeinsame Basisklasse für DB-Verbindungen aufbaut.
 Diese Klassen enthalten Methoden für: SELECT, INSERT, UPDATE, DELETE, sowie für komplexere Abfragen mit JOINs.
 Die Data-Access-Schicht ist rein technisch – sie enthält keine Geschäftslogik.
 
-##### Business Logic (Manager-Schicht): 
+#### Business Logic (Manager-Schicht): 
 Diese Ebene übernimmt die fachliche Steuerung. Sie stellt die Verbindung zwischen Benutzerinteraktion (UI) und Datenzugriff (Data Accsess) her und validiert alle Aktionen.
 Hier wird definiert, wer was darf (z. B. Gast bucht, Admin verwaltet Daten),welche Regeln gelten (z. B. keine Buchung in der Vergangenheit),wie Suchanfragen verarbeitet werden.
 Die Business-Logic-Schicht ist zentral für die Sicherheit und Korrektheit der Anwendung.
 
-##### User Interface (UI): 
+#### User Interface (UI): 
 Die Benutzeroberfläche wurde in Python direkt in Deepnote als Konsolenanwendung umgesetzt. Sie enthält Menüführung und Eingabeaufforderungen, z. B.: Zimmertypen anzeigen, Buchungen erfassen, Hoteldaten aktualisieren.
 Sie ruft Methoden aus der Business-Logik auf und zeigt Ergebnisse oder Fehlermeldungen direkt im Menü an.
 
