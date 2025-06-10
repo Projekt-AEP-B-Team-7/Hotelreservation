@@ -22,7 +22,7 @@ Deepnote:\
 Project Board:\
 Präsentationsvideo:
 
-### Teamarbeit:
+## Teamarbeit:
 Unser Team hat grundsätzlich gemeinsam gearbeitet und sich gegenseitig unterstützt, da niemand von uns einen IT-Background hatte. Anstatt feste Rollen oder Zuständigkeiten zu vergeben, haben wir uns jede Woche neue Ziele gesetzt, die wir bis zum nächsten Coaching erreichen wollten. Diese Ziele umfassten sowohl Repetition als auch das Bearbeiten konkreter Aufgaben.
 
 Zu Beginn nutzten wir ein Projektboard, später kommunizierten wir hauptsächlich über WhatsApp und Microsoft Teams. Gegen Projektende wurde das Board nochmals aktiv verwendet, um alle offenen Aufgaben vor der Abgabe gezielt abzuarbeiten. Da alle Teammitglieder regelmässig vor Ort waren, konnten wir die Coaching-Zeit optimal nutzen, um gemeinsam weiterzuarbeiten und bei Bedarf direkt Fragen zu stellen.
@@ -30,7 +30,7 @@ Zu Beginn nutzten wir ein Projektboard, später kommunizierten wir hauptsächlic
 Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten, entschieden wir uns bewusst dafür, das gesamte Projekt in Deepnote umzusetzen, inklusive Datenmodellierung, Datenzugriff, Logik und Benutzeroberfläche.
 
 
-### Class Diagram
+## Class Diagram
 
 ![image](https://github.com/user-attachments/assets/1b4d7a91-2510-4f92-bc11-e5e5cce9ef09)
  
