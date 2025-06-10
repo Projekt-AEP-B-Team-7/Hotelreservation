@@ -30,7 +30,7 @@ Zu Beginn nutzten wir ein Projektboard, später kommunizierten wir hauptsächlic
 Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten, entschieden wir uns bewusst dafür, das gesamte Projekt in Deepnote umzusetzen, inklusive Datenmodellierung, Datenzugriff, Logik und Benutzeroberfläche.
 
 
-## Class Diagram
+## Class Diagram -> Methoden ergänzen und Erklärung fehlt!
 
 ![image](https://github.com/user-attachments/assets/1b4d7a91-2510-4f92-bc11-e5e5cce9ef09)
  
