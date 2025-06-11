@@ -37,4 +37,7 @@ class RoomManager:
         self.__room_da.update_room(room)
 
     def delete_room(self, room: Room) -> None:
-        self.__room_da.delete_room(room) 
+        self.__room_da.delete_room(room)
+        
+    def read_rooms_by_hotel_id(self, hotel_id: int) -> list[Room]:
+        return self.__room_da.read_rooms_by_hotel_id(hotel_id)

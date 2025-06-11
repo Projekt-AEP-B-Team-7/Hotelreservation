@@ -47,5 +47,5 @@ class RoomType:
         if not isinstance(max_guests, int):
             raise ValueError("Max Guests must be an integer")
         if max_guests < 1:
-            raise ValueError("Max Gguests must be at least 1")
+            raise ValueError("Max Guests must be at least 1")
         self.__max_guests = max_guests

@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+import model
 from model.room_type import RoomType
 from model.hotel import Hotel
 from model.booking import Booking
@@ -8,7 +8,6 @@ from model.address import Address
 from model.guest import Guest
 from model.room import Room
 from model.invoice import Invoice
-
 from data_access.base_data_access import BaseDataAccess
 
 class RoomTypeDataAccess(BaseDataAccess):
@@ -26,17 +25,17 @@ class RoomTypeDataAccess(BaseDataAccess):
         """
         params = (description, max_guests)
         last_row_id, row_count = self.execute(sql, params)
-        return model.RoomType(last_row_id, description, max_guests)
+        return RoomType(last_row_id, description, max_guests)
 
-    def read_roomtype_by_id(self, type_id: int) -> Roomtype:
+    def read_roomtype_by_id(self, type_id: int) -> RoomType:
         sql = """
-        SELECT type_id, description, max_guests  FROM Room WHERE type_id = ?;
+        SELECT type_id, description, max_guests FROM Room_Type WHERE type_id = ?;
         """
         params = tuple([type_id])
         result = self.fetchone(sql, params)
         if result:
             type_id, description, max_guests = result
-            return Roomtype(type_id, description, max_guests)
+            return RoomType(type_id, description, max_guests)
         return None
 
     def read_room_type_by_description(self, description: str) -> RoomType | None:
@@ -60,7 +59,7 @@ class RoomTypeDataAccess(BaseDataAccess):
         """
         room_types = self.fetchall(sql)
         return [RoomType(type_id, description, max_guests)
-                for type_id, description, max_guests in room_types]        
+                for type_id, description, max_guests in room_types]
 
     def read_room_types_by_guest_capacity(self, min_guests: int) -> list[RoomType]:
         if min_guests is None:

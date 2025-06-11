@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 from model.room_type import RoomType
 from model.hotel import Hotel
 from model.booking import Booking
@@ -8,7 +7,6 @@ from model.address import Address
 from model.guest import Guest
 from model.room import Room
 from model.invoice import Invoice
-
 from data_access.base_data_access import BaseDataAccess
 
 class RoomDataAccess(BaseDataAccess):
@@ -135,3 +133,53 @@ class RoomDataAccess(BaseDataAccess):
             available_rooms.append(room)
         
         return available_rooms
+
+    def read_rooms_by_hotel_id(self, hotel_id: int) -> list[Room]:
+        if hotel_id is None:
+            raise ValueError("Hotel ID is required")
+
+        sql = """
+        SELECT Room.room_id, Room.room_number, Room.price_per_night,
+            Room_Type.type_id, Room_Type.description, Room_Type.max_guests,
+            Hotel.hotel_id, Hotel.name, Hotel.stars
+        FROM Room
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
+        JOIN Hotel ON Room.hotel_id = Hotel.hotel_id
+        WHERE Hotel.hotel_id = ?
+        ORDER BY Room.room_number
+        """
+        params = (hotel_id,)
+        results = self.fetchall(sql, params)
+
+        return [
+            Room(
+                room_id,
+                Hotel(hotel_id, hotel_name, hotel_stars),
+                room_number,
+                RoomType(type_id, description, max_guests),
+                price_per_night
+            )
+            for room_id, room_number, price_per_night,
+                type_id, description, max_guests,
+                hotel_id, hotel_name, hotel_stars in results
+        ]
+
+    def update_room(self, room: Room) -> None:
+        if room is None:
+            raise ValueError("Room cannot be None")
+
+        sql = """
+        UPDATE Room SET hotel_id = ?, room_number = ?, type_id = ?, price_per_night = ? WHERE room_id = ?
+        """
+        params = tuple([room.hotel.hotel_id, room.room_number, room.room_type.type_id, room.price_per_night, room.room_id])
+        last_row_id, row_count = self.execute(sql, params)
+
+    def delete_room(self, room: Room) -> None:
+        if room is None:
+            raise ValueError("Room cannot be None")
+
+        sql = """
+        DELETE FROM Room WHERE room_id = ?
+        """
+        params = tuple([room.room_id])
+        last_row_id, row_count = self.execute(sql, params)
