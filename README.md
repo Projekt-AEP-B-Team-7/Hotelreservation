@@ -1,4 +1,4 @@
-# B-Team-7 Hotelreservation
+'# B-Team-7 Hotelreservation
 
 ## Autoren
 - Saruje Varatharajah
@@ -18,7 +18,7 @@ Abgabetermin: 15.06.2025
 - Link zum Präsentationsvideo (Microsoft Stream, SWITCHtube oder Youtube)
 
 ## Links
-Deepnote:\
+Deepnote: https://deepnote.com/workspace/FHNW-9efe9cac-fee5-4d76-b7c4-0114c7e240f2/project/AEPB-Team-7-12cf43ae-1be3-4ed6-97d6-f7f9a12a6fe8/notebook/User-Stories-c7ba22b20c7a4a278e9192df60615dea
 Project Board:\
 Präsentationsvideo:
 
