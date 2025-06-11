@@ -2,8 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from datetime import date
 
-if TYPE_CHECKING:
-    from model.booking import Booking
+from model.booking import Booking
 
 class Invoice:
     def __init__(self, invoice_id: int, booking: Booking, issue_date: date, total_amount: float):

@@ -1,6 +1,5 @@
 from __future__ import annotations
 from datetime import date
-import model
 from model.room_type import RoomType
 from model.hotel import Hotel
 from model.booking import Booking
@@ -15,7 +14,7 @@ class InvoiceDataAccess(BaseDataAccess):
     def __init__(self, db_path: str = None):
         super().__init__(db_path)
 
-    def create_new_invoice(self, booking: model.Booking, issue_date: date, total_amount: float) -> model.Invoice:
+    def create_new_invoice(self, booking: Booking, issue_date: date, total_amount: float) -> Invoice:
         if booking is None:
             raise ValueError("Booking is required")
         if issue_date is None:
@@ -28,9 +27,9 @@ class InvoiceDataAccess(BaseDataAccess):
         """
         params = (booking.booking_id, issue_date, total_amount)
         last_row_id, row_count = self.execute(sql, params)
-        return model.Invoice(last_row_id, booking, issue_date, total_amount)
+        return Invoice(last_row_id, booking, issue_date, total_amount)
 
-    def read_invoice_by_id(self, invoice_id: int) -> model.Invoice | None:
+    def read_invoice_by_id(self, invoice_id: int) -> Invoice | None:
         if invoice_id is None:
             raise ValueError("Invoice ID is required")
 
@@ -38,7 +37,7 @@ class InvoiceDataAccess(BaseDataAccess):
         SELECT Invoice.invoice_id, Invoice.booking_id, Invoice.issue_date, Invoice.total_amount,
                Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
                Booking.is_cancelled, Booking.total_amount AS "Booking amount",
-               Guest.first_name, Guest.last_name, Guest.email,
+               Guest.first_name, Guest.last_name, Guest.email, Guest.phone_number,
                Room.room_number, Room.price_per_night,
                Hotel.hotel_id, Hotel.name AS "Hotel Name", Hotel.stars,
                Room_Type.type_id, Room_Type.description, Room_Type.max_guests
@@ -55,20 +54,20 @@ class InvoiceDataAccess(BaseDataAccess):
         if result:
             (invoice_id, booking_id, issue_date, total_amount,
              guest_id, room_id, check_in_date, check_out_date, is_cancelled, booking_amount,
-             first_name, last_name, email, room_number, price_per_night,
+             first_name, last_name, email, phone_number, room_number, price_per_night,
              hotel_id, hotel_name, hotel_stars, type_id, type_description, max_guests) = result
             
-            guest = model.Guest(guest_id, first_name, last_name, email)
-            hotel = model.Hotel(hotel_id, hotel_name, hotel_stars)
-            room_type = model.RoomType(type_id, type_description, max_guests)
-            room = model.Room(room_id, hotel, room_number, room_type, price_per_night)
-            booking = model.Booking(booking_id, guest, room, check_in_date, check_out_date, is_cancelled, booking_amount)
+            guest = Guest(guest_id, first_name, last_name, email, phone_number or "", None)
+            hotel = Hotel(hotel_id, hotel_name, hotel_stars)
+            room_type = RoomType(type_id, type_description, max_guests)
+            room = Room(room_id, hotel, room_number, room_type, price_per_night)
+            booking = Booking(booking_id, guest, room, check_in_date, check_out_date, is_cancelled, booking_amount)
             
-            return model.Invoice(invoice_id, booking, issue_date, total_amount)
+            return Invoice(invoice_id, booking, issue_date, total_amount)
         else:
             return None
 
-    def read_invoice_by_booking(self, booking: model.Booking) -> model.Invoice | None:
+    def read_invoice_by_booking(self, booking: Booking) -> Invoice | None:
         if booking is None:
             raise ValueError("Booking cannot be None")
 
@@ -81,11 +80,11 @@ class InvoiceDataAccess(BaseDataAccess):
         result = self.fetchone(sql, params)
         if result:
             invoice_id, booking_id, issue_date, total_amount = result
-            return model.Invoice(invoice_id, booking, issue_date, total_amount)
+            return Invoice(invoice_id, booking, issue_date, total_amount)
         else:
             return None
 
-    def read_invoices_by_guest(self, guest: model.Guest) -> list[model.Invoice]:
+    def read_invoices_by_guest(self, guest: Guest) -> list[Invoice]:
         if guest is None:
             raise ValueError("Guest cannot be None")
 
@@ -106,9 +105,9 @@ class InvoiceDataAccess(BaseDataAccess):
         params = tuple([guest.guest_id])
         invoices = self.fetchall(sql, params)
         
-        return [model.Invoice(invoice_id, model.Booking(booking_id, guest,
-                    model.Room(room_id, model.Hotel(hotel_id, hotel_name, hotel_stars),
-                        room_number, model.RoomType(type_id, description, max_guests),
+        return [Invoice(invoice_id, Booking(booking_id, guest,
+                    Room(room_id, Hotel(hotel_id, hotel_name, hotel_stars),
+                        room_number, RoomType(type_id, description, max_guests),
                         price_per_night),
                     check_in_date, check_out_date, is_cancelled, booking_amount),
                 issue_date,total_amount)
@@ -117,12 +116,12 @@ class InvoiceDataAccess(BaseDataAccess):
                 room_number, price_per_night, hotel_id, hotel_name, hotel_stars,
                 type_id, description, max_guests in invoices]
 
-    def read_all_invoices(self) -> list[model.Invoice]:
+    def read_all_invoices(self) -> list[Invoice]:
         sql = """
         SELECT Invoice.invoice_id, Invoice.booking_id, Invoice.issue_date, Invoice.total_amount,
                Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
                Booking.is_cancelled, Booking.total_amount AS "Booking Amount",
-               Guest.first_name, Guest.last_name, Guest.email,
+               Guest.first_name, Guest.last_name, Guest.email, Guest.phone_number,
                Room.room_number, Room.price_per_night,
                Hotel.hotel_id, Hotel.name AS "Hotel Name", Hotel.stars,
                Room_Type.type_id, Room_Type.description, Room_Type.max_guests
@@ -136,52 +135,17 @@ class InvoiceDataAccess(BaseDataAccess):
         """
         invoices = self.fetchall(sql)
         
-        return [model.Invoice(invoice_id, model.Booking( booking_id,
-                    model.Guest(guest_id, first_name, last_name, email),
-                    model.Room(room_id, model.Hotel(hotel_id, hotel_name, hotel_stars), room_number, model.RoomType(type_id, description, max_guests), price_per_night),
+        return [Invoice(invoice_id, Booking( booking_id,
+                    Guest(guest_id, first_name, last_name, email, phone_number or "", None),
+                    Room(room_id, Hotel(hotel_id, hotel_name, hotel_stars), room_number, RoomType(type_id, description, max_guests), price_per_night),
                     check_in_date, check_out_date, is_cancelled, booking_amount),
                 issue_date, total_amount)
             for invoice_id, booking_id, issue_date, total_amount,
                 guest_id, room_id, check_in_date, check_out_date, is_cancelled, booking_amount,
-                first_name, last_name, email, room_number, price_per_night,
+                first_name, last_name, email, phone_number, room_number, price_per_night,
                 hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in invoices]
 
-    def read_invoices_by_date_range(self, start_date: date, end_date: date) -> list[model.Invoice]:
-        if start_date is None:
-            raise ValueError("Start date is required")
-        if end_date is None:
-            raise ValueError("End date is required")
-
-        sql = """
-        SELECT Invoice.invoice_id, Invoice.booking_id, Invoice.issue_date, Invoice.total_amount,
-               Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
-               Booking.is_cancelled, Booking.total_amount AS "Booking Amount",
-               Guest.first_name, Guest.last_name, Guest.email,
-               Room.room_number, Room.price_per_night,
-               Hotel.hotel_id, Hotel.name AS "Hotel Name", Hotel.stars,
-               Room_Type.type_id, Room_Type.description, Room_Type.max_guests
-        FROM Invoice
-        JOIN Booking ON Invoice.booking_id = Booking.booking_id
-        JOIN Guest ON Booking.guest_id = Guest.guest_id
-        JOIN Room ON Booking.room_id = Room.room_id
-        JOIN Hotel ON Room.hotel_id = Hotel.hotel_id
-        JOIN Room_Type ON Room.type_id = Room_Type.type_id
-        WHERE Invoice.issue_date >= ? AND Invoice.issue_date <= ?
-        ORDER BY Invoice.issue_date DESC
-        """
-        params = tuple([start_date, end_date])
-        invoices = self.fetchall(sql, params)
-        
-        return [model.Invoice(invoice_id, model.Booking(booking_id, model.Guest(guest_id, first_name, last_name, email),
-                    model.Room(room_id, model.Hotel(hotel_id, hotel_name, hotel_stars), room_number,
-                        model.RoomType(type_id, description, max_guests), price_per_night),
-                    check_in_date, check_out_date, is_cancelled, booking_amount), issue_date, total_amount)
-            for invoice_id, booking_id, issue_date, total_amount,
-                guest_id, room_id, check_in_date, check_out_date, is_cancelled, booking_amount,
-                first_name, last_name, email, room_number, price_per_night,
-                hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in invoices]
-
-    def update_invoice(self, invoice: model.Invoice) -> None:
+    def update_invoice(self, invoice: Invoice) -> None:
         if invoice is None:
             raise ValueError("Invoice cannot be None")
 
@@ -192,7 +156,7 @@ class InvoiceDataAccess(BaseDataAccess):
         params = tuple([invoice.booking.booking_id, invoice.issue_date, invoice.total_amount, invoice.invoice_id])
         last_row_id, row_count = self.execute(sql, params)
 
-    def delete_invoice(self, invoice: model.Invoice) -> None:
+    def delete_invoice(self, invoice: Invoice) -> None:
         if invoice is None:
             raise ValueError("Invoice cannot be None")
 

@@ -1,6 +1,5 @@
 from __future__ import annotations
 from datetime import date
-import model
 from model.room_type import RoomType
 from model.hotel import Hotel
 from model.booking import Booking
@@ -43,7 +42,7 @@ class BookingDataAccess(BaseDataAccess):
         sql = """
         SELECT Booking.booking_id, Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
                Booking.is_cancelled, Booking.total_amount,
-               Guest.first_name AS "First Name", Guest.last_name AS "Last Name", Guest.email,
+               Guest.first_name AS "First Name", Guest.last_name AS "Last Name", Guest.email, Guest.phone_number,
                Room.room_number, Room.price_per_night,
                Hotel.hotel_id, Hotel.name AS "Hotel Name", Hotel.stars,
                Room_Type.type_id, Room_Type.description, Room_Type.max_guests,
@@ -60,7 +59,7 @@ class BookingDataAccess(BaseDataAccess):
         result = self.fetchone(sql, params)
         if result:
             (booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
-             first_name, last_name, email, room_number, price_per_night,
+             first_name, last_name, email, phone_number, room_number, price_per_night,
              hotel_id, hotel_name, hotel_stars, type_id, type_description, max_guests,
              address_id, street, city, zip_code) = result
             
@@ -68,7 +67,7 @@ class BookingDataAccess(BaseDataAccess):
             if address_id:
                 guest_address = Address(address_id, street, city, zip_code)
             
-            guest = Guest(guest_id, first_name, last_name, email, guest_address)
+            guest = Guest(guest_id, first_name, last_name, email, phone_number, guest_address)
             hotel = Hotel(hotel_id, hotel_name, hotel_stars)
             room_type = RoomType(type_id, type_description, max_guests)
             room = Room(room_id, hotel, room_number, room_type, price_per_night)
@@ -111,7 +110,7 @@ class BookingDataAccess(BaseDataAccess):
         sql = """
         SELECT Booking.booking_id, Booking.guest_id, Booking.check_in_date, Booking.check_out_date, 
                Booking.is_cancelled, Booking.total_amount,
-               Guest.first_name, Guest.last_name, Guest.email
+               Guest.first_name, Guest.last_name, Guest.email, Guest.phone_number
         FROM Booking
         JOIN Guest ON Booking.guest_id = Guest.guest_id
         WHERE Booking.room_id = ?
@@ -120,10 +119,10 @@ class BookingDataAccess(BaseDataAccess):
         params = tuple([room.room_id])
         bookings = self.fetchall(sql, params)
         
-        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email),
+        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email, phone_number, None),
                 room, check_in_date, check_out_date, bool(is_cancelled), total_amount)
             for booking_id, guest_id, check_in_date, check_out_date, is_cancelled, total_amount,
-                first_name, last_name, email in bookings]
+                first_name, last_name, email, phone_number in bookings]
 
     def read_bookings_by_hotel(self, hotel: Hotel) -> list[Booking]:
         if hotel is None:
@@ -132,7 +131,7 @@ class BookingDataAccess(BaseDataAccess):
         sql = """
         SELECT Booking.booking_id, Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
                Booking.is_cancelled, Booking.total_amount,
-               Guest.first_name, Guest.last_name, Guest.email,
+               Guest.first_name, Guest.last_name, Guest.email, Guest.phone_number,
                Room.room_number, Room.price_per_night,
                Room_Type.type_id, Room_Type.description, Room_Type.max_guests
         FROM Booking
@@ -145,18 +144,18 @@ class BookingDataAccess(BaseDataAccess):
         params = tuple([hotel.hotel_id])
         bookings = self.fetchall(sql, params)
         
-        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email),
+        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email, phone_number, None),
                 Room(room_id, hotel, room_number, RoomType(type_id, description, max_guests), price_per_night),
                 check_in_date, check_out_date, bool(is_cancelled), total_amount)
             for booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
-                first_name, last_name, email, room_number, price_per_night,
+                first_name, last_name, email, phone_number, room_number, price_per_night,
                 type_id, description, max_guests in bookings]
 
     def read_all_bookings(self) -> list[Booking]:
         sql = """
         SELECT Booking.booking_id, Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
                Booking.is_cancelled, Booking.total_amount,
-               Guest.first_name, Guest.last_name, Guest.email,
+               Guest.first_name, Guest.last_name, Guest.email, Guest.phone_number,
                Room.room_number, Room.price_per_night,
                Hotel.hotel_id, Hotel.name AS "Hotel Name", Hotel.stars,
                Room_Type.type_id, Room_Type.description, Room_Type.max_guests
@@ -169,19 +168,19 @@ class BookingDataAccess(BaseDataAccess):
         """
         bookings = self.fetchall(sql)
         
-        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email),
+        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email, phone_number, None),
                 Room(room_id, Hotel(hotel_id, hotel_name, hotel_stars),
                     room_number, RoomType(type_id, description, max_guests), price_per_night),
                 check_in_date, check_out_date, bool(is_cancelled), total_amount)
             for booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
-                first_name, last_name, email, room_number, price_per_night,
+                first_name, last_name, email, phone_number, room_number, price_per_night,
                 hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in bookings]
 
     def read_active_bookings(self) -> list[Booking]:
         sql = """
         SELECT Booking.booking_id, Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
                Booking.is_cancelled, Booking.total_amount,
-               Guest.first_name, Guest.last_name, Guest.email,
+               Guest.first_name, Guest.last_name, Guest.email, Guest.phone_number,
                Room.room_number, Room.price_per_night,
                Hotel.hotel_id, Hotel.name AS "Hotel Name", Hotel.stars,
                Room_Type.type_id, Room_Type.description, Room_Type.max_guests
@@ -195,19 +194,19 @@ class BookingDataAccess(BaseDataAccess):
         """
         bookings = self.fetchall(sql)
         
-        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email),
+        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email, phone_number, None),
                 Room(room_id, Hotel(hotel_id, hotel_name, hotel_stars),
                     room_number, RoomType(type_id, description, max_guests), price_per_night),
                 check_in_date, check_out_date, bool(is_cancelled), total_amount)
             for booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
-                first_name, last_name, email, room_number, price_per_night,
+                first_name, last_name, email, phone_number, room_number, price_per_night,
                 hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in bookings]
 
     def read_cancelled_bookings(self) -> list[Booking]:
         sql = """
         SELECT Booking.booking_id, Booking.guest_id, Booking.room_id, Booking.check_in_date, Booking.check_out_date, 
                Booking.is_cancelled, Booking.total_amount,
-               Guest.first_name, Guest.last_name, Guest.email,
+               Guest.first_name, Guest.last_name, Guest.email, Guest.phone_number,
                Room.room_number, Room.price_per_night,
                Hotel.hotel_id, Hotel.name AS "Hotel Name", Hotel.stars,
                Room_Type.type_id, Room_Type.description, Room_Type.max_guests
@@ -221,12 +220,12 @@ class BookingDataAccess(BaseDataAccess):
         """
         bookings = self.fetchall(sql)
         
-        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email),
+        return [Booking(booking_id, Guest(guest_id, first_name, last_name, email, phone_number, None),
                 Room(room_id, Hotel(hotel_id, hotel_name, hotel_stars), room_number,
                     RoomType(type_id, description, max_guests), price_per_night),
                 check_in_date, check_out_date, bool(is_cancelled), total_amount)
             for booking_id, guest_id, room_id, check_in_date, check_out_date, is_cancelled, total_amount,
-                first_name, last_name, email, room_number, price_per_night,
+                first_name, last_name, email, phone_number, room_number, price_per_night,
                 hotel_id, hotel_name, hotel_stars, type_id, description, max_guests in bookings]
 
     def update_booking(self, booking: Booking) -> None:
@@ -242,11 +241,23 @@ class BookingDataAccess(BaseDataAccess):
             booking.is_cancelled, booking.total_amount, booking.booking_id])
         last_row_id, row_count = self.execute(sql, params)
 
-    def cancel_booking_by_id(self, booking_id: int) -> None:
+    def cancel_booking(self, booking: Booking) -> None:
+        if booking is None:
+            raise ValueError("Booking cannot be None")
+        
         sql = """
-        UPDATE Booking SET is_cancelled = 1 WHERE booking_id = ?"""
+        UPDATE Booking SET is_cancelled = 1 WHERE booking_id = ?
+        """
+        params = tuple([booking.booking_id])
+        last_row_id, row_count = self.execute(sql, params)
+
+    def cancel_booking_by_id(self, booking_id: int) -> bool:
+        sql = """
+        UPDATE Booking SET is_cancelled = 1 WHERE booking_id = ? AND is_cancelled = 0
+        """
         params = tuple([booking_id])
         last_row_id, row_count = self.execute(sql, params)
+        return row_count > 0
        
     def delete_booking(self, booking: Booking) -> None:
         if booking is None:

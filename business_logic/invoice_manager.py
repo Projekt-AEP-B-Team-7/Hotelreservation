@@ -1,11 +1,8 @@
-import model
-import data_access
 from datetime import date, datetime
 from model.invoice import Invoice
 from model.booking import Booking
 from model.guest import Guest
 from data_access.invoice_data_access import InvoiceDataAccess
-
 
 class InvoiceManager:
     def __init__(self):

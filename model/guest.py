@@ -2,7 +2,7 @@ from __future__ import annotations
 from model.address import Address
 
 class Guest:
-    def __init__(self, guest_id: int, first_name: str, last_name: str, email: str, phone_number:str, address: Address = None):
+    def __init__(self, guest_id: int, first_name: str, last_name: str, email: str, phone_number: str = None, address: Address = None):
         if not guest_id:
             raise ValueError("Guest ID is required")
         if not isinstance(guest_id, int):
@@ -19,7 +19,7 @@ class Guest:
             raise ValueError("Email is required")
         if not isinstance(email, str):
             raise ValueError("Email must be a string")
-        if not isinstance(phone_number, str):
+        if phone_number is not None and not isinstance(phone_number, str):
             raise ValueError("Phone Nr. must be a string")
         if address is not None and not isinstance(address, Address):
             raise ValueError("Address must be an instance of Address")
@@ -80,6 +80,8 @@ class Guest:
 
     @phone_number.setter
     def phone_number(self, value: str):
+        if value is not None and not isinstance(value, str):
+            raise ValueError("Phone Nr. must be a string")
         self.__phone_number = value
 
     @property
