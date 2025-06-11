@@ -30,6 +30,20 @@ class GuestDataAccess(BaseDataAccess):
         last_row_id, row_count = self.execute(sql, params)
         return Guest(last_row_id, first_name, last_name, email, address)
 
+    def read_all_guests_w_phone_number(self) -> list[Guest]:
+        sql = """
+        SELECT Guest.guest_id, Guest.first_name, Guest.last_name, Guest.email, Guest.phone_number,
+            Address.address_id, Address.street, Address.city, Address.zip_code
+        FROM Guest
+        LEFT JOIN Address ON Guest.address_id = Address.address_id
+        ORDER BY Guest.last_name, Guest.first_name
+        """
+        guests = self.fetchall(sql)
+        
+        return [Guest(guest_id, first_name, last_name, email, phone_number,
+                Address(address_id, street, city, zip_code) if address_id else None)
+            for guest_id, first_name, last_name, email, phone_number, address_id, street, city, zip_code in guests]
+
     def read_guest_by_id(self, guest_id: int) -> Guest | None:
         if guest_id is None:
             raise ValueError("Guest ID is required")
@@ -135,10 +149,28 @@ class GuestDataAccess(BaseDataAccess):
             guest.address.address_id if guest.address else None, guest.guest_id])
         last_row_id, row_count = self.execute (sql, params)
 
+    def read_all_guests_w_phone_number(self) -> list[Guest]:
+        sql = """
+        SELECT Guest.guest_id, Guest.first_name, Guest.last_name, Guest.email, Guest.phone_number,
+               Address.address_id, Address.street, Address.city, Address.zip_code
+        FROM Guest
+        LEFT JOIN Address ON Guest.address_id = Address.address_id
+        ORDER BY Guest.last_name, Guest.first_name
+        """
+        return [Guest(guest_id, first_name, last_name, email, phone_number,
+                Address(address_id, street, city, zip_code) if address_id else None)
+            for guest_id, first_name, last_name, email, phone_number, address_id, street, city, zip_code in guests]
+
+    
+    def update_guest_phone(self, guest_id: int, new_phone: str) -> bool:
+        sql = "UPDATE Guest SET phone_number = ? WHERE guest_id = ?"
+        params = tuple([guest_id, new_phone])
+        last_row_id, row_count = self.execute (sql, params)
+        return row_count > 0 
+
     def delete_guest(self, guest: Guest) -> None:
         if guest is None:
             raise ValueError ("Guest cannot be None")
-
         sql = """
         DELETE FROM Guest WHERE guest_id = ?
         """
