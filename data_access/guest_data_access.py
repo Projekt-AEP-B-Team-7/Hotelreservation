@@ -157,14 +157,17 @@ class GuestDataAccess(BaseDataAccess):
         LEFT JOIN Address ON Guest.address_id = Address.address_id
         ORDER BY Guest.last_name, Guest.first_name
         """
+        guests = self.fetchall(sql)
         return [Guest(guest_id, first_name, last_name, email, phone_number,
                 Address(address_id, street, city, zip_code) if address_id else None)
             for guest_id, first_name, last_name, email, phone_number, address_id, street, city, zip_code in guests]
 
     
-    def update_guest_phone(self, guest_id: int, new_phone: str) -> bool:
-        sql = "UPDATE Guest SET phone_number = ? WHERE guest_id = ?"
-        params = tuple([guest_id, new_phone])
+    def update_guest_phone(self, new_phone: str, guest_id: int,) -> bool:
+        sql = """
+        UPDATE Guest SET phone_number = ? WHERE guest_id = ?
+        """
+        params = tuple([new_phone, guest_id])
         last_row_id, row_count = self.execute (sql, params)
         return row_count > 0 
 

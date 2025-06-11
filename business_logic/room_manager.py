@@ -31,17 +31,10 @@ class RoomManager:
         return self.__room_da.read_available_rooms_by_hotel(hotel, check_in_date, check_out_date)
 
     def read_all_rooms_with_facilities(self) -> list[Room]:
-        return self.__room_da.read_rooms_with_facilities(room)
+        return self.__room_da.read_all_rooms_with_facilities()
 
     def update_room(self, room: Room) -> None:
         self.__room_da.update_room(room)
 
     def delete_room(self, room: Room) -> None:
-        self.__room_da.delete_room(room)
-    
-    def read_all_rooms_with_facilities(self) -> list[Room]:
-        return self.__room_da.read_all_rooms_with_facilities()
-
-
-    
-   
+        self.__room_da.delete_room(room) 
