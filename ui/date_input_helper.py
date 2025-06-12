@@ -52,3 +52,29 @@ class DateInputHelper:
         checkin_date = datetime.strptime(checkin, "%Y-%m-%d").date()
         checkout_date = datetime.strptime(checkout, "%Y-%m-%d").date()
         return (checkout_date - checkin_date).days
+
+    def get_valid_datetime_input(self, prompt: str) -> datetime:
+        today = date.today()
+        
+        while True:
+            try:
+                date_str = input(prompt)
+                input_date = datetime.strptime(date_str, "%Y-%m-%d")
+                
+                if input_date.date() < today:
+                    print(f"Date cannot be in the past. Today is {today}. Please enter a date from today onwards.")
+                    continue
+                    
+                return input_date
+            except ValueError:
+                print("Please enter date in YYYY-MM-DD format.")
+
+    def get_valid_datetime_range(self) -> tuple[datetime, datetime]:
+        while True:
+            check_in = self.get_valid_datetime_input("Check-in date (YYYY-MM-DD): ")
+            check_out = self.get_valid_datetime_input("Check-out date (YYYY-MM-DD): ")
+
+            if check_out > check_in:
+                return check_in, check_out
+            else:
+                print("Check-out date must be after check-in date.")
