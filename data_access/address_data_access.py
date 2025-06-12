@@ -1,4 +1,5 @@
 from __future__ import annotations
+import model
 from model.room_type import RoomType
 from model.hotel import Hotel
 from model.booking import Booking
