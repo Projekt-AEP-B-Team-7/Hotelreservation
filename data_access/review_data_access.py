@@ -87,11 +87,15 @@ class ReviewDataAccess(BaseDataAccess):
         sql = """
         SELECT Review.review_id, Review.rating, Review.comment, Review.review_date,
                Hotel.hotel_id, Hotel.name AS hotel_name, Hotel.stars,
-               Booking.booking_id, Booking.check_in_date, Booking.check_out_date,
+               Booking.booking_id, Booking.check_in_date, Booking.check_out_date, Booking.total_amount,
+               Room.room_id, Room.room_number, Room.price_per_night,
+               Room_Type.type_id, Room_Type.description, Room_Type.max_guests,
                Address.address_id, Address.street, Address.city, Address.zip_code
         FROM Review
         JOIN Hotel ON Review.hotel_id = Hotel.hotel_id
         JOIN Booking ON Review.booking_id = Booking.booking_id
+        JOIN Room ON Booking.room_id = Room.room_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
         LEFT JOIN Address ON Hotel.address_id = Address.address_id
         WHERE Review.guest_id = ?
         ORDER BY Review.review_date DESC
@@ -102,7 +106,9 @@ class ReviewDataAccess(BaseDataAccess):
         result = []
         for (review_id, rating, comment, review_date,
              hotel_id, hotel_name, hotel_stars,
-             booking_id, check_in_date, check_out_date,
+             booking_id, check_in_date, check_out_date, total_amount,
+             room_id, room_number, price_per_night,
+             type_id, description, max_guests,
              address_id, street, city, zip_code) in reviews:
             
             address = None
@@ -110,7 +116,9 @@ class ReviewDataAccess(BaseDataAccess):
                 address = Address(address_id, street, city, zip_code)
             
             hotel = Hotel(hotel_id, hotel_name, hotel_stars, address)
-            booking = Booking(booking_id, guest, None, check_in_date, check_out_date, False, 0.0)
+            room_type = RoomType(type_id, description, max_guests)
+            room = Room(room_id, hotel, room_number, room_type, price_per_night)
+            booking = Booking(booking_id, guest, room, check_in_date, check_out_date, False, total_amount)
             result.append(Review(review_id, guest, hotel, booking, rating, comment, review_date))
         
         return result
@@ -122,10 +130,14 @@ class ReviewDataAccess(BaseDataAccess):
         sql = """
         SELECT Review.review_id, Review.rating, Review.comment, Review.review_date,
                Guest.guest_id, Guest.first_name, Guest.last_name, Guest.email, Guest.phone_number,
-               Booking.booking_id, Booking.check_in_date, Booking.check_out_date
+               Booking.booking_id, Booking.check_in_date, Booking.check_out_date, Booking.total_amount,
+               Room.room_id, Room.room_number, Room.price_per_night,
+               Room_Type.type_id, Room_Type.description, Room_Type.max_guests
         FROM Review
         JOIN Guest ON Review.guest_id = Guest.guest_id
         JOIN Booking ON Review.booking_id = Booking.booking_id
+        JOIN Room ON Booking.room_id = Room.room_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
         WHERE Review.hotel_id = ?
         ORDER BY Review.review_date DESC
         """
@@ -135,10 +147,14 @@ class ReviewDataAccess(BaseDataAccess):
         result = []
         for (review_id, rating, comment, review_date,
              guest_id, first_name, last_name, email, phone_number,
-             booking_id, check_in_date, check_out_date) in reviews:
+             booking_id, check_in_date, check_out_date, total_amount,
+             room_id, room_number, price_per_night,
+             type_id, description, max_guests) in reviews:
             
             guest = Guest(guest_id, first_name, last_name, email, phone_number, None)
-            booking = Booking(booking_id, guest, None, check_in_date, check_out_date, False, 0.0)
+            room_type = RoomType(type_id, description, max_guests)
+            room = Room(room_id, hotel, room_number, room_type, price_per_night)
+            booking = Booking(booking_id, guest, room, check_in_date, check_out_date, False, total_amount)
             result.append(Review(review_id, guest, hotel, booking, rating, comment, review_date))
         
         return result
@@ -148,12 +164,16 @@ class ReviewDataAccess(BaseDataAccess):
         SELECT Review.review_id, Review.rating, Review.comment, Review.review_date,
                Guest.guest_id, Guest.first_name, Guest.last_name, Guest.email, Guest.phone_number,
                Hotel.hotel_id, Hotel.name AS hotel_name, Hotel.stars,
-               Booking.booking_id, Booking.check_in_date, Booking.check_out_date,
+               Booking.booking_id, Booking.check_in_date, Booking.check_out_date, Booking.total_amount,
+               Room.room_id, Room.room_number, Room.price_per_night,
+               Room_Type.type_id, Room_Type.description, Room_Type.max_guests,
                Address.address_id, Address.street, Address.city, Address.zip_code
         FROM Review
         JOIN Guest ON Review.guest_id = Guest.guest_id
         JOIN Hotel ON Review.hotel_id = Hotel.hotel_id
         JOIN Booking ON Review.booking_id = Booking.booking_id
+        JOIN Room ON Booking.room_id = Room.room_id
+        JOIN Room_Type ON Room.type_id = Room_Type.type_id
         LEFT JOIN Address ON Hotel.address_id = Address.address_id
         ORDER BY Review.review_date DESC
         """
@@ -163,7 +183,9 @@ class ReviewDataAccess(BaseDataAccess):
         for (review_id, rating, comment, review_date,
              guest_id, first_name, last_name, email, phone_number,
              hotel_id, hotel_name, hotel_stars,
-             booking_id, check_in_date, check_out_date,
+             booking_id, check_in_date, check_out_date, total_amount,
+             room_id, room_number, price_per_night,
+             type_id, description, max_guests,
              address_id, street, city, zip_code) in reviews:
             
             address = None
@@ -172,7 +194,9 @@ class ReviewDataAccess(BaseDataAccess):
             
             guest = Guest(guest_id, first_name, last_name, email, phone_number, None)
             hotel = Hotel(hotel_id, hotel_name, hotel_stars, address)
-            booking = Booking(booking_id, guest, None, check_in_date, check_out_date, False, 0.0)
+            room_type = RoomType(type_id, description, max_guests)
+            room = Room(room_id, hotel, room_number, room_type, price_per_night)
+            booking = Booking(booking_id, guest, room, check_in_date, check_out_date, False, total_amount)
             result.append(Review(review_id, guest, hotel, booking, rating, comment, review_date))
         
         return result

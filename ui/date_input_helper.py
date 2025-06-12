@@ -47,3 +47,8 @@ class DateInputHelper:
 
     def get_valid_date_input_old(self, prompt: str) -> str:
         return self.get_valid_date_input(prompt, allow_past_dates=True)
+
+    def calculate_nights(self, checkin: str, checkout: str) -> int:
+        checkin_date = datetime.strptime(checkin, "%Y-%m-%d").date()
+        checkout_date = datetime.strptime(checkout, "%Y-%m-%d").date()
+        return (checkout_date - checkin_date).days
