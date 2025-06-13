@@ -51,3 +51,6 @@ class BookingManager:
 
     def delete_booking(self, booking: Booking) -> None:
         self.__booking_da.delete_booking(booking)
+
+    def update_booking(self, booking: Booking):
+        return self.__booking_da.update_booking(booking)

@@ -63,6 +63,10 @@ class Booking:
         self.__guest = guest
 
     @property
+    def guest_id(self) -> int:
+        return self.__guest.guest_id
+
+    @property
     def room(self) -> Room:
         return self.__room
 

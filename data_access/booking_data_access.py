@@ -268,3 +268,11 @@ class BookingDataAccess(BaseDataAccess):
         """
         params = tuple([booking.booking_id])
         last_row_id, row_count = self.execute(sql, params)
+
+    def update_booking(self, booking: Booking):
+        sql = """
+        UPDATE Booking SET check_in_date = ?, check_out_date = ?, is_cancelled = ?
+        WHERE booking_id = ?
+        """
+        params = (booking.check_in_date, booking.check_out_date, int(booking.is_cancelled), booking.booking_id)
+        self.execute(sql, params)

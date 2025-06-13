@@ -43,3 +43,6 @@ class GuestManager:
 
     def delete_guest(self, guest: Guest) -> None:
         self.__guest_da.delete_guest(guest)
+    
+    def read_guest_by_id(self, guest_id: int):
+        return self.__guest_da.read_guest_by_id(guest_id)
