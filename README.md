@@ -6,7 +6,8 @@ Eine kurze Übersicht, wer zu welchen Projekt-Themen beigetragen hat (also z. B.
 Instruktion für uns, wie eure Applikation benutzt werden muss (Schritt-für-Schritt-Anleitung, insb. welche Notebooks oder Files ausgeführt werden müssen).
 Annahmen und Interpretationen, falls welche vorhanden sind.
 
-[image](https://github.com/user-attachments/assets/0d7d1786-b36f-4f11-9d3a-9924c032262f)
+
+<img width="1116" alt="Bildschirmfoto 2025-06-14 um 11 27 53" src="https://github.com/user-attachments/assets/f034ac7a-fed0-4b48-b904-c01528398cd1" />
 
 
 
