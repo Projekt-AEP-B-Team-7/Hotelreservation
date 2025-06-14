@@ -96,6 +96,20 @@ Die Business-Logic-Schicht ist wichtig für die Sicherheit und Korrektheit der A
 ### User Interface (UI)
 Die Benutzeroberfläche wurde in Python direkt in Deepnote als Konsolenanwendung umgesetzt. Sie enthält Menüführung und Eingabeaufforderungen, z. B.: Zimmertypen anzeigen, Buchungen erfassen, Hoteldaten aktualisieren.
 Sie ruft Methoden aus der Business-Logik auf und zeigt Ergebnisse oder Fehlermeldungen direkt im Menü an.
+Zur Vereinfachung und Strukturierung der Benutzereingaben haben wir modulare Input Helper entwickelt, die jeweils für bestimmte Entitäten zuständig sind (z. B. Gast, Adresse, Buchung).
+
+Jede Eingabehilfe ist in einer eigenen Datei gekapselt, um Wiederverwendung und Wartbarkeit zu gewährleisten. Dabei wird sichergestellt, dass Benutzereingaben korrekt validiert werden (z. B. Datumsformate, erlaubte Städte, Nummernformate, Pflichtfelder). So wird die Eingabelogik von der Geschäftslogik getrennt.
+
+Zu den wichtigsten Eingabehilfen zählen:
+* `guest_input_helper.py` – erfasst und prüft Gästedaten (Name, Telefonnummer etc.)
+* `address_input_helper.py` – strukturiert die Adresseneingabe
+* `date_input_helper.py` – validiert Check-in- und Check-out-Daten
+* `booking_helper.py` – steuert den Ablauf der Buchungseingabe
+* `admin_helper.py` – erlaubt Admins, Stammdaten wie Zimmer oder Einrichtungen zu pflegen
+* `star_input_helper.py` – prüft Bewertungen auf Skalen von 1 bis 5 Sternen
+* `city_input_helper.py` – verwendet eine JSON-Liste (swiss_city_list.json) zur Überprüfung von Schweizer Städten
+
+Diese modulare Herangehensweise erhöht die Benutzerfreundlichkeit, reduziert Fehlerquellen und sorgt für eine klare Trennung von Zuständigkeiten in der UI.
 
 ## Gelerntes Wissen
 
@@ -135,7 +149,7 @@ Natürlich gab es auch viele Herausforderungen und Momente, in denen wir nicht w
 Am Ende hat uns dieses Projekt gezeigt, dass man etwas Komplexes umsetzen kann, wenn man als Team zusammenarbeitet, sich Zeit nimmt und offen bleibt für Neues.
 
 ## Angewendete User Stories
-Im Rahmen unseres Projekts haben wir die folgenden User Stories umgesetzt. Die Vorgehensweise ist jeweils in Deepnote bei der entsprechenden User Story dokumentiert.
+Im Rahmen unseres Projekts haben wir die folgenden User Stories umgesetzt. Die Vorgehensweise ist jeweils in Deepnote bei der entsprechenden User Story dokumentiert. Gemäss Dokument Guidlines haben wir haben alle Minimale User Stories umgesetzt von DB-Schemaänderung haben wir 3 User Stories umgesetzt und von Datenvisualisierung haben wir einen User Story umgesetzt.
 
 ### Minimale User Stories
 
