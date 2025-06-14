@@ -48,9 +48,9 @@ Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten, entschiede
 | Hotel      | Room           | 1:1..*                 | Composited    | Ein Hotel besteht aus mindestens einem oder mehreren Zimmern.                                  |
 | Room       | Hotel          | 1..*:1                 | Composited    | Ein oder mehrere Zimmer gehören genau zu einem Hotel.                                          |
 | Room       | RoomType       | 1..*:1                 | Shared        | Mehrere Zimmer können denselben Zimmertyp haben.                                               |
-| Room       | Facilities     | 0..*:0..*              | Shared        | Ein Zimmer kann gar keine bis mehrere Einrichtungen haben.                                       |
+| Room       | Facilities     | 0..*:0..*              | Shared        | Ein Zimmer kann gar keine pder eine oder mehrere Einrichtungen haben.                          |
 | RoomType   | Room           | 1:1..*                 | Shared        | Ein Zimmertyp kann mehreren Zimmern zugewiesen sein.                                           |
-| Facilities | Room           | 0..*:0..*              | Shared        | Ein Zimmer kann gar keine bis mehrere Einrichtungen haben.                                       |
+| Facilities | Room           | 0..*:0..*              | Shared        | Gar keine oder eine oder mehrere Einrichtungen gehören zu ein Zimmer.                          |
 | Guest      | Booking        | 1:0..*                 | Composited    | Ein Gast kann mehrere Buchungen tätigen. Ohne Gast keine Buchung.                             |
 | Guest      | Review         | 1:0..*                 | None          | Ein Gast kann mehrere Bewertungen abgeben.                                                     |
 | Guest      | Address        | 1:1                    | None          | Jeder Gast hat genau eine Adresse.                                                             |
