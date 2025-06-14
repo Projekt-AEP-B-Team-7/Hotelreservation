@@ -1,4 +1,5 @@
 '# B-Team-7 Hotelreservation
+Löschen:
 Das README.md-File sollte Folgendes enthalten:
 
 Name und Vorname der Teammitglieder, die am Projekt mitgearbeitet haben
@@ -43,25 +44,16 @@ Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten, entschiede
 
 | Klasse     | Verbunden mit | Kardinalität (von–zu) | Aggregation  | Beschreibung                                                                                   |
 |------------|----------------|------------------------|---------------|------------------------------------------------------------------------------------------------|
-| Address    | Hotel          | 1:1                    | None          | Jede Adresse ist genau einem Hotel zugeordnet.                                                 |
-| Address    | Guest          | 1:1                    | None          | Eine Adresse gehört zum einem  Gäst. Ein Gast hat genau eine Adresse.                         |
-| Hotel      | Address        | 1:1                    | None          | Jedes Hotel besitzt genau eine Adresse.                                                        |
-| Hotel      | Room           | 1:1..*                 | Composited    | Ein Hotel besteht aus mindestens einem oder mehreren Zimmern.                                  |
-| Room       | Hotel          | 1..*:1                 | Composited    | Ein oder mehrere Zimmer gehören genau zu einem Hotel.                                          |
-| Room       | RoomType       | 1..*:1                 | Shared        | Mehrere Zimmer können denselben Zimmertyp haben.                                               |
-| Room       | Facilities     | 0..*:0..*              | Shared        | Ein Zimmer kann gar keine oder eine oder mehrere Einrichtungen haben.                          |
-| RoomType   | Room           | 1:1..*                 | Shared        | Ein Zimmertyp kann mehreren Zimmern zugewiesen sein.                                           |
-| Facilities | Room           | 0..*:0..*              | Shared        | Gar keine oder eine oder mehrere Einrichtungen gehören zu ein Zimmer.                          |
-| Guest      | Booking        | 1:0..*                 | Composited    | Ein Gast kann mehrere Buchungen tätigen. Ohne Gast keine Buchung.                             |
-| Guest      | Review         | 1:0..*                 | None          | Ein Gast kann mehrere Bewertungen abgeben.                                                     |
-| Guest      | Address        | 1:1                    | None          | Jeder Gast hat genau eine Adresse.                                                             |
-| Booking    | Guest          | 0..*:1                 | Composited    | Eine Buchung gehört zu genau einem Gast. Ohne Gast keine Buchung.                             |
+| Address    | Hotel          | 1:1                    | None          | Jede Adresse ist genau einem Hotel zugeordnet. Jedes Hotel besitzt genau eine Adresse.         |
+| Address    | Guest          | 1:1                    | None          | Eine Adresse gehört zum einem Gäst. Jeder Gast hat genau eine Adresse.                         |
+| Hotel      | Room           | 1:1..*                 | Composited    | Ein Hotel besteht aus mindestens einem oder mehreren Zimmern. Ein oder mehrere Zimmer gehören genau zu einem Hotel.|
+| Room       | RoomType       | 1..*:1                 | Shared        | Mehrere Zimmer können denselben Zimmertyp haben. Ein Zimmertyp kann mehreren Zimmern zugewiesen sein.|
+| Room       | Facilities     | 0..*:0..*              | Shared        | Ein Zimmer kann gar keine oder eine oder mehrere Einrichtungen haben. Gar keine oder eine oder mehrere Einrichtungen gehören zu ein Zimmer.|
+| Guest      | Booking        | 1:0..*                 | Composited    | Ein Gast kann mehrere Buchungen tätigen. Ohne Gast keine Buchung. Eine Buchung gehört zu genau einem Gast. Ohne Gast keine Buchung.|
+| Guest      | Review         | 1:0..*                 | None          | Ein Gast kann mehrere Bewertungen abgeben. Jede Bewertung wird von genau einem Gast erstellt.  |
 | Booking    | Room           | 0..*:1                 | None          | Eine Buchung bezieht sich genau auf ein Zimmer.                                                |
-| Booking    | Invoice        | 1:1                    | Composited    | Jede Buchung erzeugt genau eine Rechnung. Ohne Buchung keine Rechnung.                        |
-| Booking    | Review         | 1:0..1                 | None          | Eine Buchung kann mit höchstens einer Bewertung verknüpft sein.                                |
-| Invoice    | Booking        | 1:1                    | Composited    | Jede Rechnung gehört zu genau einer Buchung.                                                   |
-| Review     | Guest          | 0..*:1                 | None          | Jede Bewertung wird von genau einem Gast erstellt.                                             |
-| Review     | Booking        | 0..1:1                 | None          | Eine Bewertung bezieht sich auf eine Buchung.                                                  |
+| Booking    | Invoice        | 1:1                    | Composited    | Jede Buchung erzeugt genau eine Rechnung. Ohne Buchung keine Rechnung. Jede Rechnung gehört zu genau einer Buchung.|
+| Booking    | Review         | 1:0..1                 | None          | Eine Buchung kann mit höchstens einer Bewertung verknüpft sein. Eine Bewertung bezieht sich auf eine Buchung.|
 
 
 ## Technische Architektur
