@@ -6,14 +6,6 @@ Eine kurze Übersicht, wer zu welchen Projekt-Themen beigetragen hat (also z. B.
 Instruktion für uns, wie eure Applikation benutzt werden muss (Schritt-für-Schritt-Anleitung, insb. welche Notebooks oder Files ausgeführt werden müssen).
 Annahmen und Interpretationen, falls welche vorhanden sind.
 
-## Rollenverteilung im Team
-
-| Name                 | Model                                | Data Access & Business Logic          | User Stories                | Sonstiges                  |
-|----------------------|--------------------------------------|---------------------------------------|-----------------------------|----------------------------|
-| Saruje Varatharajah  | Invoice, Room, RoomType              | Entsprechend unserer User Stories     | User Story 1.1 bis 1.6, 2   | Dokumentation (README)     |
-| Luxaayini Ponnaiya   | Hotel, Guest                         | Entsprechend unserer User Stories     | User Story 3, 8, 9, 10      | Dokumentation (README)     |
-| Albina Ramesh        | Address, Booking, Facilities, Review | Entsprechend unserer User Stories     | User Story 4, 5, 6, 7 und DB-Schemaänderung (User Story 1, 3, 4) und Datenvisualisierung (User Story 1)| Input helper files     |
-
 ## Einleitung
 Im Rahmen unsere Projektarbeit haben wir den Auftrag erhalten eine  Hotelreservierungssystem mit der Programmiersprache Python zu entwerfen, welches die folgenden User Stories realisieren. Wie bereits in den Guidelines beschrieben, werden wir auf die Userstorys richten.
 
@@ -37,6 +29,13 @@ Zu Beginn nutzten wir ein Projektboard, später kommunizierten wir hauptsächlic
 
 Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten, entschieden wir uns bewusst dafür, das gesamte Projekt in Deepnote umzusetzen, inklusive Datenmodellierung, Datenzugriff, Logik und Benutzeroberfläche.
 
+## Rollenverteilung im Team
+
+| Name                 | Model                                | Data Access & Business Logic          | User Stories                | Sonstiges                  |
+|----------------------|--------------------------------------|---------------------------------------|-----------------------------|----------------------------|
+| Saruje Varatharajah  | Invoice, Room, RoomType              | Entsprechend unserer User Stories     | User Story 1.1 bis 1.6, 2   | Dokumentation (README)     |
+| Luxaayini Ponnaiya   | Hotel, Guest                         | Entsprechend unserer User Stories     | User Story 3, 8, 9, 10      | Dokumentation (README)     |
+| Albina Ramesh        | Address, Booking, Facilities, Review | Entsprechend unserer User Stories     | User Story 4, 5, 6, 7 und DB-Schemaänderung (User Story 1, 3, 4) und Datenvisualisierung (User Story 1)| Input helper files     |
 
 ## Class Diagram -> Methoden ergänzen und Erklärung fehlt!
 
