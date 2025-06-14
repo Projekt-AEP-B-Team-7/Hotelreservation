@@ -6,7 +6,7 @@ Eine kurze Übersicht, wer zu welchen Projekt-Themen beigetragen hat (also z. B.
 Instruktion für uns, wie eure Applikation benutzt werden muss (Schritt-für-Schritt-Anleitung, insb. welche Notebooks oder Files ausgeführt werden müssen).
 Annahmen und Interpretationen, falls welche vorhanden sind.
 
-## Rollenverteilung im Team:
+## Rollenverteilung im Team
 
 | Name                 | Model                                | Data Access & Business Logic          | User Stories                | Sonstiges                  |
 |----------------------|--------------------------------------|---------------------------------------|-----------------------------|----------------------------|
@@ -30,7 +30,7 @@ Abgabetermin: 15.06.2025
 Deepnote: https://deepnote.com/workspace/FHNW-9efe9cac-fee5-4d76-b7c4-0114c7e240f2/project/AEPB-Team-7-12cf43ae-1be3-4ed6-97d6-f7f9a12a6fe8/notebook/User-Stories-c7ba22b20c7a4a278e9192df60615dea
 Präsentationsvideo: 
 
-## Teamarbeit:
+## Teamarbeit
 Unser Team hat grundsätzlich gemeinsam gearbeitet und sich gegenseitig unterstützt, da niemand von uns einen IT-Background hatte. Anstatt feste Rollen oder Zuständigkeiten zu vergeben, haben wir uns jede Woche neue Ziele gesetzt, die wir bis zum nächsten Coaching erreichen wollten. Diese Ziele umfassten sowohl Repetition als auch das Bearbeiten konkreter Aufgaben.
 
 Zu Beginn nutzten wir ein Projektboard, später kommunizierten wir hauptsächlich über WhatsApp und Microsoft Teams. Gegen Projektende wurde das Board nochmals aktiv verwendet, um alle offenen Aufgaben vor der Abgabe gezielt abzuarbeiten. Da alle Teammitglieder regelmässig vor Ort waren, konnten wir die Coaching-Zeit optimal nutzen, um gemeinsam weiterzuarbeiten und bei Bedarf direkt Fragen zu stellen.
@@ -74,30 +74,30 @@ Class Facilities: (Cardinality 0:1)
 Attributes: facility_id, facility_name 
 Relationship: One Facility can be linked to multiple room types
 
-## Technische Architektur:
+## Technische Architektur
 
 Unsere Anwendung basiert auf einer klar getrennten Vier-Schichten-Architektur, bestehend aus:
 
-### Model: 
+### Model
 Diese Schicht umfasst die Klassenstruktur, die direkt auf dem Klassendiagramm basiert (Hotel, Room, Guest, Booking, Invoice, RoomType, Facility, Address).
 Jede Klasse wurde in einer eigenen .py-Datei gespeichert, besitzt einen Konstruktor zur Initialisierung, enthält Getter- und Setter-Methoden für kontrollierten Zugriff auf Attribute.
 Die Klassen dienen zur Abbildung der Geschäftsobjekte im Code und stellen sicher, dass Daten konsistent verarbeitet werden können.
 
-### Data Access: 
+### Data Access
 In dieser Schicht erfolgt der Zugriff auf die SQLite-Datenbank. Jede Entität hat eine eigene Klasse, die auf eine gemeinsame Basisklasse für DB-Verbindungen aufbaut.
 Diese Klassen enthalten Methoden für: SELECT, INSERT, UPDATE, DELETE, sowie für komplexere Abfragen mit JOINs.
 Die Data-Access-Schicht sind reine Daten und enthalten keine Geschäftslogik.
 
-### Business Logic (Manager-Schicht): 
+### Business Logic (Manager-Schicht)
 Diese Ebene übernimmt die fachliche Steuerung. Sie stellt die Verbindung zwischen Benutzerinteraktion (UI) und Datenzugriff (Data Accsess) her und validiert alle Aktionen.
 Hier wird definiert, wer was darf (z. B. Gast bucht, Admin verwaltet Daten),welche Regeln gelten (z. B. keine Buchung in der Vergangenheit),wie Suchanfragen verarbeitet werden.
 Die Business-Logic-Schicht ist wichtig für die Sicherheit und Korrektheit der Anwendung. (Damit klar vorgegebn wird, was der USER machen darf oder kann!)
 
-### User Interface (UI): 
+### User Interface (UI)
 Die Benutzeroberfläche wurde in Python direkt in Deepnote als Konsolenanwendung umgesetzt. Sie enthält Menüführung und Eingabeaufforderungen, z. B.: Zimmertypen anzeigen, Buchungen erfassen, Hoteldaten aktualisieren.
 Sie ruft Methoden aus der Business-Logik auf und zeigt Ergebnisse oder Fehlermeldungen direkt im Menü an.
 
-## Gelerntes Wissen:
+## Gelerntes Wissen
 
 Im Verlauf des Projekts haben wir vielfältiges Wissen aufgebaut, sowohl auf technischer als auch auf methodischer Ebene. 
 
@@ -117,14 +117,14 @@ Wir lernten unter anderem:
 
 Darüber hinaus lernten wir viel über Testen, Fehlersuche, Umgang mit Fehlermeldungen und wie man im Team gemeinsam Probleme löst. 
 
-## Herausforderung: 
+## Herausforderung
 
 Eine erste Herausforderung war der Einstieg in die praktische Umsetzung nach der theoretischen Phase. Obwohl wir das Klassendiagramm gut erarbeiten konnten, war zunächst nicht klar, wie daraus ein funktionierendes System entstehen soll. Insbesondere die Trennung in verschiedene Schichten war für uns schwer verständlich. Erst durch Unterstützung unserer Coaches, mit einem praxisnahen Beispiel zur Schichtenarchitektur, konnten wir die Zusammenhänge zwischen Model, Data Access und Business Logic nachvollziehen und korrekt umsetzen.
 
 Ein weiterer schwieriger Punkt war das Fehlersuchen. Sie konnten in jeder Schicht entstehen und waren nicht immer sofort nachvollziehbar. Oft verursachte ein kleider Fehler dazu, dass der gesamte Ablauf nicht mehr funktionierte. Fehlermeldungen waren manchmal unklar und führten zu viel Sucharbeit über mehrere Ebenen hinweg. Das erforderte Geduld, Konzentration und Teamarbeit.
 Auch das Umsetzen von Benutzerabfragen und Menüs in der UI-Schicht war komplexer als erwartet, insbesondere, wenn Eingaben validiert oder dynamisch auf Datenbankinhalte reagiert werden musste.Oftmals mussten wir zwischen den layers switchen und dort Änderungen vornehmen und eine von mehreren Fehler zu bereinigen. 
 
-## Reflexion:
+## Reflexion
 
 Rückblickend war dieses Projekt für uns alle ein intensiver, aber auch sehr wertvoller Lernprozess. Wir haben viel Neues über Programmierung, Datenbanken und den Aufbau eines Systems gelernt. Besonders die technische Struktur, also wie man ein Projekt in mehrere Schichten (Model, Data Access, Business Logic und Benutzeroberfläche) aufteilt, wurde für uns nach und nach verständlich.
 
@@ -137,7 +137,7 @@ Am Ende hat uns dieses Projekt gezeigt, dass man etwas Komplexes umsetzen kann, 
 ## Angewendete User Stories
 Im Rahmen unseres Projekts haben wir die folgenden User Stories umgesetzt. Die Vorgehensweise ist jeweils in Deepnote bei der entsprechenden User Story dokumentiert.
 
-## Minimale User Stories
+# Minimale User Stories
 
 1. Als Gast möchte ich die verfügbaren Hotels durchsuchen, damit ich dasjenige auswählen kann, welches meinen Wünschen entspricht.\
 1.1 Ich möchte alle Hotels in einer Stadt durchsuchen,damit ich das Hotel nach meinem bevorzugten Standort (Stadt) auswählen kann.\
@@ -167,11 +167,11 @@ Hint: Wendet in der Hochsaison höhere und in der Nebensaison niedrigere Tarife 
 9. Als Admin möchte ich eine Liste der Zimmer mit ihrer Ausstattung sehen, damit ich sie besser bewerben kann.
 10. Als Admin möchte ich in der Lage sein, Stammdaten zu verwalten, z.B. Zimmertypen, Einrichtungen, und Preise in Echtzeit zu aktualisieren, damit das Backend-System aktuelle Informationen hat.
 
-## User Stories mit DB-Schemaänderung
+# User Stories mit DB-Schemaänderung
 1. Als Admin möchte ich alle Buchungen bearbeiten können, um fehlende Informationen zu ergänzen (z.B. Telefonnummer).
 3. Als Gast möchte ich nach meinem Aufenthalt eine Bewertung für ein Hotel abgeben, damit ich meine Erfahrungen teilen kann.
 4. Als Gast möchte ich vor der Buchung Hotelbewertungen lesen, damit ich das beste Hotel auswählen kann.
 
-## User Stories mit Datenvisualisierung
+# User Stories mit Datenvisualisierung
 1. Als Admin möchte ich die Belegungsraten für jeden Zimmertyp in meinem Hotel sehen, damit ich weiss, welche Zimmer am beliebtesten sind und ich meine Buchungsstrategien optimiren kann.
 Hint: Wählt ein geeignetes Diagramm, um die Auslastung nach Zimmertyp darzustellen (z.B. wie oft jeder Zimmertyp gebucht wird).
