@@ -12,6 +12,11 @@ Annahmen und Interpretationen, falls welche vorhanden sind.
 
 <img width="1271" alt="Bildschirmfoto 2025-06-14 um 11 38 24" src="https://github.com/user-attachments/assets/4e5532d1-7285-42fe-95c4-995eba20e943" />
 
+| Name                 | Model                                | Data Access & Business Logic          | UI / User Stories           | DB-Schemaänderung      | Datenvisualisierung | Sonstiges                  |
+|----------------------|--------------------------------------|---------------------------------------|-----------------------------|------------------------|---------------------|----------------------------|
+| Saruje Varatharajah  | Invoice, Room, RoomType              | Entsprechend unserer User Stories     | User Story 1.1 bis 1.6, 2   | -                      | -                   | Dokumentation (README)     |
+| Luxaayini Ponnaiya   | Hotel, Guest                         | Entsprechend unserer User Stories     | User Story 3, 8, 9, 10      | -                      | -                   | Dokumentation (README)     |
+| Albina Ramesh        | Address, Booking, Facilities, Review | Entsprechend unserer User Stories     | User Story 4, 5, 6, 7       | User Story 1, 3, 4     | User Story 1        | -                          |
 
 
 
