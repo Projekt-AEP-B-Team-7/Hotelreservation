@@ -8,10 +8,6 @@ Annahmen und Interpretationen, falls welche vorhanden sind.
 
 ## Rollenverteilung im Team:
 
-(User Stories sind gemäss Guidline beschriftet worden, beispielsweise DB-Schemaänderung, Visualisierung -> User Story 3, 4 von der Guidline) 
-
-<img width="1271" alt="Bildschirmfoto 2025-06-14 um 11 38 24" src="https://github.com/user-attachments/assets/4e5532d1-7285-42fe-95c4-995eba20e943" />
-
 | Name                 | Model                                | Data Access & Business Logic          | User Stories                | Sonstiges                  |
 |----------------------|--------------------------------------|---------------------------------------|-----------------------------|----------------------------|
 | Saruje Varatharajah  | Invoice, Room, RoomType              | Entsprechend unserer User Stories     | User Story 1.1 bis 1.6, 2   | Dokumentation (README)     |
