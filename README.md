@@ -6,10 +6,7 @@ Eine kurze Übersicht, wer zu welchen Projekt-Themen beigetragen hat (also z. B.
 Instruktion für uns, wie eure Applikation benutzt werden muss (Schritt-für-Schritt-Anleitung, insb. welche Notebooks oder Files ausgeführt werden müssen).
 Annahmen und Interpretationen, falls welche vorhanden sind.
 
-Name	Modellierung	Data Access & Business Logic	UI / User Stories	DB-Schemaänderung	Datenvisualisierung	Sonstiges
-Saruje Varatharajah	Invoice, Room, RoomType	Entsprechend unserer User Stories	User Story 1.1 bis 1.6, 2	-	-	READ-ME File
-Luxaayini Ponnaiya	Hotel, Guest	Entsprechend unserer User Stories	User Story 3, 8, 9, 10	-	-	READ-ME File
-Albina Ramesh	Address, Booking, Facilities, Review	Entsprechend unserer User Stories	User Story 4, 5, 6, 7	User Story 1, 3, 4	User Story 1	-![image](https://github.com/user-attachments/assets/959322d5-9b03-4865-a309-8eef821e1e50)
+	-![image](https://github.com/user-attachments/assets/959322d5-9b03-4865-a309-8eef821e1e50)
 
 
 
