@@ -6,6 +6,10 @@ Eine kurze Übersicht, wer zu welchen Projekt-Themen beigetragen hat (also z. B.
 Instruktion für uns, wie eure Applikation benutzt werden muss (Schritt-für-Schritt-Anleitung, insb. welche Notebooks oder Files ausgeführt werden müssen).
 Annahmen und Interpretationen, falls welche vorhanden sind.
 
+## Rollenverteilung im Team:
+
+(User Stories sind gemäss Guidline beschriftet worden, beispielsweise DB-Schemaänderung, Visualisierung -> User Story 3, 4 von der Guidline) 
+
 <img width="1271" alt="Bildschirmfoto 2025-06-14 um 11 38 24" src="https://github.com/user-attachments/assets/4e5532d1-7285-42fe-95c4-995eba20e943" />
 
 
