@@ -134,6 +134,9 @@ Natürlich gab es auch viele Herausforderungen und Momente, in denen wir nicht w
 
 Am Ende hat uns dieses Projekt gezeigt, dass man etwas Komplexes umsetzen kann, wenn man als Team zusammenarbeitet, sich Zeit nimmt und offen bleibt für Neues.
 
+## Angewendete User Stories
+Im Rahmen unseres Projekts haben wir die folgenden User Stories umgesetzt. Die Vorgehensweise ist jeweils in Deepnote bei der entsprechenden User Story dokumentiert.
+
 ## Minimale User Stories
 
 1. Als Gast möchte ich die verfügbaren Hotels durchsuchen, damit ich dasjenige auswählen kann, welches meinen Wünschen entspricht.\
@@ -166,22 +169,9 @@ Hint: Wendet in der Hochsaison höhere und in der Nebensaison niedrigere Tarife 
 
 ## User Stories mit DB-Schemaänderung
 1. Als Admin möchte ich alle Buchungen bearbeiten können, um fehlende Informationen zu ergänzen (z.B. Telefonnummer).
-2. Als Gast möchte ich auf meine Buchungshistorie zuzugreifen ("lesen"), damit ich meine kommenden Reservierungen verwalten kann.\
-2.1. Die Anwendungsfälle für meine Buchungen sind "neu/erstellen", "ändern/aktualisieren","stornieren/löschen".
-
 3. Als Gast möchte ich nach meinem Aufenthalt eine Bewertung für ein Hotel abgeben, damit ich meine Erfahrungen teilen kann.
-
 4. Als Gast möchte ich vor der Buchung Hotelbewertungen lesen, damit ich das beste Hotel auswählen kann.
-
-5. Als Gast möchte ich für jeden Aufenthalt Treuepunkte sammeln, die ich dann für Ermässigungen einlösen kann.
-Hint: Nur häufige Gäste sollten Treuepunkte erhalten. Definieren Sie eine Regel, um häufige Gäste zu identifizieren.
-
-6. Als Gast möchte ich meine Buchung mit der von mir bevorzugten Zahlungsmethode bezahlen, damit ich meine Reservierung abschliessen kann.
 
 ## User Stories mit Datenvisualisierung
 1. Als Admin möchte ich die Belegungsraten für jeden Zimmertyp in meinem Hotel sehen, damit ich weiss, welche Zimmer am beliebtesten sind und ich meine Buchungsstrategien optimiren kann.
 Hint: Wählt ein geeignetes Diagramm, um die Auslastung nach Zimmertyp darzustellen (z.B. wie oft jeder Zimmertyp gebucht wird).
-
-2. Als Admin möchte ich eine Aufschlüsselung der demografischen Merkmalde meiner Gäste sehen, damit ich gezieltes Marketing planen kann.
-Hint: Wählt ein geeignetes Diagramm, um die Verteilung der Gäste nach verschiedenen Merkmalden darzustellen (z.B. Altersspanne, Nationalität, wiederkehrende Gäste). Möglicherweise müssen Sie dier Tabelle "Gäste" einige Spalten hinzufügen.
-
