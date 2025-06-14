@@ -137,7 +137,7 @@ Am Ende hat uns dieses Projekt gezeigt, dass man etwas Komplexes umsetzen kann, 
 ## Angewendete User Stories
 Im Rahmen unseres Projekts haben wir die folgenden User Stories umgesetzt. Die Vorgehensweise ist jeweils in Deepnote bei der entsprechenden User Story dokumentiert.
 
-# Minimale User Stories
+### Minimale User Stories
 
 1. Als Gast möchte ich die verfügbaren Hotels durchsuchen, damit ich dasjenige auswählen kann, welches meinen Wünschen entspricht.\
 1.1 Ich möchte alle Hotels in einer Stadt durchsuchen,damit ich das Hotel nach meinem bevorzugten Standort (Stadt) auswählen kann.\
@@ -167,11 +167,11 @@ Hint: Wendet in der Hochsaison höhere und in der Nebensaison niedrigere Tarife 
 9. Als Admin möchte ich eine Liste der Zimmer mit ihrer Ausstattung sehen, damit ich sie besser bewerben kann.
 10. Als Admin möchte ich in der Lage sein, Stammdaten zu verwalten, z.B. Zimmertypen, Einrichtungen, und Preise in Echtzeit zu aktualisieren, damit das Backend-System aktuelle Informationen hat.
 
-# User Stories mit DB-Schemaänderung
+### User Stories mit DB-Schemaänderung
 1. Als Admin möchte ich alle Buchungen bearbeiten können, um fehlende Informationen zu ergänzen (z.B. Telefonnummer).
 3. Als Gast möchte ich nach meinem Aufenthalt eine Bewertung für ein Hotel abgeben, damit ich meine Erfahrungen teilen kann.
 4. Als Gast möchte ich vor der Buchung Hotelbewertungen lesen, damit ich das beste Hotel auswählen kann.
 
-# User Stories mit Datenvisualisierung
+### User Stories mit Datenvisualisierung
 1. Als Admin möchte ich die Belegungsraten für jeden Zimmertyp in meinem Hotel sehen, damit ich weiss, welche Zimmer am beliebtesten sind und ich meine Buchungsstrategien optimiren kann.
 Hint: Wählt ein geeignetes Diagramm, um die Auslastung nach Zimmertyp darzustellen (z.B. wie oft jeder Zimmertyp gebucht wird).
