@@ -6,6 +6,11 @@ Eine kurze Übersicht, wer zu welchen Projekt-Themen beigetragen hat (also z. B.
 Instruktion für uns, wie eure Applikation benutzt werden muss (Schritt-für-Schritt-Anleitung, insb. welche Notebooks oder Files ausgeführt werden müssen).
 Annahmen und Interpretationen, falls welche vorhanden sind.
 
+Name	Modellierung	Data Access & Business Logic	UI / User Stories	DB-Schemaänderung	Sonstiges
+Luxaayini Ponnaiya	Hotel, Guest	Entsprechend ihrer User Stories	User Story 3, 8, 9, 10	–	Mitverantwortlich für README-Datei
+Saruje Varatharajah	Invoice, Room, RoomType	Entsprechend ihrer User Stories	User Story 1.1 bis 1.6, 2	–	Mitverantwortlich für README-Datei
+Albina Ramesh	Address, Booking, Facilities, Review	Entsprechend ihrer User Stories	User Story 4, 5, 6, 7	Änderungen zu Story 1, 3, 4	Datenvisualisierung (User Story 3)
+
 ## Autoren
 - Saruje Varatharajah
 - Luxaayini Ponnaiya
