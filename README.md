@@ -37,7 +37,7 @@ Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten, entschiede
 | Luxaayini Ponnaiya   | Hotel, Guest                         | Entsprechend unserer User Stories     | User Story 3, 8, 9, 10      | Dokumentation (README)     |
 | Albina Ramesh        | Address, Booking, Facilities, Review | Entsprechend unserer User Stories     | User Story 4, 5, 6, 7 und DB-Schemaänderung (User Story 1, 3, 4) und Datenvisualisierung (User Story 1)| Input helper files     |
 
-## Class Diagram -> Methoden ergänzen und Erklärung fehlt!
+## Class Diagram
 ![image](https://github.com/user-attachments/assets/ea5177c5-b2a0-46b1-aecf-14cdf52a97a0)
 
 | Klasse     | Verbunden mit | Kardinalität (von–zu) | Aggregation  | Beschreibung                                                                                   |
