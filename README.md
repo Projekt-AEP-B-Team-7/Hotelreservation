@@ -45,7 +45,7 @@ Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten, entschiede
 | Address    | Hotel          | 1:1                    | None          | Jede Adresse ist genau einem Hotel zugeordnet.                                                 |
 | Address    | Guest          | 1:1                    | None          | Eine Adresse kann von mehreren Gästen verwendet werden, aber ein Gast hat genau eine Adresse. |
 | Hotel      | Address        | 1:1                    | None          | Jedes Hotel besitzt genau eine Adresse.                                                        |
-| Hotel      | Room           | 1:1..*                 | Composited    | Ein Hotel besteht aus mindestens einem oder mehreren Zimmern. Ohne Hotel existieren keine Zimmer. |
+| Hotel      | Room           | 1:1..*                 | Composited    | Ein Hotel besteht aus mindestens einem oder mehreren Zimmern.                                  |
 | Room       | Hotel          | 1..*:1                 | Composited    | Ein oder mehrere Zimmer gehören genau zu einem Hotel.                                          |
 | Room       | RoomType       | 1..*:1                 | Shared        | Mehrere Zimmer können denselben Zimmertyp haben.                                               |
 | Room       | Facilities     | 0..*:0..*              | Shared        | Ein Zimmer kann gar keine bis mehrere Einrichtungen haben.                                       |
