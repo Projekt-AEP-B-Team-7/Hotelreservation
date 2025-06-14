@@ -42,27 +42,27 @@ Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten, entschiede
 
 | **Klasse**    | **Verbunden mit** | **Kardinalität (von–zu)** | **Aggregation**   | **Begründung / Beschreibung**                                                                 |
 |---------------|-------------------|----------------------------|-------------------|------------------------------------------------------------------------------------------------|
-| `Address`     | `Hotel`           | 1:1                        | None              | Jede Adresse gehört genau einem Hotel.                                                        |
-|               | `Guest`           | 0..1:1                     | None              | Ein Gast kann eine Adresse haben, muss aber nicht.                                            |
-| `Hotel`       | `Address`         | 1:1                        | None              | Hotel benötigt eine feste Adresse.                                                            |
-|               | `Room`            | 1:*                        | **Composited**    | Ein Hotel besteht aus mehreren Räumen. Ohne Hotel existieren Räume nicht.                     |
-|               | `Review`          | 1:0..*                     | None              | Ein Hotel kann viele Bewertungen erhalten.                                                    |
-| `Room`        | `Hotel`           | *:1                        | Composited        | Jeder Raum gehört genau zu einem Hotel.                                                       |
-|               | `RoomType`        | *:1                        | **Shared**        | Viele Räume können denselben Typ teilen.                                                      |
-|               | `Facilities`      | *:*                        | **Shared**        | Einrichtungen können mehreren Räumen zugewiesen sein.                                         |
-| `RoomType`    | `Room`            | 1:0..*                     | Shared            | Ein Raumtyp kann für mehrere Räume verwendet werden.                                          |
-| `Facilities`  | `Room`            | 1:0..*                     | Shared            | Eine Einrichtung kann mehreren Räumen zugewiesen sein.                                        |
-| `Guest`       | `Booking`         | 1:0..*                     | None              | Ein Gast kann mehrere Buchungen tätigen.                                                      |
-|               | `Review`          | 1:0..*                     | None              | Ein Gast kann mehrere Bewertungen abgeben.                                                    |
-|               | `Address`         | 0..1:1                     | None              | Optional kann ein Gast eine Adresse besitzen.                                                 |
-| `Booking`     | `Guest`           | *:1                        | None              | Eine Buchung gehört zu genau einem Gast.                                                      |
-|               | `Room`            | *:1                        | None              | Eine Buchung bezieht sich auf genau ein Zimmer.                                               |
-|               | `Invoice`         | 1:1                        | **Composited**    | Eine Rechnung existiert nur in Verbindung mit der Buchung.                                    |
-|               | `Review`          | 0..1:1                     | None              | Eine Buchung kann optional eine Bewertung haben.                                              |
-| `Invoice`     | `Booking`         | 1:1                        | Composited        | Die Rechnung ist Teil der Buchung und kann nicht separat existieren.                          |
-| `Review`      | `Guest`           | *:1                        | None              | Eine Bewertung wird von genau einem Gast erstellt.                                            |
-|               | `Hotel`           | *:1                        | None              | Eine Bewertung bezieht sich auf ein bestimmtes Hotel.                                         |
-|               | `Booking`         | 0..1:1                     | None              | Optionaler Bezug zu einer Buchung (z. B. bei Aufenthalt).                                     |
+|  Address      |  Hotel            | 1:1                        | None              | Jede Adresse gehört genau einem Hotel.                                                        |
+|               |  Guest            | 0..1:1                     | None              | Ein Gast kann eine Adresse haben, muss aber nicht.                                            |
+|  Hotel        |  Address          | 1:1                        | None              | Hotel benötigt eine feste Adresse.                                                            |
+|               |  Room             | 1:*                        | Composited        | Ein Hotel besteht aus mehreren Räumen. Ohne Hotel existieren Räume nicht.                     |
+|               |  Review           | 1:0..*                     | None              | Ein Hotel kann viele Bewertungen erhalten.                                                    |
+|  Room         |  Hotel            | *:1                        | Composited        | Jeder Raum gehört genau zu einem Hotel.                                                       |
+|               |  RoomType         | *:1                        | Shared            | Viele Räume können denselben Typ teilen.                                                      |
+|               |  Facilities       | *:*                        | Shared            | Einrichtungen können mehreren Räumen zugewiesen sein.                                         |
+|  RoomType     |  Room             | 1:0..*                     | Shared            | Ein Raumtyp kann für mehrere Räume verwendet werden.                                          |
+|  Facilities   |  Room             | 1:0..*                     | Shared            | Eine Einrichtung kann mehreren Räumen zugewiesen sein.                                        |
+|  Guest        |  Booking          | 1:0..*                     | None              | Ein Gast kann mehrere Buchungen tätigen.                                                      |
+|               |  Review           | 1:0..*                     | None              | Ein Gast kann mehrere Bewertungen abgeben.                                                    |
+|               |  Address          | 0..1:1                     | None              | Optional kann ein Gast eine Adresse besitzen.                                                 |
+|  Booking      |  Guest            | *:1                        | None              | Eine Buchung gehört zu genau einem Gast.                                                      |
+|               |  Room             | *:1                        | None              | Eine Buchung bezieht sich auf genau ein Zimmer.                                               |
+|               |  Invoice          | 1:1                        | Composited        | Eine Rechnung existiert nur in Verbindung mit der Buchung.                                    |
+|               |  Review           | 0..1:1                     | None              | Eine Buchung kann optional eine Bewertung haben.                                              |
+|  Invoice      |  Booking          | 1:1                        | Composited        | Die Rechnung ist Teil der Buchung und kann nicht separat existieren.                          |
+|  Review       |  Guest            | *:1                        | None              | Eine Bewertung wird von genau einem Gast erstellt.                                            |
+|               |  Hotel            | *:1                        | None              | Eine Bewertung bezieht sich auf ein bestimmtes Hotel.                                         |
+|               |  Booking          | 0..1:1                     | None              | Optionaler Bezug zu einer Buchung (z. B. bei Aufenthalt).                                     |
 
 ## Technische Architektur
 
