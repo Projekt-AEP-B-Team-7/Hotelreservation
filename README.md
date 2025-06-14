@@ -38,40 +38,31 @@ Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten, entschiede
 | Albina Ramesh        | Address, Booking, Facilities, Review | Entsprechend unserer User Stories     | User Story 4, 5, 6, 7 und DB-Schemaänderung (User Story 1, 3, 4) und Datenvisualisierung (User Story 1)| Input helper files     |
 
 ## Class Diagram -> Methoden ergänzen und Erklärung fehlt!
+![image](https://github.com/user-attachments/assets/ea5177c5-b2a0-46b1-aecf-14cdf52a97a0)
 
-![image](https://github.com/user-attachments/assets/1b4d7a91-2510-4f92-bc11-e5e5cce9ef09)
- 
-Class Address: (Cardinality 1:1)
-Attributes: address_id, street, city, zip_code
-Relationship: One-to-one with both Hotel and Guest (One to One) 
+Klasse	Verbunden mit	Kardinalität (von–zu)	Aggregation	Begründung / Beschreibung
+Address	Hotel	1:1	None	Jede Adresse gehört genau einem Hotel. Keine Aggregation nötig.
+Guest	0..1:1	None	Ein Gast kann eine Adresse haben, muss aber nicht.
+Hotel	Address	1:1	None	Hotel benötigt eine feste Adresse (direkte Zuordnung).
+Room	1:*	Composited	Hotel besteht aus Räumen. Räume können ohne Hotel nicht existieren.
+Review	1:0..*	None	Ein Hotel kann viele Bewertungen haben. Review verweist auf genau ein Hotel.
+Room	Hotel	*:1	Composited	Umgekehrte Sicht: Jeder Raum gehört fest zu einem Hotel.
+RoomType	*:1	Shared	Viele Räume können denselben Typ teilen. Der Typ existiert unabhängig.
+Facilities	:	Shared	Einrichtungen können mehreren Räumen zugewiesen sein. Unabhängig.
+RoomType	Room	1:0..*	Shared	Aggregierte Nutzung durch viele Räume.
+Facilities	Room	1:0..*	Shared	Eine Einrichtung ist nicht vom Raum abhängig.
+Guest	Booking	1:0..*	None	Ein Gast kann viele Buchungen haben.
+Review	1:0..*	None	Ein Gast kann mehrere Bewertungen schreiben.
+Address	0..1:1	None	Ein Gast kann eine Adresse haben.
+Booking	Guest	*:1	None	Jede Buchung gehört genau einem Gast.
+Room	*:1	None	Buchung bezieht sich auf genau ein Zimmer.
+Invoice	1:1	Composited	Rechnung existiert nur in Verbindung mit Buchung. Wird Buchung gelöscht, Rechnung auch.
+Review	1:0..1	None	Eine Buchung kann eine Bewertung haben, muss aber nicht.
+Invoice	Booking	1:1	Composited	Siehe oben. Invoice ist Bestandteil der Buchung.
+Review	Guest	*:1	None	Bewertung gehört zu einem Gast, aber ein Gast kann viele schreiben.
+Hotel	*:1	None	Eine Bewertung bezieht sich auf ein Hotel. Hotel kann viele haben.
+Booking	0..1:1	None	Review optional mit einer Buchung verbunden.
 
-Class Guest: (Cardinality 1:0)
-Attributes: address_id, street, city, zip_code
-Relationship: One Guest has one address and One Guest can have multiple bookings (One to many)
-
-Class Booking (Cardinality 0:1), (Cardinality 1:1)
-Attributes: booking_id, check_in_date, check_out_date, is_cancelled, total_amount
-Relationships: One or more Booking belongs to one guest, One Booking is linked to one invoice
-
-Class Invoice: (Cardinality 1:1)
-Attributes: invoice_id, issue_date, total_amount
-Relationship: One Invoice belongs to one booking
-
-Class Hotel: (Cardinality 1:0)
-Attributes: hotel_id, name, stars, rooms, address
-Relationships: One hotel has one address, One hotel includes multiple rooms
-
-Class Room: (Cardinality 1:1)
-Attributes: room_id, room_no, price_per_night
-Relationships: One Room belongs to one hotel, One Room has exactly one room type
-
-Class Room_Type: (Cardinality 0:1)
-Attributes: room_type_id, description, max_guests
-Relationships: One Room_type can be associated with multiple rooms and one Room_type can have multiple facilities
-
-Class Facilities: (Cardinality 0:1)
-Attributes: facility_id, facility_name 
-Relationship: One Facility can be linked to multiple room types
 
 ## Technische Architektur
 
