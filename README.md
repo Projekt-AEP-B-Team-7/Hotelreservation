@@ -1,6 +1,11 @@
 ## Einleitung
 Im Rahmen unsere Projektarbeit haben wir den Auftrag erhalten eine  Hotelreservierungssystem mit der Programmiersprache Python zu entwerfen, welches die folgenden User Stories realisieren. Wie bereits in den Guidelines beschrieben, werden wir auf die Userstorys richten.
 
+## Autoren
+•	Saruje Varatharajah
+•	Luxaayini Ponnaiya
+•	Albina Ramesh
+
 ## Deliverables
 Abgabetermin: 15.06.2025
 - Source Code und Artefakte
