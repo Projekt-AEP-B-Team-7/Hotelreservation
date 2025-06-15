@@ -27,9 +27,10 @@ Präsentationsvideo: Wir haben den Link zum Video der Präsentation über Moodle
 ## Teamarbeit
 Unser Team hat grundsätzlich gemeinsam gearbeitet und sich gegenseitig unterstützt, da niemand von uns einen IT-Background hatte. Anstatt feste Rollen oder Zuständigkeiten zu vergeben, haben wir uns jede Woche neue Ziele gesetzt, die wir bis zum nächsten Coaching erreichen wollten. Diese Ziele umfassten sowohl Repetition als auch das Bearbeiten konkreter Aufgaben.
 
-Zu Beginn nutzten wir ein Projektboard, später kommunizierten wir hauptsächlich über WhatsApp und Microsoft Teams. Gegen Projektende wurde das Board nochmals aktiv verwendet, um alle offenen Aufgaben vor der Abgabe gezielt abzuarbeiten. Da alle Teammitglieder regelmässig vor Ort waren, konnten wir die Coaching-Zeit optimal nutzen, um gemeinsam weiterzuarbeiten und bei Bedarf direkt Fragen zu stellen.
+Zu Beginn nutzten wir ein Projektboard, später kommunizierten wir hauptsächlich über WhatsApp und Microsoft Teams. Gegen Projektende wurde das Board nochmals aktiv verwendet, um alle offenen Aufgaben vor der Abgabe gezielt abzuarbeiten. Da alle Teammitglieder regelmässig vor Ort waren, konnten wir die Coaching-Zeit optimal nutzen, um gemeinsam weiterzuarbeiten und bei Bedarf direkt Fragen zu stellen. 
 
 Da wir bereits im vorherigen Semester mit Deepnote gearbeitet hatten, entschieden wir uns bewusst dafür, das gesamte Projekt in Deepnote umzusetzen, inklusive Datenmodellierung, Datenzugriff, Logik und Benutzeroberfläche.
+Zu Unterstützung nutzten wir ChatGPT für Konzeptverständnis oder Fehlersuche und so konnten wir effizient am Projekt arbeiten.
 
 ## Rollenverteilung im Team
 
