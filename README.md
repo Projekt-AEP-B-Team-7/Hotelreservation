@@ -22,7 +22,7 @@ Abgabetermin: 15.06.2025
 ## Links
 Deepnote: https://deepnote.com/workspace/FHNW-9efe9cac-fee5-4d76-b7c4-0114c7e240f2/project/AEPB-Team-7-12cf43ae-1be3-4ed6-97d6-f7f9a12a6fe8/notebook/User-Stories-c7ba22b20c7a4a278e9192df60615dea
 
-Präsentationsvideo: Video der Präsentation: Wir haben den Link zum Video der Präsentation über Moodle auf der PDF-Datei zur Verfügung gestellt.
+Präsentationsvideo: Wir haben den Link zum Video der Präsentation über Moodle auf der PDF-Datei zur Verfügung gestellt.
 
 ## Teamarbeit
 Unser Team hat grundsätzlich gemeinsam gearbeitet und sich gegenseitig unterstützt, da niemand von uns einen IT-Background hatte. Anstatt feste Rollen oder Zuständigkeiten zu vergeben, haben wir uns jede Woche neue Ziele gesetzt, die wir bis zum nächsten Coaching erreichen wollten. Diese Ziele umfassten sowohl Repetition als auch das Bearbeiten konkreter Aufgaben.
