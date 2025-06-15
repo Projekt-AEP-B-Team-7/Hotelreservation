@@ -48,6 +48,16 @@ def display_admin_booking_overview(bookings, title):
     
     return True
 
+def validate_view_again_choice(search_again):
+    if search_again in ['y', 'yes']:
+        return True
+    elif search_again in ['n', 'no']:
+        print("Admin session ended.")
+        return False
+    else:
+        print("Please enter 'y' for yes or 'n' for no.")
+        return None
+
 def get_room_type_menu_choice():
     print("\nRoom Type Admin")
     print("1. Show all room types")
