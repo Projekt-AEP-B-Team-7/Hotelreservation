@@ -1,12 +1,3 @@
-'# B-Team-7 Hotelreservation
-Löschen:
-Das README.md-File sollte Folgendes enthalten:
-
-Name und Vorname der Teammitglieder, die am Projekt mitgearbeitet haben
-Eine kurze Übersicht, wer zu welchen Projekt-Themen beigetragen hat (also z. B. zu welchen User-Stories, Files, Projektphasen, Rollen innerhalb des Teams etc.). Themen, die durch mehrere Teammitglieder bearbeitet wurden, dürft ihr bei allen jeweiligen Teammitgliedern aufführen.
-Instruktion für uns, wie eure Applikation benutzt werden muss (Schritt-für-Schritt-Anleitung, insb. welche Notebooks oder Files ausgeführt werden müssen).
-Annahmen und Interpretationen, falls welche vorhanden sind.
-
 ## Einleitung
 Im Rahmen unsere Projektarbeit haben wir den Auftrag erhalten eine  Hotelreservierungssystem mit der Programmiersprache Python zu entwerfen, welches die folgenden User Stories realisieren. Wie bereits in den Guidelines beschrieben, werden wir auf die Userstorys richten.
 
