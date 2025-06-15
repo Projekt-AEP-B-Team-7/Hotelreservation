@@ -173,6 +173,10 @@ Hint: Wendet in der Hochsaison höhere und in der Nebensaison niedrigere Tarife 
 Hint: Wählt ein geeignetes Diagramm, um die Auslastung nach Zimmertyp darzustellen (z.B. wie oft jeder Zimmertyp gebucht wird).
 
 ## Quellen
-Wir haben die folgende Website für unser Projekt verwendet:
-- https://www.w3schools.com/python/python_operators.asp
-- https://www.programiz.com/python-programming
+Für die Umsetzung des Projekts haben wir den gesamten Python-Code selbst geschrieben. Zur Unterstützung beim Programmieren und zur Lösung technischer Fragen haben wir verschiedene Online-Ressourcen genutzt:
+
+W3Schools (https://www.w3schools.com/python/python_operators.asp): Diente uns als Nachschlagewerk, insbesondere für grundlegende Python-Konzepte wie Operatoren.
+Programiz (https://www.programiz.com/python-programming): Half uns beim besseren Verständnis von Themen wie Schleifen, Bedingungen und Funktionen in Python.
+ChatGPT: Wie bereits erwähnt, haben wir ChatGPT unterstützend eingesetzt – insbesondere zur Erklärung von Fehlermeldungen, zur Fehlersuche im Code und zur schnellen Klärung von Syntax- oder Logikfragen.
+
+Diese Quellen haben uns geholfen, unser Wissen zu festigen, Fehler schneller zu beheben und den Code effizienter zu entwickeln.
